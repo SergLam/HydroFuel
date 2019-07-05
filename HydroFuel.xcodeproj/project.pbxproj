@@ -1,0 +1,538 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6D152541215BD51500E5B3AE /* AlertVCNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D152540215BD51500E5B3AE /* AlertVCNew.swift */; };
+		6DF23DE9214A6CF6000A7DBB /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF23DE8214A6CF6000A7DBB /* Global.swift */; };
+		6DF23DF9214A6F7A000A7DBB /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DF23DEE214A6F7A000A7DBB /* FMDatabaseQueue.m */; };
+		6DF23DFA214A6F7A000A7DBB /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DF23DEF214A6F7A000A7DBB /* FMResultSet.m */; };
+		6DF23DFB214A6F7A000A7DBB /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DF23DF1214A6F7A000A7DBB /* FMDatabaseAdditions.m */; };
+		6DF23DFC214A6F7A000A7DBB /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DF23DF4214A6F7A000A7DBB /* FMDatabase.m */; };
+		6DF23DFD214A6F7A000A7DBB /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DF23DF6214A6F7A000A7DBB /* FMDatabasePool.m */; };
+		6DF23E01214A77E7000A7DBB /* AFSQLWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF23E00214A77E7000A7DBB /* AFSQLWrapper.swift */; };
+		9DFDF4361D18266FA3A14C03 /* Pods_HydroFuel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD07F55ECDE656312122A720 /* Pods_HydroFuel.framework */; };
+		A72C719C213A5FF2008FB95F /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72C719B213A5FF2008FB95F /* HomeVC.swift */; };
+		A72C719E213A64EC008FB95F /* menucell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72C719D213A64EC008FB95F /* menucell.swift */; };
+		A72C71A0213A776A008FB95F /* HistoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72C719F213A776A008FB95F /* HistoryVC.swift */; };
+		A72C71A2213A7781008FB95F /* HistoryDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72C71A1213A7781008FB95F /* HistoryDetail.swift */; };
+		A72C71A4213A7795008FB95F /* MyStatisticVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72C71A3213A7795008FB95F /* MyStatisticVC.swift */; };
+		A750589A213916FA00CA3878 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7505899213916FA00CA3878 /* AppDelegate.swift */; };
+		A750589F213916FA00CA3878 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A750589D213916FA00CA3878 /* Main.storyboard */; };
+		A75058A1213916FA00CA3878 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A75058A0213916FA00CA3878 /* Assets.xcassets */; };
+		A75058A4213916FA00CA3878 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A75058A2213916FA00CA3878 /* LaunchScreen.storyboard */; };
+		A796B0642139199B00FD85A1 /* PersonalInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A796B0632139199B00FD85A1 /* PersonalInfoVC.swift */; };
+		A796B06921391CDF00FD85A1 /* Avenir-Book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A796B06621391CDF00FD85A1 /* Avenir-Book.ttf */; };
+		A796B06A21391CDF00FD85A1 /* Avenir-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A796B06721391CDF00FD85A1 /* Avenir-Light.ttf */; };
+		A796B06B21391CDF00FD85A1 /* Avenir-Roman.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A796B06821391CDF00FD85A1 /* Avenir-Roman.ttf */; };
+		A796B06D2139668800FD85A1 /* alertCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A796B06C2139668800FD85A1 /* alertCell.swift */; };
+		A796B06F213969E700FD85A1 /* AlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A796B06E213969E700FD85A1 /* AlertVC.swift */; };
+		A796B07121397D1E00FD85A1 /* menuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A796B07021397D1E00FD85A1 /* menuVC.swift */; };
+		A7FCF1252141300100325BE9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7FCF1242141300100325BE9 /* Constants.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1B8D9D83B7C463DAF24E9732 /* Pods-HydroFuel.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HydroFuel.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HydroFuel/Pods-HydroFuel.debug.xcconfig"; sourceTree = "<group>"; };
+		6D152540215BD51500E5B3AE /* AlertVCNew.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertVCNew.swift; sourceTree = "<group>"; };
+		6DF23DE8214A6CF6000A7DBB /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
+		6DF23DEA214A6F21000A7DBB /* HydroFuel-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HydroFuel-Bridging-Header.h"; sourceTree = "<group>"; };
+		6DF23DEE214A6F7A000A7DBB /* FMDatabaseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseQueue.m; sourceTree = "<group>"; };
+		6DF23DEF214A6F7A000A7DBB /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
+		6DF23DF0214A6F7A000A7DBB /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
+		6DF23DF1214A6F7A000A7DBB /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseAdditions.m; sourceTree = "<group>"; };
+		6DF23DF2214A6F7A000A7DBB /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
+		6DF23DF3214A6F7A000A7DBB /* FMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDB.h; sourceTree = "<group>"; };
+		6DF23DF4214A6F7A000A7DBB /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
+		6DF23DF5214A6F7A000A7DBB /* FMDatabasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabasePool.h; sourceTree = "<group>"; };
+		6DF23DF6214A6F7A000A7DBB /* FMDatabasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabasePool.m; sourceTree = "<group>"; };
+		6DF23DF7214A6F7A000A7DBB /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
+		6DF23DF8214A6F7A000A7DBB /* FMDatabaseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseQueue.h; sourceTree = "<group>"; };
+		6DF23E00214A77E7000A7DBB /* AFSQLWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AFSQLWrapper.swift; sourceTree = "<group>"; };
+		A72C719B213A5FF2008FB95F /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
+		A72C719D213A64EC008FB95F /* menucell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = menucell.swift; sourceTree = "<group>"; };
+		A72C719F213A776A008FB95F /* HistoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryVC.swift; sourceTree = "<group>"; };
+		A72C71A1213A7781008FB95F /* HistoryDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryDetail.swift; sourceTree = "<group>"; };
+		A72C71A3213A7795008FB95F /* MyStatisticVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStatisticVC.swift; sourceTree = "<group>"; };
+		A7505896213916FA00CA3878 /* HydroFuel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HydroFuel.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A7505899213916FA00CA3878 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		A750589E213916FA00CA3878 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		A75058A0213916FA00CA3878 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A75058A3213916FA00CA3878 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		A75058A5213916FA00CA3878 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A796B0632139199B00FD85A1 /* PersonalInfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoVC.swift; sourceTree = "<group>"; wrapsLines = 0; };
+		A796B06621391CDF00FD85A1 /* Avenir-Book.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Avenir-Book.ttf"; sourceTree = "<group>"; };
+		A796B06721391CDF00FD85A1 /* Avenir-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Avenir-Light.ttf"; sourceTree = "<group>"; };
+		A796B06821391CDF00FD85A1 /* Avenir-Roman.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Avenir-Roman.ttf"; sourceTree = "<group>"; };
+		A796B06C2139668800FD85A1 /* alertCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = alertCell.swift; sourceTree = "<group>"; };
+		A796B06E213969E700FD85A1 /* AlertVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertVC.swift; sourceTree = "<group>"; };
+		A796B07021397D1E00FD85A1 /* menuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = menuVC.swift; sourceTree = "<group>"; };
+		A7FCF1242141300100325BE9 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		AD07F55ECDE656312122A720 /* Pods_HydroFuel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HydroFuel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C5D007F13B901C05CBB5F351 /* Pods-HydroFuel.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HydroFuel.release.xcconfig"; path = "Pods/Target Support Files/Pods-HydroFuel/Pods-HydroFuel.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A7505893213916FA00CA3878 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9DFDF4361D18266FA3A14C03 /* Pods_HydroFuel.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6DF23DE5214A6C9A000A7DBB /* Constants & Globle */ = {
+			isa = PBXGroup;
+			children = (
+				A7FCF1242141300100325BE9 /* Constants.swift */,
+				6DF23DE8214A6CF6000A7DBB /* Global.swift */,
+				6DF23E00214A77E7000A7DBB /* AFSQLWrapper.swift */,
+			);
+			path = "Constants & Globle";
+			sourceTree = "<group>";
+		};
+		6DF23DED214A6F5A000A7DBB /* FMDB_SQL */ = {
+			isa = PBXGroup;
+			children = (
+				6DF23DF7214A6F7A000A7DBB /* FMDatabase.h */,
+				6DF23DF4214A6F7A000A7DBB /* FMDatabase.m */,
+				6DF23DF2214A6F7A000A7DBB /* FMDatabaseAdditions.h */,
+				6DF23DF1214A6F7A000A7DBB /* FMDatabaseAdditions.m */,
+				6DF23DF5214A6F7A000A7DBB /* FMDatabasePool.h */,
+				6DF23DF6214A6F7A000A7DBB /* FMDatabasePool.m */,
+				6DF23DF8214A6F7A000A7DBB /* FMDatabaseQueue.h */,
+				6DF23DEE214A6F7A000A7DBB /* FMDatabaseQueue.m */,
+				6DF23DF3214A6F7A000A7DBB /* FMDB.h */,
+				6DF23DF0214A6F7A000A7DBB /* FMResultSet.h */,
+				6DF23DEF214A6F7A000A7DBB /* FMResultSet.m */,
+			);
+			path = FMDB_SQL;
+			sourceTree = "<group>";
+		};
+		9834042595A6A2FDBF07E7CF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AD07F55ECDE656312122A720 /* Pods_HydroFuel.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A750588D213916FA00CA3878 = {
+			isa = PBXGroup;
+			children = (
+				A7505898213916FA00CA3878 /* HydroFuel */,
+				A7505897213916FA00CA3878 /* Products */,
+				C72F7F6BF63130D38F237F5C /* Pods */,
+				9834042595A6A2FDBF07E7CF /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		A7505897213916FA00CA3878 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A7505896213916FA00CA3878 /* HydroFuel.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A7505898213916FA00CA3878 /* HydroFuel */ = {
+			isa = PBXGroup;
+			children = (
+				6DF23DED214A6F5A000A7DBB /* FMDB_SQL */,
+				6DF23DE5214A6C9A000A7DBB /* Constants & Globle */,
+				A796B06521391CDF00FD85A1 /* avenirFont */,
+				A7505899213916FA00CA3878 /* AppDelegate.swift */,
+				A796B0632139199B00FD85A1 /* PersonalInfoVC.swift */,
+				A796B06E213969E700FD85A1 /* AlertVC.swift */,
+				6D152540215BD51500E5B3AE /* AlertVCNew.swift */,
+				A796B07021397D1E00FD85A1 /* menuVC.swift */,
+				A72C719B213A5FF2008FB95F /* HomeVC.swift */,
+				A72C719F213A776A008FB95F /* HistoryVC.swift */,
+				A72C71A1213A7781008FB95F /* HistoryDetail.swift */,
+				A72C71A3213A7795008FB95F /* MyStatisticVC.swift */,
+				A750589D213916FA00CA3878 /* Main.storyboard */,
+				A75058A0213916FA00CA3878 /* Assets.xcassets */,
+				A796B06C2139668800FD85A1 /* alertCell.swift */,
+				A72C719D213A64EC008FB95F /* menucell.swift */,
+				A75058A2213916FA00CA3878 /* LaunchScreen.storyboard */,
+				A75058A5213916FA00CA3878 /* Info.plist */,
+				6DF23DEA214A6F21000A7DBB /* HydroFuel-Bridging-Header.h */,
+			);
+			path = HydroFuel;
+			sourceTree = "<group>";
+		};
+		A796B06521391CDF00FD85A1 /* avenirFont */ = {
+			isa = PBXGroup;
+			children = (
+				A796B06621391CDF00FD85A1 /* Avenir-Book.ttf */,
+				A796B06721391CDF00FD85A1 /* Avenir-Light.ttf */,
+				A796B06821391CDF00FD85A1 /* Avenir-Roman.ttf */,
+			);
+			path = avenirFont;
+			sourceTree = "<group>";
+		};
+		C72F7F6BF63130D38F237F5C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1B8D9D83B7C463DAF24E9732 /* Pods-HydroFuel.debug.xcconfig */,
+				C5D007F13B901C05CBB5F351 /* Pods-HydroFuel.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A7505895213916FA00CA3878 /* HydroFuel */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A75058A8213916FA00CA3878 /* Build configuration list for PBXNativeTarget "HydroFuel" */;
+			buildPhases = (
+				E928F0E0B641290808D3F0C8 /* [CP] Check Pods Manifest.lock */,
+				A7505892213916FA00CA3878 /* Sources */,
+				A7505893213916FA00CA3878 /* Frameworks */,
+				A7505894213916FA00CA3878 /* Resources */,
+				B9262F07074B349E4A1D803B /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HydroFuel;
+			productName = HydroFuel;
+			productReference = A7505896213916FA00CA3878 /* HydroFuel.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A750588E213916FA00CA3878 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0920;
+				LastUpgradeCheck = 0920;
+				ORGANIZATIONNAME = Stegowl;
+				TargetAttributes = {
+					A7505895213916FA00CA3878 = {
+						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 0920;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = A7505891213916FA00CA3878 /* Build configuration list for PBXProject "HydroFuel" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A750588D213916FA00CA3878;
+			productRefGroup = A7505897213916FA00CA3878 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A7505895213916FA00CA3878 /* HydroFuel */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A7505894213916FA00CA3878 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A796B06921391CDF00FD85A1 /* Avenir-Book.ttf in Resources */,
+				A75058A4213916FA00CA3878 /* LaunchScreen.storyboard in Resources */,
+				A75058A1213916FA00CA3878 /* Assets.xcassets in Resources */,
+				A796B06B21391CDF00FD85A1 /* Avenir-Roman.ttf in Resources */,
+				A796B06A21391CDF00FD85A1 /* Avenir-Light.ttf in Resources */,
+				A750589F213916FA00CA3878 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		B9262F07074B349E4A1D803B /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HydroFuel/Pods-HydroFuel-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/CTShowcase/CTShowcase.framework",
+				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
+				"${BUILT_PRODUCTS_DIR}/FSCalendar/FSCalendar.framework",
+				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SlideMenuControllerSwift/SlideMenuControllerSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/UICircularProgressRing/UICircularProgressRing.framework",
+				"${BUILT_PRODUCTS_DIR}/iShowcase/iShowcase.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CTShowcase.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FSCalendar.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SlideMenuControllerSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UICircularProgressRing.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/iShowcase.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HydroFuel/Pods-HydroFuel-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E928F0E0B641290808D3F0C8 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HydroFuel-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A7505892213916FA00CA3878 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A796B07121397D1E00FD85A1 /* menuVC.swift in Sources */,
+				A7FCF1252141300100325BE9 /* Constants.swift in Sources */,
+				6DF23DFA214A6F7A000A7DBB /* FMResultSet.m in Sources */,
+				6D152541215BD51500E5B3AE /* AlertVCNew.swift in Sources */,
+				A796B06D2139668800FD85A1 /* alertCell.swift in Sources */,
+				A72C71A2213A7781008FB95F /* HistoryDetail.swift in Sources */,
+				6DF23DF9214A6F7A000A7DBB /* FMDatabaseQueue.m in Sources */,
+				A72C71A4213A7795008FB95F /* MyStatisticVC.swift in Sources */,
+				6DF23DE9214A6CF6000A7DBB /* Global.swift in Sources */,
+				A72C719E213A64EC008FB95F /* menucell.swift in Sources */,
+				A796B06F213969E700FD85A1 /* AlertVC.swift in Sources */,
+				A72C719C213A5FF2008FB95F /* HomeVC.swift in Sources */,
+				A72C71A0213A776A008FB95F /* HistoryVC.swift in Sources */,
+				A796B0642139199B00FD85A1 /* PersonalInfoVC.swift in Sources */,
+				A750589A213916FA00CA3878 /* AppDelegate.swift in Sources */,
+				6DF23DFB214A6F7A000A7DBB /* FMDatabaseAdditions.m in Sources */,
+				6DF23DFC214A6F7A000A7DBB /* FMDatabase.m in Sources */,
+				6DF23DFD214A6F7A000A7DBB /* FMDatabasePool.m in Sources */,
+				6DF23E01214A77E7000A7DBB /* AFSQLWrapper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		A750589D213916FA00CA3878 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A750589E213916FA00CA3878 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		A75058A2213916FA00CA3878 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A75058A3213916FA00CA3878 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		A75058A6213916FA00CA3878 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A75058A7213916FA00CA3878 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A75058A9213916FA00CA3878 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1B8D9D83B7C463DAF24E9732 /* Pods-HydroFuel.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = MDWBDEPC5G;
+				INFOPLIST_FILE = HydroFuel/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.serglam.hydrofuel;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "HydroFuel/HydroFuel-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A75058AA213916FA00CA3878 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C5D007F13B901C05CBB5F351 /* Pods-HydroFuel.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = MDWBDEPC5G;
+				INFOPLIST_FILE = HydroFuel/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.serglam.hydrofuel;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "HydroFuel/HydroFuel-Bridging-Header.h";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A7505891213916FA00CA3878 /* Build configuration list for PBXProject "HydroFuel" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A75058A6213916FA00CA3878 /* Debug */,
+				A75058A7213916FA00CA3878 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A75058A8213916FA00CA3878 /* Build configuration list for PBXNativeTarget "HydroFuel" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A75058A9213916FA00CA3878 /* Debug */,
+				A75058AA213916FA00CA3878 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A750588E213916FA00CA3878 /* Project object */;
+}
