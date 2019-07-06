@@ -65,7 +65,6 @@ class HistoryDetail: UIViewController {
     
     @IBAction func btnmenuclick(_ sender: UIButton) {
         
-       
             if appDelegate.backvar == "static"
             {
                 appDelegate.backvar = "static"
@@ -73,13 +72,7 @@ class HistoryDetail: UIViewController {
                 self.navigationController?.popViewController(animated: true)
               
             }
-//            else if appDelegate.backvar == "graph"
-//            {
-//                appDelegate.backvar = "static"
-//                imgback.image = UIImage(named: "backk")
-//                self.navigationController?.popViewController(animated: true)
-//            }
-           
+
             else{
                  appDelegate.backvar = "abc"
                 imgback.image = UIImage(named: "backk")
@@ -88,8 +81,6 @@ class HistoryDetail: UIViewController {
             }
        
     }
-    
-
     
     func searchDataForProgress(strDate : String) {
         
@@ -140,27 +131,6 @@ class HistoryDetail: UIViewController {
 extension HistoryDetail: FSCalendarDelegate {
     
     func calendar(_ calendar: FSCalendar, willDisplay cell: FSCalendarCell, for date: Date, at monthPosition: FSCalendarMonthPosition) {
-        print(date)
-        //        let today = date
-        //        let dateFormattor = DateFormatter()
-        //        dateFormattor.dateFormat = "yyyy-MM-dd"
-        //        let strDate = dateFormattor.string(from: today)
-        //        arrDatesForGraph.add(strDate)
-        //
-        //        print(counter)
-        //        counter += 1
-        //
-        //        if counter == 6 {
-        //
-        //            let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)
-        //            let dateFormattor = DateFormatter()
-        //            dateFormattor.dateFormat = "yyyy-MM-dd"
-        //            let strDate = dateFormattor.string(from: tomorrow!)
-        //            arrDatesForGraph.add(strDate)
-        //            //arrDatesForGraph.removeObject(at: 0)
-        //
-        //            print(arrDatesForGraph)
-        //        }
         
     }
     

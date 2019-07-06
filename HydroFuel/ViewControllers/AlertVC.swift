@@ -12,8 +12,7 @@ import UserNotifications
 import UserNotificationsUI
 import IQKeyboardManagerSwift
 
-class AlertVC: UIViewController,UITextFieldDelegate {
-    
+class AlertVC: UIViewController {
     
     @IBOutlet var lbltimetwo: UILabel!
     @IBOutlet var txtten: UITextField!
@@ -133,9 +132,6 @@ class AlertVC: UIViewController,UITextFieldDelegate {
         lbltimenine.text = arraydate[8] as? String//"4:30 pm"
         lbltimeten.text = arraydate[9] as? String//"5:30 pm"
         //let ans = (1 * 350)
-        
-        
-        // Do any additional setup after loading the view.
     }
     
     
@@ -166,37 +162,36 @@ class AlertVC: UIViewController,UITextFieldDelegate {
         switch alertNumber {
         case 1:
             lbldescription.text = lbl//calculateWaterPerAlert(alertNumber: 1)
-            break
+            
         case 2:
             lbldestwo.text = lbl
-            break
+            
         case 3:
             lbldesthree.text = lbl
-            break
+            
         case 4:
             lbldesfour.text = lbl
-            break
+            
         case 5:
             lbldesfive.text = lbl
-            break
+            
         case 6:
             lbldessix.text = lbl
-            break
+            
         case 7:
             lbldesseven.text = lbl
-            break
+            
         case 8:
             lbldeseight.text = lbl
-            break
+            
         case 9:
             lbldesnine.text = lbl
-            break
+            
         case 10:
             lbldesten.text = lbl
-            break
+            
         default:
-            print("Default")
-            break
+            assertionFailure("Unknown alertNumber \(alertNumber)")
         }
     }
     
@@ -290,31 +285,6 @@ class AlertVC: UIViewController,UITextFieldDelegate {
         }
         
     }
-    //    func setdata()
-    //    {
-    //        if appDelegate.resettime == "change"
-    //        {
-    //            //resettime = "change"
-    //            dateFormatter.dateFormat = "hh:mm a"
-    //            let strDate = dateFormatter.string(from: Date())
-    //            for i in 0..<arraydate.count
-    //            {
-    //                if (dateFormatter.date(from: arraydate[i] as! String))! < (dateFormatter.date(from: strDate))!
-    //                {
-    //                    count += 1
-    //                    badgeCount = count
-    //                    UIApplication.shared.applicationIconBadgeNumber = badgeCount
-    //                }
-    //                print(count)
-    //            }
-    //        }
-    //    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        
-        // Dispose of any resources that can be recreated.
-    }
     
     func permissionForAlert() {
         let options: UNAuthorizationOptions = [.badge, .alert, .sound];
@@ -348,285 +318,7 @@ class AlertVC: UIViewController,UITextFieldDelegate {
         }
     }
     
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        dateFormatter.amSymbol = "AM"
-        dateFormatter.pmSymbol = "PM"
-        //datePickerView.minimumDate = Date()
-        dateFormatter.dateFormat = "hh:mm a"
-        dateFormatter.timeZone = TimeZone(identifier: "UTC")
-        timeTag = textField.tag
-        datePickerView.datePickerMode = .time
-        
-        switch textField.tag {
-        case 0:
-            //txttimer.inputView = datePickerView
-            // let mini = datePickerView.minimumDate as! String
-            
-            print(datePickerView.date)
-            setAlarm(datePickerView.date)
-            lbltime.text = dateFormatter.string(from: datePickerView.date)
-            arraydate.replaceObject(at: textField.tag, with: lbltime.text!)
-            appDelegate.resettime = "change"
-            //datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
-            break
-        case 1:
-            //txttwo.inputView = datePickerView
-            
-            
-            lbltimetwo.text = dateFormatter.string(from: datePickerView.date)
-            arraydate.replaceObject(at: textField.tag, with: lbltimetwo.text!)
-            setAlarm(datePickerView.date)
-            appDelegate.resettime = "change"
-            
-            //datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
-            break
-        case 2:
-            //txtthree.inputView = datePickerView
-            lbltimethree.text = dateFormatter.string(from: datePickerView.date)
-            arraydate.replaceObject(at: textField.tag, with: lbltimethree.text!)
-            setAlarm(datePickerView.date)
-            appDelegate.resettime = "change"
-            //datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
-            break
-        case 3:
-            // txtfour.inputView = datePickerView
-            lbltimefour.text = dateFormatter.string(from: datePickerView.date)
-            arraydate.replaceObject(at: textField.tag, with: lbltimefour.text!)
-            setAlarm(datePickerView.date)
-            appDelegate.resettime = "change"
-            // datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
-            break
-        case 4:
-            //txtfive.inputView = datePickerView
-            lbltimefive.text = dateFormatter.string(from: datePickerView.date)
-            arraydate.replaceObject(at: textField.tag, with: lbltimefive.text!)
-            setAlarm(datePickerView.date)
-            appDelegate.resettime = "change"
-            //datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
-            break
-        case 5:
-            //txtsix.inputView = datePickerView
-            lbltimesix.text = dateFormatter.string(from: datePickerView.date)
-            arraydate.replaceObject(at: textField.tag, with: lbltimesix.text!)
-            setAlarm(datePickerView.date)
-            appDelegate.resettime = "change"
-            //datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
-            break
-        case 6:
-            // txtseven.inputView = datePickerView
-            lbltimeseven.text = dateFormatter.string(from: datePickerView.date)
-            arraydate.replaceObject(at: textField.tag, with: lbltimeseven.text!)
-            setAlarm(datePickerView.date)
-            appDelegate.resettime = "change"
-            //datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
-            break
-        case 7:
-            // txteight.inputView = datePickerView
-            lbltimeeight.text = dateFormatter.string(from: datePickerView.date)
-            arraydate.replaceObject(at: textField.tag, with: lbltimeeight.text!)
-            setAlarm(datePickerView.date)
-            appDelegate.resettime = "change"
-            // datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
-            break
-        case 8:
-            // txtnine.inputView = datePickerView
-            
-            lbltimenine.text = dateFormatter.string(from: datePickerView.date)
-            arraydate.replaceObject(at: textField.tag, with: lbltimenine.text!)
-            setAlarm(datePickerView.date)
-            appDelegate.resettime = "change"
-            // datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
-            break
-        case 9:
-            // txtten.inputView = datePickerView
-            lbltimeten.text = dateFormatter.string(from: datePickerView.date)
-            arraydate.replaceObject(at: textField.tag, with: lbltimeten.text!)
-            setAlarm(datePickerView.date)
-            appDelegate.resettime = "change"
-            // datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
-            break
-        default:
-            print("")
-            break
-        }
-    }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        dateFormatter.amSymbol = "AM"
-        dateFormatter.pmSymbol = "PM"
-        //datePickerView.minimumDate = Date()
-        dateFormatter.dateFormat = "hh:mm a"
-        dateFormatter.timeZone = TimeZone(identifier: "UTC")
-        timeTag = textField.tag
-        datePickerView.datePickerMode = .time
-        
-        switch textField.tag {
-        case 0:
-            
-            
-            txttimer.inputView = datePickerView
-            //print(datePickerView.date)
-            //setAlarm(datePickerView.date)
-            //lbltime.text = dateFormatter.string(from: datePickerView.date)
-            //arraydate.replaceObject(at: textField.tag, with: lbltime.text!)
-            // appDelegate.resettime = "change"
-            datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
-            break
-        case 1:
-            txttwo.inputView = datePickerView
-            //            lbltimetwo.text = dateFormatter.string(from: datePickerView.date)
-            //            arraydate.replaceObject(at: textField.tag, with: lbltimetwo.text!)
-            //            setAlarm(datePickerView.date)
-            // appDelegate.resettime = "change"
-            datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
-            break
-        case 2:
-            txtthree.inputView = datePickerView
-            //            lbltimethree.text = dateFormatter.string(from: datePickerView.date)
-            //            arraydate.replaceObject(at: textField.tag, with: lbltimethree.text!)
-            //            setAlarm(datePickerView.date)
-            //appDelegate.resettime = "change"
-            datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
-            break
-        case 3:
-            txtfour.inputView = datePickerView
-            //            lbltimefour.text = dateFormatter.string(from: datePickerView.date)
-            //            arraydate.replaceObject(at: textField.tag, with: lbltimefour.text!)
-            //            setAlarm(datePickerView.date)
-            //appDelegate.resettime = "change"
-            datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
-            break
-        case 4:
-            txtfive.inputView = datePickerView
-            //            lbltimefive.text = dateFormatter.string(from: datePickerView.date)
-            //            arraydate.replaceObject(at: textField.tag, with: lbltimefive.text!)
-            //            setAlarm(datePickerView.date)
-            //appDelegate.resettime = "change"
-            datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
-            break
-        case 5:
-            txtsix.inputView = datePickerView
-            //            lbltimesix.text = dateFormatter.string(from: datePickerView.date)
-            //            arraydate.replaceObject(at: textField.tag, with: lbltimesix.text!)
-            //            setAlarm(datePickerView.date)
-            // appDelegate.resettime = "change"
-            datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
-            break
-        case 6:
-            txtseven.inputView = datePickerView
-            //appDelegate.resettime = "change"
-            //            lbltimeseven.text = dateFormatter.string(from: datePickerView.date)
-            //            arraydate.replaceObject(at: textField.tag, with: lbltimeseven.text!)
-            //            setAlarm(datePickerView.date)
-            datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
-            break
-        case 7:
-            txteight.inputView = datePickerView
-            //            lbltimeeight.text = dateFormatter.string(from: datePickerView.date)
-            //            arraydate.replaceObject(at: textField.tag, with: lbltimeeight.text!)
-            //            setAlarm(datePickerView.date)
-            //appDelegate.resettime = "change"
-            datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
-            break
-        case 8:
-            txtnine.inputView = datePickerView
-            //            lbltimenine.text = dateFormatter.string(from: datePickerView.date)
-            //            arraydate.replaceObject(at: textField.tag, with: lbltimenine.text!)
-            //            setAlarm(datePickerView.date)
-            // appDelegate.resettime = "change"
-            datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
-            break
-        case 9:
-            txtten.inputView = datePickerView
-            //            lbltimeten.text = dateFormatter.string(from: datePickerView.date)
-            //            arraydate.replaceObject(at: textField.tag, with: txtten.text!)
-            //            setAlarm(datePickerView.date)
-            //appDelegate.resettime = "change"
-            datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
-            break
-        default:
-            print("")
-            break
-        }
-    }
-    
-    
-    
-    @objc func handleDatePicker(sender: UIDatePicker) {
-        dateFormatter.amSymbol = "AM"
-        dateFormatter.pmSymbol = "PM"
-        dateFormatter.dateFormat = "hh:mm a"
-        dateFormatter.timeZone = TimeZone(identifier: "UTC")
-        let dateString4 = dateFormatter.string(from: datePickerView.date)
-        arraydate.replaceObject(at: timeTag, with: dateString4)
-        print(datePickerView.date)
-        if timeTag != 0{
-            let formattor = DateFormatter()
-            formattor.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
-            dateFormatter.timeZone = TimeZone(identifier: "UTC")
-            datePickerView.minimumDate = formattor.date(from: arrSetFixAlarmTime[timeTag-1] as! String)
-        }else{
-            datePickerView.minimumDate = Date()
-        }
-        switch timeTag {
-        case 0:
-            
-            lbltime.text = dateString4
-            setAlarm(datePickerView.date)
-            break
-            
-        case 1:
-            lbltimetwo.text = dateString4
-            setAlarm(datePickerView.date)
-            break
-            
-        case 2:
-            lbltimethree.text = dateString4
-            setAlarm(datePickerView.date)
-            break
-            
-        case 3:
-            lbltimefour.text = dateString4
-            setAlarm(datePickerView.date)
-            break
-            
-        case 4:
-            lbltimefive.text = dateString4
-            setAlarm(datePickerView.date)
-            break
-            
-        case 5:
-            lbltimesix.text = dateString4
-            setAlarm(datePickerView.date)
-            break
-            
-        case 6:
-            lbltimeseven.text = dateString4
-            setAlarm(datePickerView.date)
-            break
-            
-        case 7:
-            lbltimeeight.text = dateString4
-            setAlarm(datePickerView.date)
-            break
-            
-        case 8:
-            lbltimenine.text = dateString4
-            setAlarm(datePickerView.date)
-            break
-            
-        case 9:
-            lbltimeten.text = dateString4
-            setAlarm(datePickerView.date)
-            break
-            
-        default:
-            print("")
-            break
-            
-        }
-        
-    }
     
     @IBAction func btnMenu(_ sender: UIButton) {
         if UserDefaults.standard.value(forKey: mykeys.KPREVIOUSDATE) == nil {
@@ -703,9 +395,165 @@ class AlertVC: UIViewController,UITextFieldDelegate {
             }
         })
         
-        
         UserDefaults.standard.set(arrSetFixAlarmTime, forKey: mykeys.KARRALARMDATETIME)
         UserDefaults.standard.set(arraydate, forKey: mykeys.KARRALARMTIME)
         print("Alarm set...!")
     }
+}
+
+
+// MARK: - UITextFieldDelegate
+extension AlertVC: UITextFieldDelegate {
+    
+    private func configureDatePickerAndFormatter() {
+        dateFormatter.amSymbol = "AM"
+        dateFormatter.pmSymbol = "PM"
+        dateFormatter.dateFormat = "hh:mm a"
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        datePickerView.datePickerMode = .time
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+
+        configureDatePickerAndFormatter()
+        timeTag = textField.tag
+        
+        switch textField.tag {
+            
+        case 0:
+            txttimer.inputView = datePickerView
+            
+        case 1:
+            txttwo.inputView = datePickerView
+            
+        case 2:
+            txtthree.inputView = datePickerView
+            
+        case 3:
+            txtfour.inputView = datePickerView
+            
+        case 4:
+            txtfive.inputView = datePickerView
+            
+        case 5:
+            txtsix.inputView = datePickerView
+            
+        case 6:
+            txtseven.inputView = datePickerView
+            
+        case 7:
+            txteight.inputView = datePickerView
+            
+        case 8:
+            txtnine.inputView = datePickerView
+            
+        case 9:
+            txtten.inputView = datePickerView
+            
+        default:
+            assertionFailure("Unknown text field tag \(textField.tag)")
+        }
+        datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        
+        configureDatePickerAndFormatter()
+        timeTag = textField.tag
+        
+        let timeString = dateFormatter.string(from: datePickerView.date)
+        
+        switch textField.tag {
+            
+        case 0:
+            lbltime.text = dateFormatter.string(from: datePickerView.date)
+            
+        case 1:
+            lbltimetwo.text = dateFormatter.string(from: datePickerView.date)
+            
+        case 2:
+            lbltimethree.text = dateFormatter.string(from: datePickerView.date)
+            
+        case 3:
+            lbltimefour.text = dateFormatter.string(from: datePickerView.date)
+            
+        case 4:
+            lbltimefive.text = dateFormatter.string(from: datePickerView.date)
+            
+        case 5:
+            lbltimesix.text = dateFormatter.string(from: datePickerView.date)
+            
+        case 6:
+            lbltimeseven.text = dateFormatter.string(from: datePickerView.date)
+            
+        case 7:
+            lbltimeeight.text = dateFormatter.string(from: datePickerView.date)
+            
+        case 8:
+            lbltimenine.text = dateFormatter.string(from: datePickerView.date)
+            
+        case 9:
+            lbltimeten.text = dateFormatter.string(from: datePickerView.date)
+            
+        default:
+            assertionFailure("Unknown tag \(textField.tag)")
+        }
+        
+        arraydate.replaceObject(at: textField.tag, with: timeString)
+        setAlarm(datePickerView.date)
+        appDelegate.resettime = "change"
+    }
+    
+    @objc func handleDatePicker(sender: UIDatePicker) {
+        
+        configureDatePickerAndFormatter()
+        let dateString4 = dateFormatter.string(from: datePickerView.date)
+        arraydate.replaceObject(at: timeTag, with: dateString4)
+        print(datePickerView.date)
+        if timeTag != 0{
+            let formattor = DateFormatter()
+            formattor.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+            dateFormatter.timeZone = TimeZone(identifier: "UTC")
+            datePickerView.minimumDate = formattor.date(from: arrSetFixAlarmTime[timeTag-1] as! String)
+        } else {
+            datePickerView.minimumDate = Date()
+        }
+        switch timeTag {
+        case 0:
+            lbltime.text = dateString4
+            
+        case 1:
+            lbltimetwo.text = dateString4
+            
+        case 2:
+            lbltimethree.text = dateString4
+            
+        case 3:
+            lbltimefour.text = dateString4
+            
+        case 4:
+            lbltimefive.text = dateString4
+            
+        case 5:
+            lbltimesix.text = dateString4
+            
+        case 6:
+            lbltimeseven.text = dateString4
+            
+        case 7:
+            lbltimeeight.text = dateString4
+            
+        case 8:
+            lbltimenine.text = dateString4
+            
+        case 9:
+            lbltimeten.text = dateString4
+            
+        default:
+            assertionFailure("Unknown timeTag \(timeTag)")
+        }
+        setAlarm(datePickerView.date)
+        
+    }
+    
 }

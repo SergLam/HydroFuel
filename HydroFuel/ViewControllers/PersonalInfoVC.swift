@@ -10,7 +10,6 @@ import UIKit
 import iShowcase
 import CTShowcase
 
-
 class PersonalInfoVC: UIViewController, iShowcaseDelegate {
     
     var weightCurrentVAle = Int(){
@@ -46,7 +45,7 @@ class PersonalInfoVC: UIViewController, iShowcaseDelegate {
     var dictPrevious = NSMutableDictionary()
     var currentShowcase = 0
     var showcase = iShowcase()
-   var caluculatedWaterLevelValue = 0
+    var caluculatedWaterLevelValue = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,20 +73,22 @@ class PersonalInfoVC: UIViewController, iShowcaseDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        if appDelegate.isToolTipShown == true {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                
-                self.showcase.setupShowcaseForView(self.lblkg)
-                self.showcase.titleLabel.text = "To work out your daily water intake goal please Select Your Weight"
-                self.showcase.titleLabel.font = UIFont (name: "Avenir Medium", size: 17)
-                self.showcase.detailsLabel.text = "      "
-                self.showcase.show()
-               
-            }
+        guard appDelegate.isToolTipShown else {
+            return
         }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            
+            self.showcase.setupShowcaseForView(self.lblkg)
+            self.showcase.titleLabel.text = "To work out your daily water intake goal please Select Your Weight"
+            self.showcase.titleLabel.font = UIFont (name: "Avenir Medium", size: 17)
+            self.showcase.detailsLabel.text = "      "
+            self.showcase.show()
+        }
+        
     }
-  
+    
     @IBAction func btnClickedToChangeDailyTarget(_ sender: UIButton) {
+        
         var currentAmount = Int((lblwaterml.text ?? "0").replacingOccurrences(of: " ml", with: "")) ?? 0
         if sender.tag == 1{
             //Plus
@@ -101,31 +102,30 @@ class PersonalInfoVC: UIViewController, iShowcaseDelegate {
         lblwaterml.text = "\(currentAmount)" + " ml"
         caluculatedWaterLevelValue = currentAmount
         resetValues()
-        
-        
     }
+    
     func resetValues() {
-            let today = Date().toLocalTime()
-            let dateFormattor = DateFormatter()
-            dateFormattor.dateFormat = "yyyy-MM-dd"
-            dateFormattor.timeZone = TimeZone(identifier: "UTC")
-            let strDate = dateFormattor.string(from: today)
-            let strURL = "update HYDROFUELPERSINFO set REMAININGWATERQTY='\(self.num)', TOTALDRINK='\(0)',TOTALATTEMPT='\(0)' where DATE='\(strDate)'"
-            print(strURL)
-            
-            let data = AFSQLWrapper.updateTable(strURL)
-            print(data)
-            if data.Status == 1 {
-                UIApplication.shared.applicationIconBadgeNumber = 0
-                appDelegate.badgeCount = 0
-                UserDefaults.standard.set(200, forKey: mykeys.KLASTWATERCONSTRAINT)
-                UserDefaults.standard.set(1, forKey: mykeys.KBOTTLECOUNT)
-                UserDefaults.standard.set(strDate, forKey: mykeys.KPREVIOUSDATE)
-                UserDefaults.standard.set(0, forKey: mykeys.KLASTCOUNTOFATTEMPT)
-                UserDefaults.standard.set("1000", forKey: mykeys.KLASTLBLWATERLEVAL)
-                appDelegate.resettime = "reset"
-                UserDefaults.standard.set("1000", forKey: "waterlevel")
-            }
+        let today = Date().toLocalTime()
+        let dateFormattor = DateFormatter()
+        dateFormattor.dateFormat = "yyyy-MM-dd"
+        dateFormattor.timeZone = TimeZone(identifier: "UTC")
+        let strDate = dateFormattor.string(from: today)
+        let strURL = "update HYDROFUELPERSINFO set REMAININGWATERQTY='\(self.num)', TOTALDRINK='\(0)',TOTALATTEMPT='\(0)' where DATE='\(strDate)'"
+        print(strURL)
+        
+        let data = AFSQLWrapper.updateTable(strURL)
+        print(data)
+        if data.Status == 1 {
+            UIApplication.shared.applicationIconBadgeNumber = 0
+            appDelegate.badgeCount = 0
+            UserDefaults.standard.set(200, forKey: mykeys.KLASTWATERCONSTRAINT)
+            UserDefaults.standard.set(1, forKey: mykeys.KBOTTLECOUNT)
+            UserDefaults.standard.set(strDate, forKey: mykeys.KPREVIOUSDATE)
+            UserDefaults.standard.set(0, forKey: mykeys.KLASTCOUNTOFATTEMPT)
+            UserDefaults.standard.set("1000", forKey: mykeys.KLASTLBLWATERLEVAL)
+            appDelegate.resettime = "reset"
+            UserDefaults.standard.set("1000", forKey: "waterlevel")
+        }
     }
     func caluculateTotalValue(){
         lblkg.text = "\(weightCurrentVAle) kg"
@@ -229,12 +229,13 @@ class PersonalInfoVC: UIViewController, iShowcaseDelegate {
         }
     }
     
-    func caluCulateGenderValue(genderText:String,genderRation:Double) {
+    func caluCulateGenderValue(genderText:String, genderRation:Double) {
         gander = genderText
         lblwaterml.text =  "\(Int(Double(caluculatedWaterLevelValue) + Double(genderRation) * 1000))"
         num = checkForRoundValue()
         lblwaterml.text = "\(num)"  + " " + "ml"
     }
+    
     func iShowcaseShown(_ showcase: iShowcase) {
         currentShowcase += 1
     }
@@ -249,24 +250,22 @@ class PersonalInfoVC: UIViewController, iShowcaseDelegate {
             self.showcase.detailsLabel.text = "     "
             self.showcase.show()
             
-            break
         case 2:
             self.showcase.setupShowcaseForView(self.imgmedium)
             self.showcase.titleLabel.text = "Select your Activity level"
             self.showcase.titleLabel.font = UIFont (name: "Avenir Medium", size: 17)
             self.showcase.detailsLabel.text = "     "
             self.showcase.show()
-            break
+            
         case 3:
             self.showcase.setupShowcaseForView(self.lblwaterml)
             self.showcase.titleLabel.text = "This is your suggested daily water intake"
             self.showcase.titleLabel.font = UIFont (name: "Avenir Medium", size: 17)
             self.showcase.detailsLabel.text = "      "
             self.showcase.show()
-            break
+            
         default:
-            print("Default")
-            break
+            assertionFailure("Default \(currentShowcase)")
         }
     }
     
@@ -313,7 +312,7 @@ class PersonalInfoVC: UIViewController, iShowcaseDelegate {
             weightCurrentVAle = Int(lblkg.text!)!
             slider.value = Float(weightCurrentVAle)
         }
-         caluculateTotalValue()
+        caluculateTotalValue()
         if appDelegate.menuvar == "hide"
         {
             btnmenu.isHidden = true

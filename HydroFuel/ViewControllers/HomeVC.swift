@@ -13,11 +13,10 @@ import SafariServices
 import iShowcase
 import CTShowcase
 
-class HomeVC: UIViewController, iShowcaseDelegate {
+class HomeVC: UIViewController {
     
     var dictPrevious = NSMutableDictionary()
-    var enableColour = UIColor(hexString: "#4187D2")
-    var disableColour = UIColor(hexString: "#8FC1E5")
+
     @IBOutlet var conBottomWater: NSLayoutConstraint!
     @IBOutlet weak var demowaterlevel: UILabel!
     @IBOutlet weak var lblBottleCount: UILabel!
@@ -213,8 +212,8 @@ class HomeVC: UIViewController, iShowcaseDelegate {
         
         self.navigationController?.navigationBar.isHidden = true
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-        // Do any additional setup after loading the view.
     }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         if appDelegate.isToolTipShown == true {
@@ -239,58 +238,6 @@ class HomeVC: UIViewController, iShowcaseDelegate {
         }
     }
     
-    func iShowcaseShown(_ showcase: iShowcase) {
-        currentShowcase += 1
-    }
-    
-    func iShowcaseDismissed(_ showcase: iShowcase) {
-        switch currentShowcase {
-        case 1:
-            self.showcase.setupShowcaseForView(self.demowaterlevel)
-            self.showcase.titleLabel.text = "Water level 2: This shows you where you need to drink to."
-            self.showcase.titleLabel.font = UIFont (name: "Avenir Medium", size: 17)
-            self.showcase.detailsLabel.text = "      "
-            self.showcase.show()
-           
-            
-            break
-            
-            
-        case 2:
-            self.notificationvideDomo.isHidden = true
-            self.showcase.setupShowcaseForView(self.btnHydrate)
-            self.showcase.titleLabel.text = "Once you’ve drank… Tap ‘Hydrate’ and the water level will update automatically."
-            self.showcase.titleLabel.font = UIFont (name: "Avenir Medium", size: 17)
-            self.showcase.detailsLabel.text = "     "
-            self.showcase.show()
-            
-            break
-        case 3:
-            self.showcase.setupShowcaseForView(self.btnReset)
-            self.showcase.titleLabel.text = "Click here to reset today’s intake."
-            self.showcase.titleLabel.font = UIFont (name: "Avenir Medium", size: 17)
-            self.showcase.detailsLabel.text = "      "
-            self.showcase.show()
-           
-            break
-        case 4:
-            self.showcase.setupShowcaseForView(self.imgBottle)
-            self.showcase.titleLabel.text = "You’re Done! Fill up your bottle and lets get started!"
-            self.showcase.titleLabel.font = UIFont (name: "Avenir Medium", size: 17)
-            self.showcase.detailsLabel.text = "      "
-            self.showcase.show()
-           
-            
-            break
-        default:
-            UserDefaults.standard.set(false, forKey: mykeys.KTOOLTIP)
-            appDelegate.isToolTipShown = false
-            print("Default")
-            checkForAutoNotif()
-            break
-        }
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         notifMarkerView.isHidden = true
@@ -299,11 +246,9 @@ class HomeVC: UIViewController, iShowcaseDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(NotifArrives), name: NSNotification.Name(rawValue: "NotifArrives"), object: nil)
     }
     
-    
-    
     @objc func NotifArrives() {
         if appDelegate.badgeCount != 0 {
-             btnHydrate.backgroundColor = enableColour
+             btnHydrate.backgroundColor = UIColor.enableColour
             var waterAsPerNotif = appDelegate.badgeCount * self.WATERQTYPERATTEMPT
             if waterAsPerNotif == 0 {
                 waterAsPerNotif = self.WATERQTYPERATTEMPT
@@ -397,7 +342,7 @@ class HomeVC: UIViewController, iShowcaseDelegate {
                 }
             }
         }else{
-            btnHydrate.backgroundColor =  disableColour
+            btnHydrate.backgroundColor = UIColor.disableColour
             notifMarkerView.isHidden = true
         }
     }
@@ -659,10 +604,6 @@ class HomeVC: UIViewController, iShowcaseDelegate {
         }
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     
     
     @IBAction func btnmenuclick(_ sender: UIButton) {
@@ -683,7 +624,6 @@ class HomeVC: UIViewController, iShowcaseDelegate {
     }
     
     @IBAction func btnHomeclick(_ sender: UIButton) {
-        
         
     }
     
@@ -858,7 +798,7 @@ class HomeVC: UIViewController, iShowcaseDelegate {
             timer.invalidate()
             btnHydrate.isUserInteractionEnabled = true
             UIApplication.shared.endIgnoringInteractionEvents()
-             btnHydrate.backgroundColor =  disableColour
+             btnHydrate.backgroundColor = UIColor.disableColour
         }
     }
     
@@ -902,7 +842,7 @@ class HomeVC: UIViewController, iShowcaseDelegate {
             
             
             
-        }else{
+        } else {
             print(data.Failure)
         }
         
@@ -1032,7 +972,7 @@ class HomeVC: UIViewController, iShowcaseDelegate {
         
         let data = AFSQLWrapper.updateTable(strURL)
         print(data)
-         btnHydrate.backgroundColor =  disableColour
+         btnHydrate.backgroundColor = UIColor.disableColour
         if data.Status == 1 {
             UIApplication.shared.applicationIconBadgeNumber = 0
             appDelegate.badgeCount = 0
@@ -1056,6 +996,55 @@ class HomeVC: UIViewController, iShowcaseDelegate {
             appDelegate.resettime = "reset"
             UserDefaults.standard.set(lblWaterLavel.text, forKey: "waterlevel")
             searchDataForUpdate()
+            
+        }
+    }
+    
+}
+
+// MARK: - iShowcaseDelegate
+extension HomeVC: iShowcaseDelegate {
+    
+    func iShowcaseShown(_ showcase: iShowcase) {
+        currentShowcase += 1
+    }
+    
+    func iShowcaseDismissed(_ showcase: iShowcase) {
+        
+        self.showcase.titleLabel.font = UIFont.avenirMedium17
+        
+        switch currentShowcase {
+        case 1:
+            self.showcase.setupShowcaseForView(self.demowaterlevel)
+            self.showcase.titleLabel.text = "Water level 2: This shows you where you need to drink to."
+            self.showcase.detailsLabel.text = "      "
+            self.showcase.show()
+            
+        case 2:
+            self.notificationvideDomo.isHidden = true
+            self.showcase.setupShowcaseForView(self.btnHydrate)
+            self.showcase.titleLabel.text = "Once you’ve drank… Tap ‘Hydrate’ and the water level will update automatically."
+            self.showcase.detailsLabel.text = "     "
+            self.showcase.show()
+            
+        case 3:
+            self.showcase.setupShowcaseForView(self.btnReset)
+            self.showcase.titleLabel.text = "Click here to reset today’s intake."
+            self.showcase.detailsLabel.text = "      "
+            self.showcase.show()
+            
+        case 4:
+            self.showcase.setupShowcaseForView(self.imgBottle)
+            self.showcase.titleLabel.text = "You’re Done! Fill up your bottle and lets get started!"
+            self.showcase.detailsLabel.text = "      "
+            self.showcase.show()
+            
+            
+        default:
+            UserDefaults.standard.set(false, forKey: mykeys.KTOOLTIP)
+            appDelegate.isToolTipShown = false
+            print("Default")
+            checkForAutoNotif()
             
         }
     }

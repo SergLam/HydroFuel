@@ -2528,11 +2528,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qYD-Jr-fVy">
                                 <rect key="frame" x="0.0" y="20" width="375" height="64"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="History" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xip-WK-DFu">
-                                        <rect key="frame" x="156" y="17" width="63" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="K2R-9g-DVJ"/>
-                                        </constraints>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="History" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xip-WK-DFu">
+                                        <rect key="frame" x="156" y="18.5" width="63" height="27.5"/>
                                         <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="20"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -2560,8 +2557,10 @@
                                     <constraint firstItem="Xip-WK-DFu" firstAttribute="centerX" secondItem="qYD-Jr-fVy" secondAttribute="centerX" id="BU9-1k-QAS"/>
                                     <constraint firstItem="lWs-Lz-5qe" firstAttribute="centerY" secondItem="vt3-0r-WDR" secondAttribute="centerY" id="D3I-qF-HXO"/>
                                     <constraint firstItem="lWs-Lz-5qe" firstAttribute="centerX" secondItem="vt3-0r-WDR" secondAttribute="centerX" id="D8B-4e-91S"/>
+                                    <constraint firstItem="Xip-WK-DFu" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vt3-0r-WDR" secondAttribute="trailing" constant="10" id="RCA-kZ-MNj"/>
                                     <constraint firstItem="vt3-0r-WDR" firstAttribute="leading" secondItem="qYD-Jr-fVy" secondAttribute="leading" constant="5" id="UV5-O8-9lF"/>
                                     <constraint firstItem="Xip-WK-DFu" firstAttribute="centerY" secondItem="qYD-Jr-fVy" secondAttribute="centerY" id="ccN-EQ-hUH"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Xip-WK-DFu" secondAttribute="trailing" constant="10" id="ciD-oZ-39w"/>
                                     <constraint firstItem="vt3-0r-WDR" firstAttribute="centerY" secondItem="qYD-Jr-fVy" secondAttribute="centerY" id="n6S-bj-qPe"/>
                                     <constraint firstAttribute="height" constant="64" id="nwo-tU-f5x"/>
                                 </constraints>

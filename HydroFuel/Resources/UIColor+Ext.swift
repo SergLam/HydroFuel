@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIColor {
-    
+        
     @nonobjc class var AppThemeColor: UIColor {
         return UIColor(red: 33.0 / 255.0, green: 172.0 / 255.0, blue: 2.0 / 255.0, alpha: 1.0)
     }
@@ -24,6 +24,14 @@ extension UIColor {
     
     @nonobjc class var highlite: UIColor {
         return UIColor(red: 0.0 / 255.0, green: 154.0 / 255.0, blue: 216.0 / 255.0, alpha: 1.0)
+    }
+    
+    @nonobjc class var enableColour: UIColor {
+        return UIColor(red: 65.0 / 255.0, green: 135.0 / 255.0, blue: 210.0 / 255.0, alpha: 1.0)
+    }
+    
+    @nonobjc class var disableColour: UIColor {
+        return UIColor(red: 143.0 / 255.0, green: 193.0 / 255.0, blue: 229.0 / 255.0, alpha: 1.0)
     }
     
 }

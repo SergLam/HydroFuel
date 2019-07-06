@@ -16,10 +16,11 @@
 		6DF23DFD214A6F7A000A7DBB /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DF23DF6214A6F7A000A7DBB /* FMDatabasePool.m */; };
 		6DF23E01214A77E7000A7DBB /* AFSQLWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF23E00214A77E7000A7DBB /* AFSQLWrapper.swift */; };
 		7C59A04622CFF9F4005B474E /* Double+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C59A04522CFF9F4005B474E /* Double+Ext.swift */; };
-		7C59A04822CFFA1A005B474E /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C59A04722CFFA1A005B474E /* UIColor+Ext.swift */; };
 		7C59A04A22CFFA92005B474E /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C59A04922CFFA92005B474E /* UIViewController+Ext.swift */; };
 		7C59A04C22CFFB0E005B474E /* String+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C59A04B22CFFB0E005B474E /* String+Ext.swift */; };
-		7C59A04E22CFFBB2005B474E /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C59A04D22CFFBB2005B474E /* AppColors.swift */; };
+		7C59A04E22CFFBB2005B474E /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C59A04D22CFFBB2005B474E /* UIColor+Ext.swift */; };
+		7C59A05022D06B26005B474E /* UIFont+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C59A04F22D06B26005B474E /* UIFont+Ext.swift */; };
+		7C59A05222D074B4005B474E /* Date+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C59A05122D074B4005B474E /* Date+Ext.swift */; };
 		9DFDF4361D18266FA3A14C03 /* Pods_HydroFuel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD07F55ECDE656312122A720 /* Pods_HydroFuel.framework */; };
 		A72C719C213A5FF2008FB95F /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72C719B213A5FF2008FB95F /* HomeVC.swift */; };
 		A72C719E213A64EC008FB95F /* menucell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72C719D213A64EC008FB95F /* menucell.swift */; };
@@ -58,10 +59,11 @@
 		6DF23DF8214A6F7A000A7DBB /* FMDatabaseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseQueue.h; sourceTree = "<group>"; };
 		6DF23E00214A77E7000A7DBB /* AFSQLWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AFSQLWrapper.swift; sourceTree = "<group>"; };
 		7C59A04522CFF9F4005B474E /* Double+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Ext.swift"; sourceTree = "<group>"; };
-		7C59A04722CFFA1A005B474E /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
 		7C59A04922CFFA92005B474E /* UIViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Ext.swift"; sourceTree = "<group>"; };
 		7C59A04B22CFFB0E005B474E /* String+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ext.swift"; sourceTree = "<group>"; };
-		7C59A04D22CFFBB2005B474E /* AppColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
+		7C59A04D22CFFBB2005B474E /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
+		7C59A04F22D06B26005B474E /* UIFont+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Ext.swift"; sourceTree = "<group>"; };
+		7C59A05122D074B4005B474E /* Date+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ext.swift"; sourceTree = "<group>"; };
 		A72C719B213A5FF2008FB95F /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
 		A72C719D213A64EC008FB95F /* menucell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = menucell.swift; sourceTree = "<group>"; };
 		A72C719F213A776A008FB95F /* HistoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryVC.swift; sourceTree = "<group>"; };
@@ -172,7 +174,8 @@
 			children = (
 				A75058A0213916FA00CA3878 /* Assets.xcassets */,
 				A796B06521391CDF00FD85A1 /* Fonts */,
-				7C59A04D22CFFBB2005B474E /* AppColors.swift */,
+				7C59A04D22CFFBB2005B474E /* UIColor+Ext.swift */,
+				7C59A04F22D06B26005B474E /* UIFont+Ext.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -181,9 +184,9 @@
 			isa = PBXGroup;
 			children = (
 				7C59A04522CFF9F4005B474E /* Double+Ext.swift */,
-				7C59A04722CFFA1A005B474E /* UIColor+Ext.swift */,
 				7C59A04922CFFA92005B474E /* UIViewController+Ext.swift */,
 				7C59A04B22CFFB0E005B474E /* String+Ext.swift */,
+				7C59A05122D074B4005B474E /* Date+Ext.swift */,
 			);
 			path = Extenstions;
 			sourceTree = "<group>";
@@ -378,7 +381,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7C59A04822CFFA1A005B474E /* UIColor+Ext.swift in Sources */,
 				A796B07121397D1E00FD85A1 /* menuVC.swift in Sources */,
 				A7FCF1252141300100325BE9 /* Constants.swift in Sources */,
 				6DF23DFA214A6F7A000A7DBB /* FMResultSet.m in Sources */,
@@ -388,9 +390,11 @@
 				7C59A04C22CFFB0E005B474E /* String+Ext.swift in Sources */,
 				6DF23DF9214A6F7A000A7DBB /* FMDatabaseQueue.m in Sources */,
 				A72C71A4213A7795008FB95F /* MyStatisticVC.swift in Sources */,
+				7C59A05222D074B4005B474E /* Date+Ext.swift in Sources */,
 				6DF23DE9214A6CF6000A7DBB /* Global.swift in Sources */,
 				A72C719E213A64EC008FB95F /* menucell.swift in Sources */,
 				A796B06F213969E700FD85A1 /* AlertVC.swift in Sources */,
+				7C59A05022D06B26005B474E /* UIFont+Ext.swift in Sources */,
 				A72C719C213A5FF2008FB95F /* HomeVC.swift in Sources */,
 				A72C71A0213A776A008FB95F /* HistoryVC.swift in Sources */,
 				7C59A04A22CFFA92005B474E /* UIViewController+Ext.swift in Sources */,
@@ -399,7 +403,7 @@
 				A750589A213916FA00CA3878 /* AppDelegate.swift in Sources */,
 				6DF23DFB214A6F7A000A7DBB /* FMDatabaseAdditions.m in Sources */,
 				6DF23DFC214A6F7A000A7DBB /* FMDatabase.m in Sources */,
-				7C59A04E22CFFBB2005B474E /* AppColors.swift in Sources */,
+				7C59A04E22CFFBB2005B474E /* UIColor+Ext.swift in Sources */,
 				6DF23DFD214A6F7A000A7DBB /* FMDatabasePool.m in Sources */,
 				6DF23E01214A77E7000A7DBB /* AFSQLWrapper.swift in Sources */,
 			);
