@@ -16,7 +16,7 @@ import CTShowcase
 class HomeVC: UIViewController {
     
     var dictPrevious = NSMutableDictionary()
-
+    
     @IBOutlet var conBottomWater: NSLayoutConstraint!
     @IBOutlet weak var demowaterlevel: UILabel!
     @IBOutlet weak var lblBottleCount: UILabel!
@@ -73,12 +73,14 @@ class HomeVC: UIViewController {
     
     var differenceWater = 0.0
     
+    private let dateFormatter = DateFormatter()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         showcase.delegate = self
         
-        let dateFormatter = DateFormatter()
+        
         dateFormatter.dateFormat = "HH:mm"
         strTimes = dateFormatter.string(from: Date())
         print(strTimes)
@@ -225,15 +227,15 @@ class HomeVC: UIViewController {
                 self.showcase.titleLabel.font = UIFont (name: "Avenir Medium", size: 17)
                 self.showcase.detailsLabel.text = "\n"
                 self.showcase.show()
-               
+                
             }
         }else{
             self.notificationvideDomo.isHidden = true
         }
         DispatchQueue.main.asyncAfter(deadline: .now()) {
-             self.notifMarkerView.isHidden = false
-             self.fartuMarkerView.isHidden = false
-           // self.notificationvideDomo.isHidden = false
+            self.notifMarkerView.isHidden = false
+            self.fartuMarkerView.isHidden = false
+            // self.notificationvideDomo.isHidden = false
             self.countWaterLevalAsNotif()
         }
     }
@@ -248,7 +250,7 @@ class HomeVC: UIViewController {
     
     @objc func NotifArrives() {
         if appDelegate.badgeCount != 0 {
-             btnHydrate.backgroundColor = UIColor.enableColour
+            btnHydrate.backgroundColor = UIColor.enableColour
             var waterAsPerNotif = appDelegate.badgeCount * self.WATERQTYPERATTEMPT
             if waterAsPerNotif == 0 {
                 waterAsPerNotif = self.WATERQTYPERATTEMPT
@@ -283,16 +285,16 @@ class HomeVC: UIViewController {
                     
                     
                 }else{
-                conHeightWaterLeval.constant = viewOuter.frame.size.height
-                lblBottleCount.text = "Bottle \(bottleNumberAsNotif) of \(tottleBottle)"
-                lblWaterLavel.text = "1000"
-                let totalWater = 1000 * (bottleNumberAsNotif - 1)
-                print(totalWater)
-                lblNotifWaterLavel.text = "\(1000 - (waterAsPerNotif - totalWater))"
+                    conHeightWaterLeval.constant = viewOuter.frame.size.height
+                    lblBottleCount.text = "Bottle \(bottleNumberAsNotif) of \(tottleBottle)"
+                    lblWaterLavel.text = "1000"
+                    let totalWater = 1000 * (bottleNumberAsNotif - 1)
+                    print(totalWater)
+                    lblNotifWaterLavel.text = "\(1000 - (waterAsPerNotif - totalWater))"
                 }
             }
             
-          
+            
             let needWater = appDelegate.badgeCount * self.WATERQTYPERATTEMPT
             let leval = Double(needWater).truncatingRemainder(dividingBy: 1000.0)
             print(leval)
@@ -523,23 +525,23 @@ class HomeVC: UIViewController {
                 if appDelegate.badgeCount < 1 {
                     notifMarkerView.isHidden = true
                 }
-            /*   if appDelegate.badgeCount > 0 {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        let needWater = self.appDelegate.badgeCount * self.WATERQTYPERATTEMPT
-                        let leval = Double(needWater).truncatingRemainder(dividingBy: 1000.0)
-                        print(leval)
-                        let outerViewHeight = Int(self.viewOuter.frame.size.height)
-                        let decreasingHeightPerAttempt = Double((Double(outerViewHeight) * leval)/1000)
-                        UIView.animate(withDuration: 1.0) {
-                            self.conTopNotifMarker.constant = CGFloat(decreasingHeightPerAttempt) - 15
-                            self.view.layoutIfNeeded()
-                            self.view.layer.removeAllAnimations()
-                        }
-                        self.notifMarkerView.isHidden = false
-                    }
-                }else{
-                    notifMarkerView.isHidden = true
-                }*/
+                /*   if appDelegate.badgeCount > 0 {
+                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                 let needWater = self.appDelegate.badgeCount * self.WATERQTYPERATTEMPT
+                 let leval = Double(needWater).truncatingRemainder(dividingBy: 1000.0)
+                 print(leval)
+                 let outerViewHeight = Int(self.viewOuter.frame.size.height)
+                 let decreasingHeightPerAttempt = Double((Double(outerViewHeight) * leval)/1000)
+                 UIView.animate(withDuration: 1.0) {
+                 self.conTopNotifMarker.constant = CGFloat(decreasingHeightPerAttempt) - 15
+                 self.view.layoutIfNeeded()
+                 self.view.layer.removeAllAnimations()
+                 }
+                 self.notifMarkerView.isHidden = false
+                 }
+                 }else{
+                 notifMarkerView.isHidden = true
+                 }*/
             }else{
                 for i in 0..<arrSetFixAlarmTime.count {
                     let formattor = DateFormatter()
@@ -649,41 +651,35 @@ class HomeVC: UIViewController {
     
     
     @IBAction func btnReseatClick(_ sender: UIButton) {
-        let alert = UIAlertController(title: "Are you sure to reset today log?", message: "", preferredStyle: .alert)
         
-        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
-            print("yes")
-            self.appDelegate.isAfterReset = true
-            self.resetData()
-        }))
-        
-        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-        self.present(alert, animated: true)
-        
+        AlertPresenter.showResetAlert(at: self) { [weak self] in
+            self?.resetData()
+        }        
     }
     
     
     @IBAction func btnHydrateClick(_ sender: UIButton) {
-        if appDelegate.badgeCount != 0 {
-            UIApplication.shared.beginIgnoringInteractionEvents()
-            btnHydrate.isUserInteractionEnabled = false
-            let totalDrink = appDelegate.badgeCount - lastCountOfAttempt
-            print("totalDrink--",totalDrink)
-            let remainingWaterQty = self.REMAININGWATERQTY - (totalDrink*WATERQTYPERATTEMPT)
-            print("remainingWaterQty--",remainingWaterQty)
-            self.lblWaterToDrink.text = "\(remainingWaterQty)ml"
-            self.conHeightWaterLeval.constant = UserDefaults.standard.value(forKey: mykeys.KLASTWATERCONSTRAINT) as! CGFloat
-            UserDefaults.standard.set(nil, forKey: "waterlevel")
-            
-            self.lblBottleCount.text = "Bottle \(self.bottleCount) of \(tottleBottle)"
-            
-            print(String(describing: lblBottleCount.text))
-            self.lblWaterLavel.text = UserDefaults.standard.value(forKey: mykeys.KLASTLBLWATERLEVAL) as? String
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.changeStatus()
-            }
-            timer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector:#selector(changeStatus), userInfo: nil, repeats: true)
+        guard appDelegate.badgeCount > 0 else {
+            return
         }
+        UIApplication.shared.beginIgnoringInteractionEvents()
+        btnHydrate.isUserInteractionEnabled = false
+        let totalDrink = appDelegate.badgeCount - lastCountOfAttempt
+        print("totalDrink--",totalDrink)
+        let remainingWaterQty = self.REMAININGWATERQTY - (totalDrink*WATERQTYPERATTEMPT)
+        print("remainingWaterQty--",remainingWaterQty)
+        self.lblWaterToDrink.text = "\(remainingWaterQty)ml"
+        self.conHeightWaterLeval.constant = UserDefaults.standard.value(forKey: mykeys.KLASTWATERCONSTRAINT) as! CGFloat
+        UserDefaults.standard.set(nil, forKey: "waterlevel")
+        
+        self.lblBottleCount.text = "Bottle \(self.bottleCount) of \(tottleBottle)"
+        
+        print(String(describing: lblBottleCount.text))
+        self.lblWaterLavel.text = UserDefaults.standard.value(forKey: mykeys.KLASTLBLWATERLEVAL) as? String
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.changeStatus()
+        }
+        timer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector:#selector(changeStatus), userInfo: nil, repeats: true)
     }
     
     @objc func changeStatus() {
@@ -724,14 +720,14 @@ class HomeVC: UIViewController {
                         self.conHeightWaterLeval.constant = lastBottleWater
                         self.lblWaterLavel.text = "\(Int(leval1) - leval)"
                     }else{
-                    self.lblWaterLavel.text = "1000"
-                    self.conHeightWaterLeval.constant = self.viewOuter.frame.size.height
+                        self.lblWaterLavel.text = "1000"
+                        self.conHeightWaterLeval.constant = self.viewOuter.frame.size.height
                     }
                 })
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
                     UIView.animate(withDuration: 1.0) {
                         if lastBottle == self.bottleCount + 1 {
-                        self.conHeightWaterLeval.constant = CGFloat(Double(lastBottleWater - (CGFloat(decreasingHeightPerAttempt) - heightConstant)).rounded(toPlaces: 6)) - CGFloat(self.differenceWater)
+                            self.conHeightWaterLeval.constant = CGFloat(Double(lastBottleWater - (CGFloat(decreasingHeightPerAttempt) - heightConstant)).rounded(toPlaces: 6)) - CGFloat(self.differenceWater)
                             let leval1 = Double(self.WATERQTY).truncatingRemainder(dividingBy: 1000.0)
                             print(leval1)
                             let valuelevel = "\((1000 - Int(leval1)) - leval)"
@@ -765,18 +761,18 @@ class HomeVC: UIViewController {
             }else{
                 
                 UIView.animate(withDuration: 1.0) {
-
-                        self.conHeightWaterLeval.constant = CGFloat(Double(self.conHeightWaterLeval.constant - CGFloat(decreasingHeightPerAttempt)).rounded(toPlaces: 6)) - CGFloat(self.differenceWater)
+                    
+                    self.conHeightWaterLeval.constant = CGFloat(Double(self.conHeightWaterLeval.constant - CGFloat(decreasingHeightPerAttempt)).rounded(toPlaces: 6)) - CGFloat(self.differenceWater)
                     let valuelevel = "\(Int(self.lblWaterLavel.text!)! - self.WATERQTYPERATTEMPT)"
                     self.lblWaterLavel.text = valuelevel
                     if self.counter == 10 {
                         self.conHeightWaterLeval.constant = 0
                         self.lblWaterLavel.text = "0"
                     }
-                        self.view.layoutIfNeeded()
-                        self.view.layer.removeAllAnimations()
+                    self.view.layoutIfNeeded()
+                    self.view.layer.removeAllAnimations()
                     
-                        UserDefaults.standard.set(self.conHeightWaterLeval.constant, forKey: mykeys.KPREVWATERLEVAL)
+                    UserDefaults.standard.set(self.conHeightWaterLeval.constant, forKey: mykeys.KPREVWATERLEVAL)
                 }
             }
             
@@ -798,7 +794,7 @@ class HomeVC: UIViewController {
             timer.invalidate()
             btnHydrate.isUserInteractionEnabled = true
             UIApplication.shared.endIgnoringInteractionEvents()
-             btnHydrate.backgroundColor = UIColor.disableColour
+            btnHydrate.backgroundColor = UIColor.disableColour
         }
     }
     
@@ -814,9 +810,9 @@ class HomeVC: UIViewController {
         
         let data = AFSQLWrapper.selectIdDataTable(strURL)
         print(data)
-        if data.Status == 1 {
+        if data.status == 1 {
             
-            print(data.Success)
+            print(data.success)
             let arrLocalData = data.arrData
             dictPrevious = (arrLocalData[0] as! NSDictionary).mutableCopy() as! NSMutableDictionary
             
@@ -825,7 +821,7 @@ class HomeVC: UIViewController {
             self.GENDER = dictPrevious.value(forKey: "GENDER") as! String
             self.ACTIVITYLAVEL = dictPrevious.value(forKey: "ACTIVITYLAVEL") as! String
             self.WATERQTY = dictPrevious.value(forKey: "WATERQTY") as! Int
-           
+            
             let floatData = Double(self.WATERQTY)/1000.0
             let intData = Double(self.WATERQTY/1000)
             if intData < floatData {
@@ -843,7 +839,7 @@ class HomeVC: UIViewController {
             
             
         } else {
-            print(data.Failure)
+            print(data.failure)
         }
         
     }
@@ -859,24 +855,20 @@ class HomeVC: UIViewController {
         
         let data = AFSQLWrapper.updateTable(strURL)
         print(data)
-        if data.Status == 1 {
+        if data.status == 1 {
             searchDataForUpdate()
         }
     }
     
     
     func createDB() -> Void {
+        
         let today = Date().toLocalTime()
-        let dateFormattor = DateFormatter()
-        dateFormattor.dateFormat = "yyyy-MM-dd"
-        dateFormattor.timeZone = TimeZone(identifier: "UTC")
-        let strDate = dateFormattor.string(from: today)
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        let strDate = dateFormatter.string(from: today)
         
-        let strURL = "CREATE TABLE IF NOT EXISTS HYDROFUELPERSINFO (ID INTEGER PRIMARY KEY AUTOINCREMENT, DATE TEXT, WEIGHT INTEGER, GENDER TEXT, ACTIVITYLAVEL TEXT, WATERQTY INTEGER, REMAININGWATERQTY INTEGER, TOTALDRINK INTEGER, TOTALATTEMPT INTEGER, WATERQTYPERATTEMPT INTEGER)"
-        print(strURL)
-        
-        let data = AFSQLWrapper.createTable(strURL)
-        print(data)
+        DBManager.shared.createDB()
         
         if UserDefaults.standard.value(forKey: mykeys.KPREVIOUSDATE) != nil{
             let previousDate = UserDefaults.standard.value(forKey: mykeys.KPREVIOUSDATE) as? String
@@ -892,50 +884,47 @@ class HomeVC: UIViewController {
     
     func insertData(DATE: String, WEIGHT: Int, GENDER: String, ACTIVITYLAVEL: String, WATERQTY: Int, REMAININGWATERQTY: Int, TOTALDRINK: Int, TOTALATTEMPT: Int, WATERQTYPERATTEMPT: Int) -> Void {
         
-        let strURL = "INSERT INTO HYDROFUELPERSINFO (DATE, WEIGHT, GENDER, ACTIVITYLAVEL, WATERQTY, REMAININGWATERQTY, TOTALDRINK, TOTALATTEMPT, WATERQTYPERATTEMPT) VALUES ('\(DATE)', '\(WEIGHT)', '\(GENDER)', '\(ACTIVITYLAVEL)', '\(WATERQTY)', '\(REMAININGWATERQTY)', '\(TOTALDRINK)', '\(TOTALATTEMPT)', '\(WATERQTYPERATTEMPT)')"
+        let result = DBManager.shared.insertData(date: DATE, weight: WEIGHT, gender: ACTIVITYLAVEL, activityLevel: ACTIVITYLAVEL, waterQty: WATERQTY, remainingWaterQty: REMAININGWATERQTY, totalDrink: TOTALDRINK, totalAttempt: TOTALATTEMPT, waterQtyPerAttempt: WATERQTYPERATTEMPT)
         
-        print(strURL)
-        
-        let data = AFSQLWrapper.insertTable(strURL)
-        print(data)
-        if data.Status == 1{
-            UIApplication.shared.applicationIconBadgeNumber = 0
-            appDelegate.badgeCount = 0
-            lastCountOfAttempt = 0
-            bottleCount = 1
-            prevWaterLeval = viewOuter.frame.size.height
-            conHeightWaterLeval.constant = viewOuter.frame.size.height
-            UserDefaults.standard.set(DATE, forKey: mykeys.KPREVIOUSDATE)
-            UserDefaults.standard.set(conHeightWaterLeval.constant, forKey: mykeys.KLASTWATERCONSTRAINT)
-            UserDefaults.standard.set(1, forKey: mykeys.KBOTTLECOUNT)
-            UserDefaults.standard.set(0, forKey: mykeys.KLASTCOUNTOFATTEMPT)
-            UserDefaults.standard.set(Double(viewOuter.frame.size.height).rounded(toPlaces: 6), forKey: mykeys.KPREVWATERLEVAL)
-            UserDefaults.standard.set("1000", forKey: mykeys.KLASTLBLWATERLEVAL)
-            lblBottleCount.text = "Bottle \(bottleCount) of \(tottleBottle)"
-            notifMarkerView.isHidden = true
-            lblWaterLavel.text = "\(1000)"
-            
-            lblNotifWaterLavel.text = ""
-            conTopNotifMarker.constant = -15
-            appDelegate.resettime = "reset"
-            UserDefaults.standard.set(lblWaterLavel.text, forKey: "waterlevel")
-            searchDataForUpdate()
-            
+        guard result.status == 1 else {
+            assertionFailure("\(result.failure)")
+            return
         }
+        UIApplication.shared.applicationIconBadgeNumber = 0
+        appDelegate.badgeCount = 0
+        lastCountOfAttempt = 0
+        bottleCount = 1
+        prevWaterLeval = viewOuter.frame.size.height
+        conHeightWaterLeval.constant = viewOuter.frame.size.height
+        UserDefaults.standard.set(DATE, forKey: mykeys.KPREVIOUSDATE)
+        UserDefaults.standard.set(conHeightWaterLeval.constant, forKey: mykeys.KLASTWATERCONSTRAINT)
+        UserDefaults.standard.set(1, forKey: mykeys.KBOTTLECOUNT)
+        UserDefaults.standard.set(0, forKey: mykeys.KLASTCOUNTOFATTEMPT)
+        UserDefaults.standard.set(Double(viewOuter.frame.size.height).rounded(toPlaces: 6), forKey: mykeys.KPREVWATERLEVAL)
+        UserDefaults.standard.set("1000", forKey: mykeys.KLASTLBLWATERLEVAL)
+        lblBottleCount.text = "Bottle \(bottleCount) of \(tottleBottle)"
+        notifMarkerView.isHidden = true
+        lblWaterLavel.text = "\(1000)"
+        
+        lblNotifWaterLavel.text = ""
+        conTopNotifMarker.constant = -15
+        appDelegate.resettime = "reset"
+        UserDefaults.standard.set(lblWaterLavel.text, forKey: "waterlevel")
+        searchDataForUpdate()
+        
+        
     }
     
     func showData() {
-        let today = Date().toLocalTime()
-        let dateFormattor = DateFormatter()
-        dateFormattor.dateFormat = "yyyy-MM-dd"
-        dateFormattor.timeZone = TimeZone(identifier: "UTC")
-        let strDate = dateFormattor.string(from: today)
         
-        let strURL = "SELECT * FROM HYDROFUELPERSINFO"
-        print(strURL)
-        let data = AFSQLWrapper.selectTable(strURL)
-        print(data)
-        if data.Status == 1 {
+        let today = Date().toLocalTime()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        let strDate = dateFormatter.string(from: today)
+                
+        let data = DBManager.shared.selectAll()
+        
+        if data.status == 1 {
             let arrLocalData = data.arrData
             dictPrevious = (arrLocalData[arrLocalData.count-1] as! NSDictionary).mutableCopy() as! NSMutableDictionary
             
@@ -972,8 +961,8 @@ class HomeVC: UIViewController {
         
         let data = AFSQLWrapper.updateTable(strURL)
         print(data)
-         btnHydrate.backgroundColor = UIColor.disableColour
-        if data.Status == 1 {
+        btnHydrate.backgroundColor = UIColor.disableColour
+        if data.status == 1 {
             UIApplication.shared.applicationIconBadgeNumber = 0
             appDelegate.badgeCount = 0
             lastCountOfAttempt = 0

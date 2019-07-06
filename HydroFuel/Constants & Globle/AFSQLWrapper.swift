@@ -1,9 +1,13 @@
 
 import Foundation
+
+typealias DBOperationResult = (success: String, failure: String, status: Int)
+typealias DBRecordOperationResult = (arrData: NSMutableArray, success: String, failure: String, status: Int)
+
 class AFSQLWrapper: NSObject {
-    
+
 //Class For Create Table And Create Database
-    class func createTable(_ strURL: String)  -> (Success: String, Failure: String, Status: Int) {
+    class func createTable(_ strURL: String)  -> DBOperationResult {
         var databasePath = String()
         let filemgr = FileManager.default
         var Success = String()
@@ -47,7 +51,7 @@ class AFSQLWrapper: NSObject {
     }
 
 //Class For Insert Data into Table
-    class func insertTable(_ strURL: String)  -> (Success: String, Failure: String, Status: Int) {
+    class func insertTable(_ strURL: String)  -> DBOperationResult {
         var databasePath = String()
         var Success = String()
         var Failure = String()
@@ -83,7 +87,7 @@ class AFSQLWrapper: NSObject {
     }
 
 //Class For Select Data from table
-    class func selectTable(_ strURL: String)  -> (arrData: NSMutableArray, Success: String, Failure: String, Status: Int) {
+    class func selectTable(_ strURL: String)  -> DBRecordOperationResult {
         
         let arrData = NSMutableArray()
         
@@ -128,7 +132,7 @@ class AFSQLWrapper: NSObject {
     }
     
 //Class For Select Data For Id from table
-    class func selectIdDataTable(_ strURL: String)  -> (arrData: NSMutableArray, Success: String, Failure: String, Status: Int) {
+    class func selectIdDataTable(_ strURL: String)  -> DBRecordOperationResult {
         
         let arrData = NSMutableArray()
         
@@ -170,7 +174,7 @@ class AFSQLWrapper: NSObject {
     }
 
 //Class For Update Data into Table
-    class func updateTable(_ strURL: String)  -> (Success: String, Failure: String, Status: Int) {
+    class func updateTable(_ strURL: String)  -> DBOperationResult {
         var databasePath = String()
         var Success = String()
         var Failure = String()
@@ -207,7 +211,7 @@ class AFSQLWrapper: NSObject {
     }
 
 //Class For Delete Data For Id from table
-    class func deleteDataTable(_ strURL: String)  -> (arrData: NSMutableArray, Success: String, Failure: String, Status: Int) {
+    class func deleteDataTable(_ strURL: String)  -> DBRecordOperationResult {
         
         let arrData = NSMutableArray()
         

@@ -12,6 +12,7 @@ import IQKeyboardManagerSwift
 import UserNotifications
 import UserNotificationsUI
 
+typealias VoidClosure = () -> ()
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -128,7 +129,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
-        print("ForeGround")
+        
         badgeCount = UIApplication.shared.applicationIconBadgeNumber
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "NotifArrives"), object: nil)
     }

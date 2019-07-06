@@ -10,7 +10,7 @@ import UIKit
 import iShowcase
 import CTShowcase
 
-class PersonalInfoVC: UIViewController, iShowcaseDelegate {
+class PersonalInfoVC: UIViewController {
     
     var weightCurrentVAle = Int(){
         didSet{
@@ -47,9 +47,12 @@ class PersonalInfoVC: UIViewController, iShowcaseDelegate {
     var showcase = iShowcase()
     var caluculatedWaterLevelValue = 0
     
+    private let dateFormatter = DateFormatter()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        createDB()
+        DBManager.shared.createDB()
+        
         showcase.delegate = self
         let panGesture = UIPanGestureRecognizer(target: self, action:  #selector(panGesture(gesture:)))
         self.slider.addGestureRecognizer(panGesture)
@@ -68,7 +71,6 @@ class PersonalInfoVC: UIViewController, iShowcaseDelegate {
         btnPlus.clipsToBounds = true
         btnMinus.layer.cornerRadius = btnMinus.frame.height / 2
         btnMinus.clipsToBounds = true
-        // Do any additional setup after loading the view.
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -115,7 +117,7 @@ class PersonalInfoVC: UIViewController, iShowcaseDelegate {
         
         let data = AFSQLWrapper.updateTable(strURL)
         print(data)
-        if data.Status == 1 {
+        if data.status == 1 {
             UIApplication.shared.applicationIconBadgeNumber = 0
             appDelegate.badgeCount = 0
             UserDefaults.standard.set(200, forKey: mykeys.KLASTWATERCONSTRAINT)
@@ -127,6 +129,7 @@ class PersonalInfoVC: UIViewController, iShowcaseDelegate {
             UserDefaults.standard.set("1000", forKey: "waterlevel")
         }
     }
+    
     func caluculateTotalValue(){
         lblkg.text = "\(weightCurrentVAle) kg"
         caluculatedWaterLevelValue = (Int(Double(weightCurrentVAle) * Double(0.033) * 1000))
@@ -236,40 +239,7 @@ class PersonalInfoVC: UIViewController, iShowcaseDelegate {
         lblwaterml.text = "\(num)"  + " " + "ml"
     }
     
-    func iShowcaseShown(_ showcase: iShowcase) {
-        currentShowcase += 1
-    }
-    
-    func iShowcaseDismissed(_ showcase: iShowcase) {
-        switch currentShowcase {
-        case 1:
-            self.showcase.setupShowcaseForView(self.btnmale)
-            self.showcase.titleLabel.text = "Select your Gender"
-            self.showcase.titleLabel.font = UIFont (name: "Avenir Medium", size: 17)
-            self.showcase.titleLabel.setNeedsDisplay(CGRect(x: 50, y: 50, width: 0, height: 0))
-            self.showcase.detailsLabel.text = "     "
-            self.showcase.show()
-            
-        case 2:
-            self.showcase.setupShowcaseForView(self.imgmedium)
-            self.showcase.titleLabel.text = "Select your Activity level"
-            self.showcase.titleLabel.font = UIFont (name: "Avenir Medium", size: 17)
-            self.showcase.detailsLabel.text = "     "
-            self.showcase.show()
-            
-        case 3:
-            self.showcase.setupShowcaseForView(self.lblwaterml)
-            self.showcase.titleLabel.text = "This is your suggested daily water intake"
-            self.showcase.titleLabel.font = UIFont (name: "Avenir Medium", size: 17)
-            self.showcase.detailsLabel.text = "      "
-            self.showcase.show()
-            
-        default:
-            assertionFailure("Default \(currentShowcase)")
-        }
-    }
-    
-    @objc func panGesture(gesture:UIPanGestureRecognizer){
+    @objc func panGesture(gesture: UIPanGestureRecognizer) {
         let currentPoint = gesture.location(in: slider)
         let percentage = currentPoint.x/slider.bounds.size.width;
         let delta = Float(percentage) *  (slider.maximumValue - slider.minimumValue)
@@ -283,12 +253,13 @@ class PersonalInfoVC: UIViewController, iShowcaseDelegate {
             weightCurrentVAle = Int(slider.value)
         }
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         if UserDefaults.standard.value(forKey: "fill") != nil{
             searchDataForUpdate()
         }else{
             let tempDate = "2000-12-31"
-            self.firstInsertData(DATE: tempDate, WEIGHT: 0, GENDER: "Male", ACTIVITYLAVEL: "Low", WATERQTY: 0, REMAININGWATERQTY: 0, TOTALDRINK: 0, TOTALATTEMPT: 0, WATERQTYPERATTEMPT: 0)
+            DBManager.shared.firstInsertData(date: tempDate, weight: 0, gender: "Male", activityLevel: "Low", waterQty: 0, remainingWaterQty: 0, totalDrink: 0, totalAttempt: 0, waterQtyPerAttempt: 0)
         }
         if UserDefaults.standard.value(forKey: "gander") != nil {
             
@@ -373,16 +344,15 @@ class PersonalInfoVC: UIViewController, iShowcaseDelegate {
         activity = "low"
         caluculateTotalValue()
     }
+    
     @IBAction func btndone(_ sender: UIButton) {
         if validation(){
             let alertController = UIAlertController(title: "", message: "Details Successfully Updated", preferredStyle: UIAlertController.Style.alert)
             
-            let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default)
-            {
-                (result : UIAlertAction) -> Void in
-                var lblanss = Int()
-                lblanss = (self.num / 10)
-                print(lblanss)
+            let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default) { [unowned self] (result) -> Void in
+                
+                let lblanss: Int = self.num / 10
+                
                 UserDefaults.standard.set(lblanss, forKey: "lblml")
                 UserDefaults.standard.set(self.gander, forKey: "gander")
                 UserDefaults.standard.set(self.activity, forKey: "activity")
@@ -392,10 +362,10 @@ class PersonalInfoVC: UIViewController, iShowcaseDelegate {
                 if self.dictPrevious.count == 0{
                     
                     let today = Date().toLocalTime()
-                    let dateFormattor = DateFormatter()
-                    dateFormattor.dateFormat = "yyyy-MM-dd"
-                    dateFormattor.timeZone = TimeZone(identifier: "UTC")
-                    let strDate = dateFormattor.string(from: today)
+                    
+                    self.dateFormatter.dateFormat = "yyyy-MM-dd"
+                    self.dateFormatter.timeZone = TimeZone(identifier: "UTC")
+                    let strDate = self.dateFormatter.string(from: today)
                     
                     self.insertData(DATE: strDate, WEIGHT: self.weightCurrentVAle, GENDER: self.gander, ACTIVITYLAVEL: self.activity, WATERQTY: self.num, REMAININGWATERQTY: self.num, TOTALDRINK: 0, TOTALATTEMPT: 0, WATERQTYPERATTEMPT: lblanss)
                 }else{
@@ -436,84 +406,49 @@ class PersonalInfoVC: UIViewController, iShowcaseDelegate {
     
     //MARK:- SQL Database Handler
     
-    func createDB() -> Void {
-        //let strURL = "CREATE TABLE IF NOT EXISTS HYDROFUELPERSINFO (ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, CITY TEXT)"
-        let strURL = "CREATE TABLE IF NOT EXISTS HYDROFUELPERSINFO (ID INTEGER PRIMARY KEY AUTOINCREMENT, DATE TEXT, WEIGHT INTEGER, GENDER TEXT, ACTIVITYLAVEL TEXT, WATERQTY INTEGER, REMAININGWATERQTY INTEGER, TOTALDRINK INTEGER, TOTALATTEMPT INTEGER, WATERQTYPERATTEMPT INTEGER)"
-        print(strURL)
-        
-        let data = AFSQLWrapper.createTable(strURL)
-        print(data)
-    }
-    
-    
-    
     func insertData(DATE: String, WEIGHT: Int, GENDER: String, ACTIVITYLAVEL: String, WATERQTY: Int, REMAININGWATERQTY: Int, TOTALDRINK: Int, TOTALATTEMPT: Int, WATERQTYPERATTEMPT: Int) -> Void {
-        //let strURL = "INSERT INTO DEMOSQL (NAME, CITY) VALUES ('\(myName)', '\(myCity)')"
-        let strURL = "INSERT INTO HYDROFUELPERSINFO (DATE, WEIGHT, GENDER, ACTIVITYLAVEL, WATERQTY, REMAININGWATERQTY, TOTALDRINK, TOTALATTEMPT, WATERQTYPERATTEMPT) VALUES ('\(DATE)', '\(WEIGHT)', '\(GENDER)', '\(ACTIVITYLAVEL)', '\(WATERQTY)', '\(REMAININGWATERQTY)', '\(TOTALDRINK)', '\(TOTALATTEMPT)', '\(WATERQTYPERATTEMPT)')"
-        print(strURL)
         
-        let data = AFSQLWrapper.insertTable(strURL)
-        print(data)
-        if data.Status == 1{
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc = storyboard.instantiateViewController(withIdentifier: "AlertVCNew") as? AlertVCNew
-            self.appDelegate.resettime = "reset"
-            self.navigationController!.pushViewController(vc!, animated: true)
-        }
-    }
-    
-    func firstInsertData(DATE: String, WEIGHT: Int, GENDER: String, ACTIVITYLAVEL: String, WATERQTY: Int, REMAININGWATERQTY: Int, TOTALDRINK: Int, TOTALATTEMPT: Int, WATERQTYPERATTEMPT: Int) -> Void {
-        //let strURL = "INSERT INTO DEMOSQL (NAME, CITY) VALUES ('\(myName)', '\(myCity)')"
-        let strURL = "INSERT INTO HYDROFUELPERSINFO (DATE, WEIGHT, GENDER, ACTIVITYLAVEL, WATERQTY, REMAININGWATERQTY, TOTALDRINK, TOTALATTEMPT, WATERQTYPERATTEMPT) VALUES ('\(DATE)', '\(WEIGHT)', '\(GENDER)', '\(ACTIVITYLAVEL)', '\(WATERQTY)', '\(REMAININGWATERQTY)', '\(TOTALDRINK)', '\(TOTALATTEMPT)', '\(WATERQTYPERATTEMPT)')"
-        print(strURL)
+        let result = DBManager.shared.insertData(date: DATE, weight: WEIGHT, gender: GENDER, activityLevel: ACTIVITYLAVEL, waterQty: WATERQTY, remainingWaterQty: REMAININGWATERQTY, totalDrink: TOTALDRINK, totalAttempt: TOTALATTEMPT, waterQtyPerAttempt: WATERQTYPERATTEMPT)
         
-        let data = AFSQLWrapper.insertTable(strURL)
-        print(data)
-        if data.Status == 1{
-            print("Success")
-            
+        guard result.status == 1 else {
+            assertionFailure("\(result.failure)")
+            return
         }
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "AlertVCNew") as? AlertVCNew
+        self.appDelegate.resettime = "reset"
+        self.navigationController!.pushViewController(vc!, animated: true)
+        
     }
     
     func updateData(WEIGHT: Int, GENDER: String, ACTIVITYLAVEL: String, WATERQTY: Int, REMAININGWATERQTY: Int, TOTALDRINK: Int, WATERQTYPERATTEMPT: Int){
-        let today = Date()
-        let dateFormattor = DateFormatter()
-        dateFormattor.dateFormat = "yyyy-MM-dd"
-        dateFormattor.timeZone = TimeZone(identifier: "UTC")
-        let strDate = dateFormattor.string(from: today)
-        let strURL = "update HYDROFUELPERSINFO set WEIGHT='\(WEIGHT)', GENDER='\(GENDER)', ACTIVITYLAVEL='\(ACTIVITYLAVEL)', WATERQTY='\(WATERQTY)', REMAININGWATERQTY='\(REMAININGWATERQTY)', TOTALDRINK='\(TOTALDRINK)', WATERQTYPERATTEMPT='\(WATERQTYPERATTEMPT)' where DATE='\(strDate)'"
-        //  print(strURL)id
+
+        let result = DBManager.shared.updateData(weight: WEIGHT, gender: GENDER, activityLevel: ACTIVITYLAVEL, waterQty: WATERQTY, remainingWaterQty: REMAININGWATERQTY, totalDrink: TOTALDRINK, waterQtyPerAttempt: WATERQTYPERATTEMPT)
         
-        let data = AFSQLWrapper.updateTable(strURL)
-        print(data)
-        if data.Status == 1 {
-            
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc = storyboard.instantiateViewController(withIdentifier: "HomeVC") as? HomeVC
-            self.navigationController!.pushViewController(vc!, animated: true)
+        guard result.status == 1 else {
+            assertionFailure("\(result.failure)")
+            return
         }
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "HomeVC") as? HomeVC
+        self.navigationController!.pushViewController(vc!, animated: true)
     }
     
     func searchDataForUpdate() {
+        
         let today = Date()
-        let dateFormattor = DateFormatter()
-        dateFormattor.dateFormat = "yyyy-MM-dd"
-        dateFormattor.timeZone = TimeZone(identifier: "UTC")
-        let strDate = dateFormattor.string(from: today)
-        let strURL = "SELECT * FROM HYDROFUELPERSINFO where DATE='\(strDate)'"
-        print(strURL)
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        let strDate = dateFormatter.string(from: today)
+        let data = DBManager.shared.selectAllByDate(strDate)
         
-        let data = AFSQLWrapper.selectIdDataTable(strURL)
-        print(data)
-        if data.Status == 1 {
-            print(data.Success)
-            let arrLocalData = data.arrData
-            dictPrevious = (arrLocalData[0] as! NSDictionary).mutableCopy() as! NSMutableDictionary
-            
-        }else{
-            print(data.Failure)
+        guard data.status == 1  else {
+            assertionFailure("\(data.failure)")
+            return
         }
-        
+        let arrLocalData = data.arrData
+        dictPrevious = (arrLocalData[0] as! NSDictionary).mutableCopy() as! NSMutableDictionary
     }
     
     
@@ -546,6 +481,44 @@ class PersonalInfoVC: UIViewController, iShowcaseDelegate {
     
     @IBAction func btnutctime(_ sender: UIButton) {
         self.appDelegate.timeselect = "yes"
+    }
+    
+}
+
+// MARK: - iShowcaseDelegate
+extension PersonalInfoVC: iShowcaseDelegate {
+    
+    func iShowcaseShown(_ showcase: iShowcase) {
+        currentShowcase += 1
+    }
+    
+    func iShowcaseDismissed(_ showcase: iShowcase) {
+        self.showcase.titleLabel.font = UIFont.avenirMedium17
+        
+        switch currentShowcase {
+        case 1:
+            self.showcase.setupShowcaseForView(self.btnmale)
+            self.showcase.titleLabel.text = "Select your Gender"
+            self.showcase.titleLabel.setNeedsDisplay(CGRect(x: 50, y: 50, width: 0, height: 0))
+            self.showcase.detailsLabel.text = "     "
+            self.showcase.show()
+            
+        case 2:
+            self.showcase.setupShowcaseForView(self.imgmedium)
+            self.showcase.titleLabel.text = "Select your Activity level"
+            self.showcase.detailsLabel.text = "     "
+            self.showcase.show()
+            
+        case 3:
+            self.showcase.setupShowcaseForView(self.lblwaterml)
+            self.showcase.titleLabel.text = "This is your suggested daily water intake"
+            self.showcase.detailsLabel.text = "      "
+            self.showcase.show()
+            
+        default:
+            break
+        }
+        
     }
     
 }

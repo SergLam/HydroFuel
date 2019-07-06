@@ -89,8 +89,8 @@ class HistoryDetail: UIViewController {
         
         let data = AFSQLWrapper.selectIdDataTable(strURL)
         print(data)
-        if data.Status == 1 {
-            print(data.Success)
+        if data.status == 1 {
+            print(data.success)
             let arrLocalData = data.arrData
             let dictPrevious = (arrLocalData[0] as! NSDictionary).mutableCopy() as! NSMutableDictionary
             
@@ -119,7 +119,7 @@ class HistoryDetail: UIViewController {
             progressRingView.value = 0
             self.lblWaterLeval.text = "\(0)" + "/" + "\(0)ml"
             self.lblWaterLevalPersentage.text = "\(0)%"
-            print(data.Failure)
+            print(data.failure)
         }
         
     }

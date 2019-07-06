@@ -27,18 +27,20 @@ class MyStatisticVC: UIViewController {
     let dataofy = [1900,190]
     var arrShowDates: [String] = []
     
+    private let dateFormatter = DateFormatter()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         showData()
         if arrDates.count == 0 {
             let today = Date()
-            let dateFormattor = DateFormatter()
-            dateFormattor.dateFormat = "yyyy-MM-dd"
-            dateFormattor.timeZone = TimeZone(identifier: "UTC")
-            let strDate = dateFormattor.string(from: today)
+            
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            dateFormatter.timeZone = TimeZone(identifier: "UTC")
+            let strDate = dateFormatter.string(from: today)
             print(strDate)
             let Day = Calendar.current.date(byAdding: .day, value: -1, to: today)
-            let Yesterday = dateFormattor.string(from: Day!)
+            let Yesterday = dateFormatter.string(from: Day!)
             let arrDatesForGraph = NSMutableArray()
             arrDatesForGraph.add(Yesterday)
             arrDatesForGraph.add(strDate)
@@ -109,6 +111,24 @@ class MyStatisticVC: UIViewController {
         
     }
     
+    private func configureChartView() {
+        
+        linechart.xAxis.granularity = 1 //  to show intervals
+        linechart.xAxis.gridColor = UIColor.clear
+        linechart.xAxis.wordWrapEnabled = true
+        linechart.xAxis.labelWidth = CGFloat(50)
+        linechart.xAxis.labelFont = UIFont.boldSystemFont(ofSize: 7.0)
+        
+        linechart.xAxis.labelPosition = .top // lebel position on graph
+        linechart.legend.formSize = 0
+        linechart.xAxis.drawGridLinesEnabled = false // show gird on graph
+        linechart.rightAxis.drawLabelsEnabled = false// to show right side value on graph
+        linechart.data?.setDrawValues(true) //
+        linechart.chartDescription?.text = ""
+        linechart.scaleXEnabled = true
+        linechart.scaleYEnabled = true
+    }
+    
     
     func setChartData(months : [String]) {
         
@@ -136,26 +156,11 @@ class MyStatisticVC: UIViewController {
         let data : LineChartData = LineChartData(dataSets: dataSets)
         
         //5 - finally set our data
-        self.linechart.data = data
-        let xaxis = self.linechart.xAxis
-        xaxis.valueFormatter = IndexAxisValueFormatter(values: months)
+        linechart.data = data
         
-        linechart.xAxis.granularity = 1 //  to show intervals
-        linechart.xAxis.gridColor = UIColor.clear
-        linechart.xAxis.wordWrapEnabled = true
-        linechart.xAxis.labelWidth = CGFloat(50)
-        linechart.xAxis.labelFont = UIFont.boldSystemFont(ofSize: 7.0)
-
-        linechart.xAxis.labelPosition = .top // lebel position on graph
+        linechart.xAxis.valueFormatter = IndexAxisValueFormatter(values: months)
         
-        linechart.legend.formSize = 0
-        linechart.xAxis.drawGridLinesEnabled = false // show gird on graph
-        linechart.rightAxis.drawLabelsEnabled = false// to show right side value on graph
-        linechart.data?.setDrawValues(true) //
-        linechart.chartDescription?.text = ""
-        
-        linechart.scaleXEnabled = true
-        linechart.scaleYEnabled = true
+        configureChartView()
         
         linechart.animate(yAxisDuration: 1.5, easingOption: .easeInOutQuart)
         
@@ -168,59 +173,42 @@ class MyStatisticVC: UIViewController {
         }
     }
     
-    func searchDataForProgress(strDate : String) {
+    func searchDataForProgress(strDate: String) {
         
-        let strURL = "SELECT * FROM HYDROFUELPERSINFO where DATE='\(strDate)'"
-        print(strURL)
+        let result = DBManager.shared.selectAllByDate(strDate)
         
-        let data = AFSQLWrapper.selectIdDataTable(strURL)
-        print(data)
-        if data.Status == 1 {
-            print(data.Success)
-            let arrLocalData = data.arrData
-            let dictPrevious = (arrLocalData[0] as! NSDictionary).mutableCopy() as! NSMutableDictionary
-            
-            let TOTALATTEMPT = dictPrevious.value(forKey: "TOTALATTEMPT") as! Int
-            let WATERQTYPERATTEMPT = dictPrevious.value(forKey: "WATERQTYPERATTEMPT") as! Int
-            
-            let totalWater = TOTALATTEMPT * WATERQTYPERATTEMPT
-            
-            self.arrDataForDates.add(totalWater)
-            
-        }else{
+        guard result.status == 1 else {
             self.arrDataForDates.add(0)
-            print(data.Failure)
+            assertionFailure("\(result.failure)")
+            return
         }
+        
+        let arrLocalData = result.arrData
+        let dictPrevious = (arrLocalData[0] as! NSDictionary).mutableCopy() as! NSMutableDictionary
+        
+        let TOTALATTEMPT = dictPrevious.value(forKey: "TOTALATTEMPT") as! Int
+        let WATERQTYPERATTEMPT = dictPrevious.value(forKey: "WATERQTYPERATTEMPT") as! Int
+        
+        let totalWater = TOTALATTEMPT * WATERQTYPERATTEMPT
+        
+        arrDataForDates.add(totalWater)
     }
     
     func showData() {
-        let today = Date()
-        let dateFormattor = DateFormatter()
-        dateFormattor.dateFormat = "yyyy-MM-dd"
-        dateFormattor.timeZone = TimeZone(identifier: "UTC")
-        let _ = dateFormattor.string(from: today)
         
-        let strURL = "SELECT * FROM HYDROFUELPERSINFO"
-        print(strURL)
-        //arrLocalData.removeAllObjects()
-        let data = AFSQLWrapper.selectTable(strURL)
-        print(data)
-        if data.Status == 1 {
+        let data = DBManager.shared.selectAll()
+        if data.status == 1 {
+            
             let arrLocalData = data.arrData
-            for i in 0..<arrLocalData.count
-            {
-                print(arrLocalData.count)
+            for element in arrLocalData {
                 
-                let dictPrevious = (arrLocalData[i] as! NSDictionary).mutableCopy() as! NSMutableDictionary
+                let dictPrevious = (element as! NSDictionary).mutableCopy() as! NSMutableDictionary
                 print("total atempt--",dictPrevious)
                 let TOTALATTEMPT = dictPrevious.value(forKey: "TOTALATTEMPT") as! Int
                 let WATERQTYPERATTEMPT = dictPrevious.value(forKey: "WATERQTYPERATTEMPT") as! Int
                 let totalWater = TOTALATTEMPT * WATERQTYPERATTEMPT
-                //let ans = totalWater / TOTALATTEMPT
-                //print(ans)
                 self.arrtotal.add(totalWater)
                 print("total",arrtotal)
-                
             }
             
             print(arrLocalData.count)
