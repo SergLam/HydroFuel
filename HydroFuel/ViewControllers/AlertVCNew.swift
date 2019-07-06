@@ -32,12 +32,14 @@ class AlertVCNew: UIViewController, iShowcaseDelegate {
     var showcase = iShowcase()
     var strTimes = ""
     
+    private let dateFormatter = DateFormatter()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm" // "a" prints "pm" or "am"
-        strTimes = dateFormatter.string(from: Date()) // "12 AM"
+        
+        dateFormatter.dateFormat = "HH:mm"
+        strTimes = dateFormatter.string(from: Date())
         print(strTimes)
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
         
@@ -202,30 +204,30 @@ class AlertVCNew: UIViewController, iShowcaseDelegate {
     }
     
     @IBAction func btnMenu(_ sender: UIButton) {
+        
         appDelegate.isAfterReset = false
         let formattor = DateFormatter()
         formattor.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
         formattor.timeZone = TimeZone(identifier: "UTC")
+        
         var arrForSort:[Date] = []
-        for j in 0..<arrFixDates.count {
+        for date in arrFixDates {
             let format1 = DateFormatter()
             format1.dateFormat = "HH:mm"
             format1.timeZone = TimeZone(identifier: "UTC")
-            let strDate2 = format1.string(from: arrFixDates[j])
+            let strDate2 = format1.string(from: date)
             arrForSort.append(format1.date(from: strDate2)!)
         }
-        
         
         let arrSortedDates = arrForSort.sorted(by: { $0.compare($1) == .orderedAscending })
         arrFixDates = ((arrSortedDates as NSArray).mutableCopy() as! NSMutableArray) as! [Date]
         
-        for i in 0..<arrFixDates.count {
-            let fixDate = arrFixDates[i]
-            print(fixDate)
-            timeTag = i
-            setAlarm(fixDate, tag: i)
+        for (index, fixDate) in arrFixDates.enumerated() {
+       
+            timeTag = index
+            setAlarm(fixDate, tag: index)
             let dt = formattor.string(from: fixDate)
-            arrSetFixAlarmTime.replaceObject(at: i, with: dt)
+            arrSetFixAlarmTime.replaceObject(at: index, with: dt)
         }
         
         if UserDefaults.standard.value(forKey: mykeys.KPREVIOUSDATE) == nil {
@@ -310,32 +312,11 @@ class AlertVCNew: UIViewController, iShowcaseDelegate {
     }
     
     func setAlarm(_ setDate: Date, tag: Int) {
-        //arrSetFixAlarmTime.replaceObject(at: timeTag, with: "\(setDate)")
-        print(tag+1)
-        let content = UNMutableNotificationContent()
-        content.title = "Hydrofuel Reminder"
-        content.body = calculateWaterPerAlert(alertNumber: tag + 1)//"Its time to drink water"
-        content.sound = UNNotificationSound.default
-        content.badge = (tag + 1) as NSNumber
-        content.userInfo = ["Name":"Parth","Badge":(timeTag + 1) as NSNumber]
-        let date = setDate.toGlobalTime()
-        let triggerDaily = Calendar.autoupdatingCurrent.dateComponents([.hour, .minute, .second], from: date)
-        //let triggerDaily = Calendar.current.dateComponents([.hour, .minute, .second], from: date)
-        let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDaily, repeats: true)
         
-        let identifier = "UYLLocalNotification\(timeTag)"
-        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
-        
-        appDelegate.center.add(request, withCompletionHandler: { (error) in
-            if let error = error {
-                print(error)
-            }
-        })
-        
-        
-        //UserDefaults.standard.set(arrSetFixAlarmTime, forKey: mykeys.KARRALARMDATETIME)
-        //UserDefaults.standard.set(arraydate, forKey: mykeys.KARRALARMTIME)
-        print("Alarm set...!")
+        let info: [String : Any] = ["Name":"Parth","Badge":(timeTag + 1) as NSNumber]
+        let body = calculateWaterPerAlert(alertNumber: tag + 1)//"Its time to drink water"
+        LocalNotificationsService.enqueueLocalNotification(body: body, badge: tag + 1,
+                                                           info: info, toDate: setDate)
     }
     
 }
@@ -348,49 +329,26 @@ extension AlertVCNew: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "alertCell", for: indexPath) as! alertCell
         
-        let format = DateFormatter()
-        format.dateFormat = "hh:mm a"
-        format.timeZone = TimeZone(identifier: "UTC")
-        let strDate = format.string(from: arrFixDates[indexPath.row])
-        cell.lbltimeshow.text = strDate//arraydate[indexPath.row] as? String
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "alertCell", for: indexPath) as? alertCell else {
+            preconditionFailure("Unable to dequeueReusableCell")
+        }
+        
+        dateFormatter.dateFormat = "hh:mm a"
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        let strDate = dateFormatter.string(from: arrFixDates[indexPath.row])
+        cell.lbltimeshow.text = strDate
         cell.lblwaterdescripation.text = calculateWaterPerAlert(alertNumber: indexPath.row + 1)
         cell.txttimer.tag = indexPath.row
         cell.txttimer.delegate = self
-        if  appDelegate.resettime == "reset"
-        {
-            cell.txttimer.isEnabled = true
-            cell.btnEdit.isEnabled = true
-            cell.imgEdit.image = #imageLiteral(resourceName: "edit")
-        }else{
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "HH:mm"
-            dateFormatter.timeZone = TimeZone(identifier: "UTC")
-            //            let strDate1 = dateFormatter.string(from: Date())
-            //            print(strDate1)
-            
-            let formatter = DateFormatter()
-            formatter.dateFormat = "HH:mm" // "a" prints "pm" or "am"
-            formatter.timeZone = TimeZone(identifier: "UTC")
-            let strDate1 = formatter.string(from: Date()) // "12 AM"
-            print(strDate1)
-            
-            
-            let format1 = DateFormatter()
-            format1.dateFormat = "HH:mm"
-            format1.timeZone = TimeZone(identifier: "UTC")
-            let strDate2 = format1.string(from: arrFixDates[indexPath.row])
-            print(strDate2)
-            
-            cell.txttimer.isEnabled = true
-            cell.btnEdit.isEnabled = true
-            cell.imgEdit.image = #imageLiteral(resourceName: "edit")
-        }
         
+        cell.txttimer.isEnabled = true
+        cell.btnEdit.isEnabled = true
+        cell.imgEdit.image = UIImage(named: "edit")
         
         return cell
     }
+    
 }
 
 // MARK: - UITableViewDelegate
@@ -410,8 +368,8 @@ extension AlertVCNew: UITableViewDelegate {
 extension AlertVCNew: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        
         datePickerView.datePickerMode = .time
-        let dateFormatter = DateFormatter()
         dateFormatter.amSymbol = "AM"
         dateFormatter.pmSymbol = "PM"
         dateFormatter.dateFormat = "hh:mm a"
@@ -423,29 +381,25 @@ extension AlertVCNew: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
+        
         datePickerView.datePickerMode = .time
-        let dateFormatter = DateFormatter()
         dateFormatter.amSymbol = "AM"
         dateFormatter.pmSymbol = "PM"
         dateFormatter.dateFormat = "hh:mm a"
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
         timeTag = textField.tag
         
-        
-        print(datePickerView.date.localiz)
-        //let text = dateFormatter.string(from: datePickerView.date)
         arrSetFixAlarmTime.replaceObject(at: timeTag, with: "\(datePickerView.date.localiz)")
-        //appDelegate.resettime = "change"
         isTimeEdited = true
         arrFixDates.removeAll()
-        for i in 0..<arrSetFixAlarmTime.count {
-            let formattor = DateFormatter()
-            formattor.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
-            //formattor.timeZone = TimeZone(identifier: "UTC")
-            let fixDate = formattor.date(from: arrSetFixAlarmTime[i] as! String)
-            print(fixDate!)
+        
+        for date in arrSetFixAlarmTime {
+            
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+            let fixDate = dateFormatter.date(from: date as! String)
             arrFixDates.append(fixDate!)
         }
+        
         tblAlert.reloadData()
     }
     
