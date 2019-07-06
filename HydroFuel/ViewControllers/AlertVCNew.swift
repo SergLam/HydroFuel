@@ -44,7 +44,7 @@ class AlertVCNew: UIViewController, iShowcaseDelegate {
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
         
         showcase.delegate = self
-        if UserDefaults.standard.value(forKey: mykeys.KPREVIOUSDATE) == nil {
+        if UserDefaultsManager.shared.previousDate == nil {
             if  appDelegate.isAfterReset == true{
                 
                 imgback.isHidden = false
@@ -57,19 +57,20 @@ class AlertVCNew: UIViewController, iShowcaseDelegate {
             imgback.isHidden = false
             btnMenu.isHidden = false
         }
-        if UserDefaults.standard.value(forKey: mykeys.KARRALARMTIME) != nil {
-            let arrTime = UserDefaults.standard.value(forKey: mykeys.KARRALARMTIME) as! NSArray
+        
+        if UserDefaultsManager.shared.alarmArrayAlarmTime != nil {
+            let arrTime = UserDefaultsManager.shared.alarmArrayAlarmTime! as NSArray
             arraydate = arrTime.mutableCopy() as! NSMutableArray
         }else{
             arraydate = ["08:30 AM","09:30 AM","11:30 AM","01:00 PM","03:30 PM","05:30 PM","07:30 PM","08:30 PM","09:30 PM","11:00 PM"]
-            UserDefaults.standard.set(arraydate, forKey: mykeys.KARRALARMTIME)
+            UserDefaultsManager.shared.alarmArrayAlarmTime = (arraydate as! [String])
         }
-        if UserDefaults.standard.value(forKey: mykeys.KARRALARMDATETIME) != nil {
-            let arrTime = UserDefaults.standard.value(forKey: mykeys.KARRALARMDATETIME) as! NSArray
+        if UserDefaultsManager.shared.alarmArrayDateTime != nil {
+            let arrTime = UserDefaultsManager.shared.alarmArrayDateTime! as NSArray
             arrSetFixAlarmTime = arrTime.mutableCopy() as! NSMutableArray
         }else{
             arrSetFixAlarmTime = ["2018-09-13 08:30:00 +0000","2018-09-13 09:30:00 +0000","2018-09-13 10:30:00 +0000","2018-09-13 11:30:00 +0000","2018-09-13 12:30:00 +0000","2018-09-13 13:30:00 +0000","2018-09-13 14:30:00 +0000","2018-09-13 15:30:00 +0000","2018-09-13 16:30:00 +0000","2018-09-13 17:30:00 +0000"]
-            UserDefaults.standard.set(arrSetFixAlarmTime, forKey: mykeys.KARRALARMDATETIME)
+            UserDefaultsManager.shared.alarmArrayDateTime = (arrSetFixAlarmTime as! [String])
             
         }
         
@@ -230,7 +231,7 @@ class AlertVCNew: UIViewController, iShowcaseDelegate {
             arrSetFixAlarmTime.replaceObject(at: index, with: dt)
         }
         
-        if UserDefaults.standard.value(forKey: mykeys.KPREVIOUSDATE) == nil {
+        if UserDefaultsManager.shared.previousDate == nil {
             let today = Date().toLocalTime()
             let dateFormattor = DateFormatter()
             dateFormattor.dateFormat = "yyyy-MM-dd"
@@ -240,13 +241,13 @@ class AlertVCNew: UIViewController, iShowcaseDelegate {
             UIApplication.shared.applicationIconBadgeNumber = 0
             appDelegate.badgeCount = 0
             
-            UserDefaults.standard.set(1, forKey: mykeys.KBOTTLECOUNT)
-            UserDefaults.standard.set(strDate, forKey: mykeys.KPREVIOUSDATE)
-            UserDefaults.standard.set(0, forKey: mykeys.KLASTCOUNTOFATTEMPT)
-            UserDefaults.standard.set("1000", forKey: mykeys.KLASTLBLWATERLEVAL)
+            UserDefaultsManager.shared.bottleCount = 1
+            UserDefaultsManager.shared.previousDate = strDate
+            UserDefaultsManager.shared.lastCountOfAttempt = 0
+            UserDefaultsManager.shared.lastDisplayedWaterLevel = 1000
         }
-        UserDefaults.standard.set(arrSetFixAlarmTime, forKey: mykeys.KARRALARMDATETIME)
-        //UserDefaults.standard.set(arraydate, forKey: mykeys.KARRALARMTIME)
+        UserDefaultsManager.shared.alarmArrayDateTime = (arrSetFixAlarmTime as! [String])
+        
         if appDelegate.backvar == "static"
         {
             self.toggleLeft()
@@ -264,7 +265,7 @@ class AlertVCNew: UIViewController, iShowcaseDelegate {
     @IBAction func btnHomeclick(_ sender: UIButton) {
         UserDefaults.standard.set(2, forKey: "fill")
         appDelegate.isAfterReset = false
-        if UserDefaults.standard.value(forKey: mykeys.KPREVIOUSDATE) == nil {
+        if UserDefaultsManager.shared.previousDate == nil {
             let today = Date().toLocalTime()
             let dateFormattor = DateFormatter()
             dateFormattor.dateFormat = "yyyy-MM-dd"
@@ -274,10 +275,10 @@ class AlertVCNew: UIViewController, iShowcaseDelegate {
             UIApplication.shared.applicationIconBadgeNumber = 0
             appDelegate.badgeCount = 0
             
-            UserDefaults.standard.set(1, forKey: mykeys.KBOTTLECOUNT)
-            UserDefaults.standard.set(strDate, forKey: mykeys.KPREVIOUSDATE)
-            UserDefaults.standard.set(0, forKey: mykeys.KLASTCOUNTOFATTEMPT)
-            UserDefaults.standard.set("1000", forKey: mykeys.KLASTLBLWATERLEVAL)
+            UserDefaultsManager.shared.bottleCount = 1
+            UserDefaultsManager.shared.previousDate = strDate
+            UserDefaultsManager.shared.lastCountOfAttempt = 0
+            UserDefaultsManager.shared.lastDisplayedWaterLevel = 1000
         }
         let formattor = DateFormatter()
         formattor.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
@@ -304,7 +305,7 @@ class AlertVCNew: UIViewController, iShowcaseDelegate {
             arrSetFixAlarmTime.replaceObject(at: i, with: dt)
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            UserDefaults.standard.set(self.arrSetFixAlarmTime, forKey: mykeys.KARRALARMDATETIME)
+            UserDefaultsManager.shared.alarmArrayDateTime = (self.arrSetFixAlarmTime as! [String])
             let vc = self.storyboard?.instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
             self.appDelegate.resettime = "change"
             self.navigationController?.pushViewController(vc, animated: true)

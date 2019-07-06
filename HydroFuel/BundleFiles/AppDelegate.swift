@@ -42,15 +42,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         UNUserNotificationCenter.current().delegate = self
         
-        if UserDefaults.standard.value(forKey: mykeys.KTOOLTIP) != nil {
-            isToolTipShown = UserDefaults.standard.value(forKey: mykeys.KTOOLTIP) as! Bool
+        if UserDefaultsManager.shared.shouldShowTutorial == false {
+            isToolTipShown = UserDefaultsManager.shared.shouldShowTutorial
         }else{
             isToolTipShown = true
         }
         
-        if UserDefaults.standard.value(forKey: mykeys.KISFIRSTNOTIF) != nil {
-            isFirstNotif = UserDefaults.standard.value(forKey: mykeys.KISFIRSTNOTIF) as! Bool
-        }else{
+        if UserDefaultsManager.shared.isFirstNotification == false {
+            isFirstNotif = UserDefaultsManager.shared.isFirstNotification
+        } else{
             isFirstNotif = true
         }
         
@@ -151,7 +151,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         UIApplication.shared.applicationIconBadgeNumber = notification.request.content.userInfo["Badge"] as! Int
         completionHandler([.alert, .badge, .sound])
         badgeCount = notification.request.content.userInfo["Badge"] as! Int
-        UserDefaults.standard.set(false, forKey: mykeys.KISFIRSTNOTIF)
+        UserDefaultsManager.shared.isFirstNotification = false
         isFirstNotif = false
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "NotifArrives"), object: nil)
     }

@@ -9,8 +9,8 @@
 import UIKit
 import Foundation
 
-class Global: NSObject
-{
+class Global: NSObject {
+    
     static let sharedInstance = Global()
     
     // Variable Declaration
@@ -22,6 +22,5 @@ class Global: NSObject
     class func getDataPath() -> String {
         return sharedInstance.userDataPath as String
     }
-    
     
 }

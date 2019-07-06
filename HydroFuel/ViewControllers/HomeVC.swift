@@ -86,7 +86,7 @@ class HomeVC: UIViewController {
         print(strTimes)
         
         //createDB()
-        let arrTime = UserDefaults.standard.value(forKey: mykeys.KARRALARMDATETIME) as! NSArray
+        let arrTime = UserDefaultsManager.shared.alarmArrayDateTime! as NSArray
         arrSetFixAlarmTime = arrTime.mutableCopy() as! NSMutableArray
         if UIDevice().userInterfaceIdiom == .phone {
             switch UIScreen.main.nativeBounds.height {
@@ -411,22 +411,24 @@ class HomeVC: UIViewController {
         dateFormattor.timeZone = TimeZone(identifier: "UTC")
         let strDate = dateFormattor.string(from: today)
         
-        if UserDefaults.standard.value(forKey: mykeys.KPREVIOUSDATE) != nil{
-            let previousDate = UserDefaults.standard.value(forKey: mykeys.KPREVIOUSDATE) as? String
+        if UserDefaultsManager.shared.previousDate != nil{
+            
+            let previousDate = UserDefaultsManager.shared.previousDate
             if previousDate == strDate {
-                lastCountOfAttempt = UserDefaults.standard.value(forKey: mykeys.KLASTCOUNTOFATTEMPT) as! Int
-                if UserDefaults.standard.value(forKey: mykeys.KLASTWATERCONSTRAINT) == nil {
-                    UserDefaults.standard.set(viewOuter.frame.size.height, forKey: mykeys.KLASTWATERCONSTRAINT)
+                lastCountOfAttempt = UserDefaultsManager.shared.lastCountOfAttempt!
+                if UserDefaultsManager.shared.lastWaterConstraint == nil {
+                    UserDefaultsManager.shared.lastWaterConstraint = Int(viewOuter.frame.size.height)
                 }
                 
-                if UserDefaults.standard.value(forKey: mykeys.KPREVWATERLEVAL) == nil {
+                if UserDefaultsManager.shared.prevWaterLevel == 0 {
                     prevWaterLeval = viewOuter.frame.size.height
-                    UserDefaults.standard.set(Double(viewOuter.frame.size.height).rounded(toPlaces: 6), forKey: mykeys.KPREVWATERLEVAL)
+                    let value = Double(viewOuter.frame.size.height).rounded(toPlaces: 6)
+                    UserDefaultsManager.shared.prevWaterLevel = value
                 }else{
-                    prevWaterLeval = UserDefaults.standard.value(forKey: mykeys.KPREVWATERLEVAL) as! CGFloat
+                    prevWaterLeval = CGFloat(UserDefaultsManager.shared.prevWaterLevel)
                 }
                 print(prevWaterLeval)
-                bottleCount = UserDefaults.standard.value(forKey: mykeys.KBOTTLECOUNT) as! Int
+                bottleCount = UserDefaultsManager.shared.bottleCount!
                 if appDelegate.badgeCount == 0
                 {
                     bottleNumberAsNotif = bottleCount
@@ -570,12 +572,12 @@ class HomeVC: UIViewController {
                 bottleCount = 1
                 prevWaterLeval = viewOuter.frame.size.height
                 conHeightWaterLeval.constant = viewOuter.frame.size.height
-                UserDefaults.standard.set(conHeightWaterLeval.constant, forKey: mykeys.KLASTWATERCONSTRAINT)
-                UserDefaults.standard.set(1, forKey: mykeys.KBOTTLECOUNT)
-                UserDefaults.standard.set(strDate, forKey: mykeys.KPREVIOUSDATE)
-                UserDefaults.standard.set(0, forKey: mykeys.KLASTCOUNTOFATTEMPT)
-                UserDefaults.standard.set(Double(viewOuter.frame.size.height).rounded(toPlaces: 6), forKey: mykeys.KPREVWATERLEVAL)
-                UserDefaults.standard.set("1000", forKey: mykeys.KLASTLBLWATERLEVAL)
+                UserDefaultsManager.shared.lastWaterConstraint = Int(conHeightWaterLeval.constant)
+                UserDefaultsManager.shared.bottleCount = 1
+                UserDefaultsManager.shared.previousDate = strDate
+                UserDefaultsManager.shared.lastCountOfAttempt = 0
+                UserDefaultsManager.shared.prevWaterLevel = Double(viewOuter.frame.size.height).rounded(toPlaces: 6)
+                UserDefaultsManager.shared.lastDisplayedWaterLevel = 1000
                 lblBottleCount.text = "Bottle \(bottleCount) of \(tottleBottle)"
                 notifMarkerView.isHidden = true
                 lblNotifWaterLavel.text = ""
@@ -589,12 +591,12 @@ class HomeVC: UIViewController {
             bottleCount = 1
             prevWaterLeval = viewOuter.frame.size.height
             conHeightWaterLeval.constant = viewOuter.frame.size.height
-            UserDefaults.standard.set(conHeightWaterLeval.constant, forKey: mykeys.KLASTWATERCONSTRAINT)
-            UserDefaults.standard.set(1, forKey: mykeys.KBOTTLECOUNT)
-            UserDefaults.standard.set(strDate, forKey: mykeys.KPREVIOUSDATE)
-            UserDefaults.standard.set(0, forKey: mykeys.KLASTCOUNTOFATTEMPT)
-            UserDefaults.standard.set(Double(viewOuter.frame.size.height).rounded(toPlaces: 6), forKey: mykeys.KPREVWATERLEVAL)
-            UserDefaults.standard.set("1000", forKey: mykeys.KLASTLBLWATERLEVAL)
+            UserDefaultsManager.shared.lastWaterConstraint = Int(conHeightWaterLeval.constant)
+            UserDefaultsManager.shared.bottleCount = 1
+            UserDefaultsManager.shared.previousDate = strDate
+            UserDefaultsManager.shared.lastCountOfAttempt = 0
+            UserDefaultsManager.shared.prevWaterLevel = Double(viewOuter.frame.size.height).rounded(toPlaces: 6)
+            UserDefaultsManager.shared.lastDisplayedWaterLevel = 1000
             lblBottleCount.text = "Bottle \(bottleCount) of \(tottleBottle)"
             notifMarkerView.isHidden = true
             lblNotifWaterLavel.text = ""
@@ -669,13 +671,13 @@ class HomeVC: UIViewController {
         let remainingWaterQty = self.REMAININGWATERQTY - (totalDrink*WATERQTYPERATTEMPT)
         print("remainingWaterQty--",remainingWaterQty)
         self.lblWaterToDrink.text = "\(remainingWaterQty)ml"
-        self.conHeightWaterLeval.constant = UserDefaults.standard.value(forKey: mykeys.KLASTWATERCONSTRAINT) as! CGFloat
+        self.conHeightWaterLeval.constant = CGFloat(UserDefaultsManager.shared.lastWaterConstraint!)
         UserDefaults.standard.set(nil, forKey: "waterlevel")
         
         self.lblBottleCount.text = "Bottle \(self.bottleCount) of \(tottleBottle)"
         
         print(String(describing: lblBottleCount.text))
-        self.lblWaterLavel.text = UserDefaults.standard.value(forKey: mykeys.KLASTLBLWATERLEVAL) as? String
+        self.lblWaterLavel.text = String(describing: UserDefaultsManager.shared.lastDisplayedWaterLevel)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.changeStatus()
         }
@@ -743,7 +745,7 @@ class HomeVC: UIViewController {
                         }
                         self.view.layoutIfNeeded()
                         self.view.layer.removeAllAnimations()
-                        UserDefaults.standard.set(self.conHeightWaterLeval.constant, forKey: mykeys.KPREVWATERLEVAL)
+                        UserDefaultsManager.shared.prevWaterLevel = Double(self.conHeightWaterLeval.constant)
                         
                         self.bottleCount += 1
                         
@@ -755,7 +757,7 @@ class HomeVC: UIViewController {
                         
                         
                         self.lblBottleCount.text = "Bottle \(self.bottleCount) of \(self.tottleBottle)"
-                        UserDefaults.standard.set(self.bottleCount, forKey: mykeys.KBOTTLECOUNT)
+                        UserDefaultsManager.shared.bottleCount = self.bottleCount
                     }
                 }
             }else{
@@ -771,8 +773,8 @@ class HomeVC: UIViewController {
                     }
                     self.view.layoutIfNeeded()
                     self.view.layer.removeAllAnimations()
+                    UserDefaultsManager.shared.prevWaterLevel = Double(self.conHeightWaterLeval.constant)
                     
-                    UserDefaults.standard.set(self.conHeightWaterLeval.constant, forKey: mykeys.KPREVWATERLEVAL)
                 }
             }
             
@@ -784,9 +786,9 @@ class HomeVC: UIViewController {
             let remainingWaterQty = self.REMAININGWATERQTY - (totalDrink*WATERQTYPERATTEMPT)
             updateData(REMAININGWATERQTY: remainingWaterQty, TOTALATTEMPT: appDelegate.badgeCount)
             lastCountOfAttempt = appDelegate.badgeCount
-            UserDefaults.standard.set(conHeightWaterLeval.constant, forKey: mykeys.KLASTWATERCONSTRAINT)
-            UserDefaults.standard.set(lastCountOfAttempt, forKey: mykeys.KLASTCOUNTOFATTEMPT)
-            UserDefaults.standard.set(self.lblWaterLavel.text!, forKey: mykeys.KLASTLBLWATERLEVAL)
+            UserDefaultsManager.shared.lastWaterConstraint = Int(conHeightWaterLeval.constant)
+            UserDefaultsManager.shared.lastCountOfAttempt = lastCountOfAttempt
+            UserDefaultsManager.shared.lastDisplayedWaterLevel = Int(self.lblWaterLavel.text!)
             print("lastCountOfAttempt--",lastCountOfAttempt)
             appDelegate.badgeCount = 0
             UIApplication.shared.applicationIconBadgeNumber = 0
@@ -870,8 +872,8 @@ class HomeVC: UIViewController {
         
         DBManager.shared.createDB()
         
-        if UserDefaults.standard.value(forKey: mykeys.KPREVIOUSDATE) != nil{
-            let previousDate = UserDefaults.standard.value(forKey: mykeys.KPREVIOUSDATE) as? String
+        if UserDefaultsManager.shared.previousDate != nil{
+            let previousDate = UserDefaultsManager.shared.previousDate
             if previousDate == strDate {
                 searchDataForUpdate()
             }else{
@@ -896,12 +898,13 @@ class HomeVC: UIViewController {
         bottleCount = 1
         prevWaterLeval = viewOuter.frame.size.height
         conHeightWaterLeval.constant = viewOuter.frame.size.height
-        UserDefaults.standard.set(DATE, forKey: mykeys.KPREVIOUSDATE)
-        UserDefaults.standard.set(conHeightWaterLeval.constant, forKey: mykeys.KLASTWATERCONSTRAINT)
-        UserDefaults.standard.set(1, forKey: mykeys.KBOTTLECOUNT)
-        UserDefaults.standard.set(0, forKey: mykeys.KLASTCOUNTOFATTEMPT)
-        UserDefaults.standard.set(Double(viewOuter.frame.size.height).rounded(toPlaces: 6), forKey: mykeys.KPREVWATERLEVAL)
-        UserDefaults.standard.set("1000", forKey: mykeys.KLASTLBLWATERLEVAL)
+        UserDefaultsManager.shared.previousDate = DATE
+        UserDefaultsManager.shared.lastWaterConstraint = Int(conHeightWaterLeval.constant)
+        UserDefaultsManager.shared.bottleCount = 1
+        UserDefaultsManager.shared.lastCountOfAttempt = 0
+        UserDefaultsManager.shared.prevWaterLevel = Double(viewOuter.frame.size.height).rounded(toPlaces: 6)
+        UserDefaultsManager.shared.lastDisplayedWaterLevel = 1000
+        
         lblBottleCount.text = "Bottle \(bottleCount) of \(tottleBottle)"
         notifMarkerView.isHidden = true
         lblWaterLavel.text = "\(1000)"
@@ -921,7 +924,7 @@ class HomeVC: UIViewController {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
         let strDate = dateFormatter.string(from: today)
-                
+        
         let data = DBManager.shared.selectAll()
         
         if data.status == 1 {
@@ -970,12 +973,12 @@ class HomeVC: UIViewController {
             prevWaterLeval = viewOuter.frame.size.height
             conHeightWaterLeval.constant = viewOuter.frame.size.height
             
-            UserDefaults.standard.set(conHeightWaterLeval.constant, forKey: mykeys.KLASTWATERCONSTRAINT)
-            UserDefaults.standard.set(1, forKey: mykeys.KBOTTLECOUNT)
-            UserDefaults.standard.set(strDate, forKey: mykeys.KPREVIOUSDATE)
-            UserDefaults.standard.set(0, forKey: mykeys.KLASTCOUNTOFATTEMPT)
-            UserDefaults.standard.set(Double(viewOuter.frame.size.height).rounded(toPlaces: 6), forKey: mykeys.KPREVWATERLEVAL)
-            UserDefaults.standard.set("1000", forKey: mykeys.KLASTLBLWATERLEVAL)
+            UserDefaultsManager.shared.lastWaterConstraint = Int(conHeightWaterLeval.constant)
+            UserDefaultsManager.shared.bottleCount = 1
+            UserDefaultsManager.shared.previousDate = strDate
+            UserDefaultsManager.shared.lastCountOfAttempt = 0
+            UserDefaultsManager.shared.prevWaterLevel = Double(viewOuter.frame.size.height).rounded(toPlaces: 6)
+            UserDefaultsManager.shared.lastDisplayedWaterLevel = 1000
             lblBottleCount.text = "Bottle \(bottleCount) of \(tottleBottle)"
             notifMarkerView.isHidden = true
             lblWaterLavel.text = "\(1000)"
@@ -1030,7 +1033,7 @@ extension HomeVC: iShowcaseDelegate {
             
             
         default:
-            UserDefaults.standard.set(false, forKey: mykeys.KTOOLTIP)
+            UserDefaultsManager.shared.shouldShowTutorial = false
             appDelegate.isToolTipShown = false
             print("Default")
             checkForAutoNotif()

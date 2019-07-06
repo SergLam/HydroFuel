@@ -120,11 +120,11 @@ class PersonalInfoVC: UIViewController {
         if data.status == 1 {
             UIApplication.shared.applicationIconBadgeNumber = 0
             appDelegate.badgeCount = 0
-            UserDefaults.standard.set(200, forKey: mykeys.KLASTWATERCONSTRAINT)
-            UserDefaults.standard.set(1, forKey: mykeys.KBOTTLECOUNT)
-            UserDefaults.standard.set(strDate, forKey: mykeys.KPREVIOUSDATE)
-            UserDefaults.standard.set(0, forKey: mykeys.KLASTCOUNTOFATTEMPT)
-            UserDefaults.standard.set("1000", forKey: mykeys.KLASTLBLWATERLEVAL)
+            UserDefaultsManager.shared.lastWaterConstraint = 200
+            UserDefaultsManager.shared.bottleCount = 1
+            UserDefaultsManager.shared.previousDate = strDate
+            UserDefaultsManager.shared.lastCountOfAttempt = 0
+            UserDefaultsManager.shared.lastDisplayedWaterLevel = 1000
             appDelegate.resettime = "reset"
             UserDefaults.standard.set("1000", forKey: "waterlevel")
         }

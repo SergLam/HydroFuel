@@ -17,7 +17,7 @@ class AFSQLWrapper: NSObject {
                                     in: .userDomainMask)
         
         databasePath = dirPaths[0].appendingPathComponent("HydroFuelData.db").path
-        UserDefaults.standard.set(databasePath, forKey: mykeys.KDBPATH)
+        UserDefaultsManager.shared.databasePath = databasePath
         print(databasePath)
         Global.setDataPath(setDataPath: databasePath)
         //DataPath = "\(databasePath)"
