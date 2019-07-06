@@ -167,13 +167,11 @@ class HomeVC: UIViewController {
                     self.differenceWater = 0.2
                 }
             case 2436:
-                if UserDefaults.standard.value(forKey: "waterlevel") != nil
+                
+                if UserDefaultsManager.shared.lastDisplayedWaterLevel != nil
                 {
-                    let value1 =  (UserDefaults.standard.value(forKey: "waterlevel") as! String)
-                    print(value1)
+                    let value1 = String(describing: UserDefaultsManager.shared.lastDisplayedWaterLevel)
                     lblWaterLavel.text = value1
-                }else{
-                    
                 }
                 print("iPhone X")
                 conImgLeading.constant = -70
@@ -415,8 +413,8 @@ class HomeVC: UIViewController {
             
             let previousDate = UserDefaultsManager.shared.previousDate
             if previousDate == strDate {
-                lastCountOfAttempt = UserDefaultsManager.shared.lastCountOfAttempt!
-                if UserDefaultsManager.shared.lastWaterConstraint == nil {
+                lastCountOfAttempt = UserDefaultsManager.shared.lastCountOfAttempt
+                if UserDefaultsManager.shared.lastWaterConstraint == 0 {
                     UserDefaultsManager.shared.lastWaterConstraint = Int(viewOuter.frame.size.height)
                 }
                 
@@ -428,7 +426,7 @@ class HomeVC: UIViewController {
                     prevWaterLeval = CGFloat(UserDefaultsManager.shared.prevWaterLevel)
                 }
                 print(prevWaterLeval)
-                bottleCount = UserDefaultsManager.shared.bottleCount!
+                bottleCount = UserDefaultsManager.shared.bottleCount
                 if appDelegate.badgeCount == 0
                 {
                     bottleNumberAsNotif = bottleCount
@@ -443,10 +441,9 @@ class HomeVC: UIViewController {
                         case 1136:
                             print("iPhone 5 or 5S or 5C")
                             conBottomTab.constant = 0
-                            if UserDefaults.standard.value(forKey: "waterlevel") != nil
+                            if UserDefaultsManager.shared.lastDisplayedWaterLevel == 0
                             {
-                                let value1 =  (UserDefaults.standard.value(forKey: "waterlevel") as! String)
-                                print(value1)
+                                let value1 =  String(describing: UserDefaultsManager.shared.lastDisplayedWaterLevel)
                                 lblWaterLavel.text = value1
                             }else{
                                 lblWaterLavel.text = "\(1000)"
@@ -455,10 +452,9 @@ class HomeVC: UIViewController {
                         case 1334:
                             print("iPhone 6/6S/7/8")
                             conBottomTab.constant = 0
-                            if UserDefaults.standard.value(forKey: "waterlevel") != nil
+                            if UserDefaultsManager.shared.lastDisplayedWaterLevel == 0
                             {
-                                let value1 =  (UserDefaults.standard.value(forKey: "waterlevel") as! String)
-                                print(value1)
+                                let value1 = String(describing: UserDefaultsManager.shared.lastDisplayedWaterLevel)
                                 lblWaterLavel.text = value1
                             }else{
                                 lblWaterLavel.text = "\(1000)"
@@ -466,10 +462,9 @@ class HomeVC: UIViewController {
                         case 1920:
                             print("iPhone 6+/6S+/7+/8+")
                             conBottomTab.constant = 0
-                            if UserDefaults.standard.value(forKey: "waterlevel") != nil
+                            if UserDefaultsManager.shared.lastDisplayedWaterLevel == 0
                             {
-                                let value1 =  (UserDefaults.standard.value(forKey: "waterlevel") as! String)
-                                print(value1)
+                                let value1 = String(describing: UserDefaultsManager.shared.lastDisplayedWaterLevel)
                                 lblWaterLavel.text = value1
                             }else{
                                 lblWaterLavel.text = "\(1000)"
@@ -478,10 +473,9 @@ class HomeVC: UIViewController {
                         case 2208:
                             print("iPhone 6+/6S+/7+/8+")
                             conBottomTab.constant = 0
-                            if UserDefaults.standard.value(forKey: "waterlevel") != nil
+                            if UserDefaultsManager.shared.lastDisplayedWaterLevel == 0
                             {
-                                let value1 =  (UserDefaults.standard.value(forKey: "waterlevel") as! String)
-                                print(value1)
+                                let value1 = String(describing: UserDefaultsManager.shared.lastDisplayedWaterLevel)
                                 lblWaterLavel.text = value1
                             }else{
                                 lblWaterLavel.text = "\(1000)"
@@ -492,10 +486,9 @@ class HomeVC: UIViewController {
                             print("iPhone X")
                             print(prevWaterLeval)
                             conBottomTab.constant = 15
-                            if UserDefaults.standard.value(forKey: "waterlevel") != nil
+                            if UserDefaultsManager.shared.lastDisplayedWaterLevel == 0
                             {
-                                let value1 =  (UserDefaults.standard.value(forKey: "waterlevel") as! String)
-                                print(value1)
+                                let value1 = String(describing: UserDefaultsManager.shared.lastDisplayedWaterLevel)
                                 lblWaterLavel.text = value1
                             }else{
                                 lblWaterLavel.text = "\(1000)"
@@ -527,23 +520,6 @@ class HomeVC: UIViewController {
                 if appDelegate.badgeCount < 1 {
                     notifMarkerView.isHidden = true
                 }
-                /*   if appDelegate.badgeCount > 0 {
-                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                 let needWater = self.appDelegate.badgeCount * self.WATERQTYPERATTEMPT
-                 let leval = Double(needWater).truncatingRemainder(dividingBy: 1000.0)
-                 print(leval)
-                 let outerViewHeight = Int(self.viewOuter.frame.size.height)
-                 let decreasingHeightPerAttempt = Double((Double(outerViewHeight) * leval)/1000)
-                 UIView.animate(withDuration: 1.0) {
-                 self.conTopNotifMarker.constant = CGFloat(decreasingHeightPerAttempt) - 15
-                 self.view.layoutIfNeeded()
-                 self.view.layer.removeAllAnimations()
-                 }
-                 self.notifMarkerView.isHidden = false
-                 }
-                 }else{
-                 notifMarkerView.isHidden = true
-                 }*/
             }else{
                 for i in 0..<arrSetFixAlarmTime.count {
                     let formattor = DateFormatter()
@@ -553,6 +529,7 @@ class HomeVC: UIViewController {
                     print(fixDate!)
                     arrFixDates.append(fixDate!)
                 }
+                
                 let dateFormatter1 = DateFormatter()
                 dateFormatter1.dateFormat = "HH:mm"
                 dateFormatter1.timeZone = TimeZone(identifier: "UTC")
@@ -671,8 +648,8 @@ class HomeVC: UIViewController {
         let remainingWaterQty = self.REMAININGWATERQTY - (totalDrink*WATERQTYPERATTEMPT)
         print("remainingWaterQty--",remainingWaterQty)
         self.lblWaterToDrink.text = "\(remainingWaterQty)ml"
-        self.conHeightWaterLeval.constant = CGFloat(UserDefaultsManager.shared.lastWaterConstraint!)
-        UserDefaults.standard.set(nil, forKey: "waterlevel")
+        self.conHeightWaterLeval.constant = CGFloat(UserDefaultsManager.shared.lastWaterConstraint)
+        UserDefaultsManager.shared.lastDisplayedWaterLevel = 0
         
         self.lblBottleCount.text = "Bottle \(self.bottleCount) of \(tottleBottle)"
         
@@ -781,14 +758,13 @@ class HomeVC: UIViewController {
         }else{
             
             timer.invalidate()
-            UserDefaults.standard.set(lblWaterLavel.text, forKey: "waterlevel")
             notifMarkerView.isHidden = true
             let remainingWaterQty = self.REMAININGWATERQTY - (totalDrink*WATERQTYPERATTEMPT)
             updateData(REMAININGWATERQTY: remainingWaterQty, TOTALATTEMPT: appDelegate.badgeCount)
             lastCountOfAttempt = appDelegate.badgeCount
             UserDefaultsManager.shared.lastWaterConstraint = Int(conHeightWaterLeval.constant)
             UserDefaultsManager.shared.lastCountOfAttempt = lastCountOfAttempt
-            UserDefaultsManager.shared.lastDisplayedWaterLevel = Int(self.lblWaterLavel.text!)
+            UserDefaultsManager.shared.lastDisplayedWaterLevel = Int(self.lblWaterLavel.text!)!
             print("lastCountOfAttempt--",lastCountOfAttempt)
             appDelegate.badgeCount = 0
             UIApplication.shared.applicationIconBadgeNumber = 0
@@ -912,7 +888,8 @@ class HomeVC: UIViewController {
         lblNotifWaterLavel.text = ""
         conTopNotifMarker.constant = -15
         appDelegate.resettime = "reset"
-        UserDefaults.standard.set(lblWaterLavel.text, forKey: "waterlevel")
+        UserDefaultsManager.shared.lastDisplayedWaterLevel = Int(lblWaterLavel.text!)!
+
         searchDataForUpdate()
         
         
@@ -986,7 +963,7 @@ class HomeVC: UIViewController {
             lblNotifWaterLavel.text = ""
             conTopNotifMarker.constant = -15
             appDelegate.resettime = "reset"
-            UserDefaults.standard.set(lblWaterLavel.text, forKey: "waterlevel")
+            UserDefaultsManager.shared.lastDisplayedWaterLevel  = Int(lblWaterLavel.text!)!
             searchDataForUpdate()
             
         }

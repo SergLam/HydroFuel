@@ -50,7 +50,7 @@ final class UserDefaultsManager {
     /**
      Number of drinks that user performed at current day
     */
-    var lastCountOfAttempt: Int? {
+    var lastCountOfAttempt: Int {
         get {
             return defaults.integer(forKey: #function)
         }
@@ -86,7 +86,7 @@ final class UserDefaultsManager {
     /**
      Number of bottles that should be drinked
      */
-    var bottleCount: Int? {
+    var bottleCount: Int {
         get {
             return defaults.integer(forKey: #function)
         }
@@ -98,7 +98,7 @@ final class UserDefaultsManager {
     /**
      Water portion that should be drink per time
      */
-    var lastWaterConstraint: Int? {
+    var lastWaterConstraint: Int {
         get {
             return defaults.integer(forKey: #function)
         }
@@ -110,7 +110,7 @@ final class UserDefaultsManager {
     /**
      Last displayed water level value
      */
-    var lastDisplayedWaterLevel: Int? {
+    var lastDisplayedWaterLevel: Int {
         get {
             return defaults.integer(forKey: #function)
         }
@@ -131,6 +131,42 @@ final class UserDefaultsManager {
     var isFirstNotification: Bool {
         get {
             return defaults.bool(forKey: #function)
+        }
+        set {
+            defaults.set(newValue, forKey: #function)
+        }
+    }
+    
+    /**
+     Selected user gender
+     */
+    var userGender: String? {
+        get {
+            return defaults.string(forKey: #function)
+        }
+        set {
+            defaults.set(newValue, forKey: #function)
+        }
+    }
+    
+    /**
+     Selected user activity level
+     */
+    var userActivityLevel: String? {
+        get {
+            return defaults.string(forKey: #function)
+        }
+        set {
+            defaults.set(newValue, forKey: #function)
+        }
+    }
+    
+    /**
+     Selected user weight
+     */
+    var userWeight: Int {
+        get {
+            return defaults.integer(forKey: #function)
         }
         set {
             defaults.set(newValue, forKey: #function)

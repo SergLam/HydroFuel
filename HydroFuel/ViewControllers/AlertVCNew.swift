@@ -162,7 +162,7 @@ class AlertVCNew: UIViewController, iShowcaseDelegate {
         }else {
             let data = (str * alertNumber) % 1000
             if 1000 - data > str && (1000 - data) + str > 1000{
-                //let text = "Drink " + "\((str - data))" + " ml Refill the bottle and drink to " + "\(1000 - data)" + " ml"
+                
                 if alertNumber == 10
                 {
                     let text = "Finish the bottle. Congratulations you’re done for the day!"
@@ -296,13 +296,11 @@ class AlertVCNew: UIViewController, iShowcaseDelegate {
         let arrSortedDates = arrForSort.sorted(by: { $0.compare($1) == .orderedAscending })
         arrFixDates = ((arrSortedDates as NSArray).mutableCopy() as! NSMutableArray) as! [Date]
         
-        for i in 0..<arrFixDates.count {
-            let fixDate = arrFixDates[i]
-            print(fixDate)
-            timeTag = i
-            setAlarm(fixDate, tag: i)
-            let dt = formattor.string(from: fixDate)
-            arrSetFixAlarmTime.replaceObject(at: i, with: dt)
+        for (index, date) in arrFixDates.enumerated() {
+            timeTag = index
+            setAlarm(date, tag: index)
+            let dt = formattor.string(from: date)
+            arrSetFixAlarmTime.replaceObject(at: index, with: dt)
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             UserDefaultsManager.shared.alarmArrayDateTime = (self.arrSetFixAlarmTime as! [String])
@@ -314,8 +312,8 @@ class AlertVCNew: UIViewController, iShowcaseDelegate {
     
     func setAlarm(_ setDate: Date, tag: Int) {
         
-        let info: [String : Any] = ["Name":"Parth","Badge":(timeTag + 1) as NSNumber]
-        let body = calculateWaterPerAlert(alertNumber: tag + 1)//"Its time to drink water"
+        let info: [String : Any] = ["Name" : "Parth", "Badge": timeTag + 1]
+        let body = calculateWaterPerAlert(alertNumber: tag + 1)
         LocalNotificationsService.enqueueLocalNotification(body: body, badge: tag + 1,
                                                            info: info, toDate: setDate)
     }

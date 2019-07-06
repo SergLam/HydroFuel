@@ -126,7 +126,6 @@ class PersonalInfoVC: UIViewController {
             UserDefaultsManager.shared.lastCountOfAttempt = 0
             UserDefaultsManager.shared.lastDisplayedWaterLevel = 1000
             appDelegate.resettime = "reset"
-            UserDefaults.standard.set("1000", forKey: "waterlevel")
         }
     }
     
@@ -261,25 +260,23 @@ class PersonalInfoVC: UIViewController {
             let tempDate = "2000-12-31"
             DBManager.shared.firstInsertData(date: tempDate, weight: 0, gender: "Male", activityLevel: "Low", waterQty: 0, remainingWaterQty: 0, totalDrink: 0, totalAttempt: 0, waterQtyPerAttempt: 0)
         }
-        if UserDefaults.standard.value(forKey: "gander") != nil {
+        if UserDefaultsManager.shared.userGender != nil {
             
-            let userObj = UserDefaults.standard.value(forKey: "gander") as! String
+            let userObj = UserDefaultsManager.shared.userGender!
             gander = userObj
-            print(userObj)
         }
-        if UserDefaults.standard.value(forKey: "activity") != nil {
+        if UserDefaultsManager.shared.userActivityLevel != nil {
             
-            let  userObj1 = UserDefaults.standard.value(forKey: "activity") as! String
+            let  userObj1 = UserDefaultsManager.shared.userActivityLevel!
             activity = userObj1
-            print(userObj1)
         }
         
-        if UserDefaults.standard.value(forKey: "kg") != nil {
-            //value = "abcd"
-            let  userObj2 = UserDefaults.standard.value(forKey: "kg") as! NSNumber
-            //currentValue = Int(userObj2)
+        if UserDefaultsManager.shared.userWeight == 0 {
+            
+            let userObj2 = UserDefaultsManager.shared.userWeight
+            
             lblkg.text = "\(userObj2)"
-            slider.value = Float(truncating: userObj2)
+            slider.value = Float(truncating: NSNumber(value: userObj2))
             weightCurrentVAle = Int(lblkg.text!)!
             slider.value = Float(weightCurrentVAle)
         }

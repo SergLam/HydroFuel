@@ -109,6 +109,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func permissionForAlert() {
+        
         let options: UNAuthorizationOptions = [.badge, .alert, .sound];
         center.requestAuthorization(options: options) { (granted, error) in
             if !granted {

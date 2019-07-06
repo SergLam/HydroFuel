@@ -116,7 +116,7 @@ extension menuVC: UITableViewDelegate {
         case 5:
             appDelegate.backvar = "static"
             appDelegate.menuvar = "show"
-            //  UserDefaults.standard.set(nil, forKey: "fill")
+            
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let HomeVC = storyboard.instantiateViewController(withIdentifier: "PersonalInfoVC") as!  PersonalInfoVC
             self.PersonalInfoVC = UINavigationController(rootViewController: HomeVC)
