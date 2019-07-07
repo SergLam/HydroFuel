@@ -8,6 +8,8 @@
 
 import UIKit
 import SlideMenuControllerSwift
+import StoreKit
+import SVProgressHUD
 
 final class menuVC: UIViewController {
     
@@ -128,10 +130,11 @@ extension menuVC: UITableViewDelegate {
             }
             UIApplication.shared.open(url, options: [:]) { (_) in }
         case 7:
-            guard let url = URL(string: "https://itunes.apple.com/us/app/buddyball/id1432543329?ls=1&mt=8") else {
-                return
-            }
-            UIApplication.shared.open(url, options: [:]) { (_) in }
+//            guard let url = URL(string: "https://itunes.apple.com/us/app/buddyball/id1432543329?ls=1&mt=8") else {
+//                return
+//            }
+//            UIApplication.shared.open(url, options: [:]) { (_) in }
+            viewProductInAppStore()
             
         default:
             assertionFailure("Unknown row value, plese update this method")
@@ -140,6 +143,36 @@ extension menuVC: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60.0
+    }
+    
+}
+
+
+// MARK: - SKStoreProductViewControllerDelegate
+extension menuVC: SKStoreProductViewControllerDelegate {
+    
+    private func viewProductInAppStore() {
+        
+        let storeViewController = SKStoreProductViewController()
+        storeViewController.delegate = self
+        let parameters = [SKStoreProductParameterITunesItemIdentifier : 1432543329]
+        SVProgressHUD.show(withStatus: "Opening AppStore...")
+        
+        storeViewController.loadProduct(withParameters: parameters) { [weak self] (loaded, error) -> Void in
+            SVProgressHUD.dismiss()
+            guard let _self = self else {
+                return
+            }
+            if loaded {
+                _self.present(storeViewController, animated: true, completion: nil)
+            } else if let error = error {
+                AlertPresenter.showErrorAlert(at: _self, message: error.localizedDescription)
+            }
+        }
+    }
+    
+    func productViewControllerDidFinish(_ viewController: SKStoreProductViewController) {
+        viewController.dismiss(animated: true, completion: nil)
     }
     
 }

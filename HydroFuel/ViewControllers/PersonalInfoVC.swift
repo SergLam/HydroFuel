@@ -342,7 +342,7 @@ final class PersonalInfoVC: UIViewController {
         guard validation() else {
             return
         }
-        let alertController = UIAlertController(title: "", message: "Details Successfully Updated", preferredStyle: UIAlertController.Style.alert)
+        let alertController = UIAlertController(title: nil, message: "Details Successfully Updated", preferredStyle: .alert)
         
         let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default) { [unowned self] (result) -> Void in
             
@@ -406,8 +406,8 @@ final class PersonalInfoVC: UIViewController {
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "AlertVCNew") as? AlertVCNew
-        self.appDelegate.resettime = "reset"
-        self.navigationController!.pushViewController(vc!, animated: true)
+        appDelegate.resettime = "reset"
+        navigationController!.pushViewController(vc!, animated: true)
         
     }
     
@@ -421,7 +421,7 @@ final class PersonalInfoVC: UIViewController {
         }
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "HomeVC") as? HomeVC
-        self.navigationController!.pushViewController(vc!, animated: true)
+        navigationController!.pushViewController(vc!, animated: true)
     }
     
     private func searchDataForUpdate() {

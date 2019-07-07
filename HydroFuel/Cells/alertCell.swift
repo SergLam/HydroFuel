@@ -15,15 +15,5 @@ class alertCell: UITableViewCell {
     @IBOutlet weak var btnEdit: UILabel!
     @IBOutlet var lbltimeshow: UILabel!
     @IBOutlet var lblwaterdescripation: UILabel!
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
 
 }

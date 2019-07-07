@@ -16,103 +16,61 @@ typealias VoidClosure = () -> ()
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    var entrySetArr = NSMutableArray()
+    
     var window: UIWindow?
+    static var shared: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
+    
     var backvar = "static"
     var menuName = ""
     var menuvar = ""
     var resettime = "change"
-    let dateFormatter = DateFormatter()
+    
     var badgeCount = UIApplication.shared.applicationIconBadgeNumber
-    var center = UNUserNotificationCenter.current()
     
-    var changevalue = ""
-    var str = 0
-    
-    var arraydate = NSMutableArray()
-    var arrSetFixAlarmTime = NSMutableArray()
     var isAfterReset = false
     var timeselect = ""
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        IQKeyboardManager.sharedManager().enable = true
+        IQKeyboardManager.shared.enable = true
         
         UNUserNotificationCenter.current().delegate = self
         
-        permissionForAlert()
+        requestPermissionForAlerts()
         let storyboard1: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        if UserDefaults.standard.value(forKey: "fill") != nil{
+        
+        if UserDefaults.standard.value(forKey: "fill") != nil {
+            
             if UserDefaults.standard.value(forKey: "fill") as! Int == 2 {
-                var mainViewController = UIViewController()
-                mainViewController = storyboard1.instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
-                let leftViewController = storyboard1.instantiateViewController(withIdentifier: "menuVC") as! menuVC
-                let nvc: UINavigationController = UINavigationController(rootViewController: mainViewController)
                 
-                leftViewController.mainViewController = nvc
-                let slideMenuController = SlideMenuController(mainViewController: nvc, leftMenuViewController: leftViewController)
+                let mainViewController = storyboard1.instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
+                AppRouter.setupAppRootVC(mainVC: mainViewController)
+            } else {
                 
-                slideMenuController.delegate = mainViewController as? SlideMenuControllerDelegate
-                self.window?.backgroundColor = UIColor(red: 236.0, green: 238.0, blue: 241.0, alpha: 1.0)
-                self.window?.rootViewController = slideMenuController
-                self.window?.makeKeyAndVisible()
-            }else{
-                var mainViewController = UIViewController()
-                mainViewController = storyboard1.instantiateViewController(withIdentifier: "AlertVCNew") as! AlertVCNew
-                let leftViewController = storyboard1.instantiateViewController(withIdentifier: "menuVC") as! menuVC
-                let nvc: UINavigationController = UINavigationController(rootViewController: mainViewController)
-                
-                leftViewController.mainViewController = nvc
-                let slideMenuController = SlideMenuController(mainViewController: nvc, leftMenuViewController: leftViewController)
-                
-                slideMenuController.delegate = mainViewController as? SlideMenuControllerDelegate
-                self.window?.backgroundColor = UIColor(red: 236.0, green: 238.0, blue: 241.0, alpha: 1.0)
-                self.window?.rootViewController = slideMenuController
-                self.window?.makeKeyAndVisible()
+                let mainViewController = storyboard1.instantiateViewController(withIdentifier: "AlertVCNew") as! AlertVCNew
+                AppRouter.setupAppRootVC(mainVC: mainViewController)
             }
             
-        }
-        else
-        {
-            // let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            var mainViewController = UIViewController()
+        } else {
+            
             menuvar = "hide"
-            mainViewController = storyboard1.instantiateViewController(withIdentifier: "PersonalInfoVC") as! PersonalInfoVC
-            let leftViewController = storyboard1.instantiateViewController(withIdentifier: "menuVC") as! menuVC
-            let nvc: UINavigationController = UINavigationController(rootViewController: mainViewController)
-            
-            leftViewController.mainViewController = nvc
-            let slideMenuController = SlideMenuController(mainViewController: nvc, leftMenuViewController: leftViewController)
-            
-            slideMenuController.delegate = mainViewController as? SlideMenuControllerDelegate
-            self.window?.backgroundColor = UIColor(red: 236.0, green: 238.0, blue: 241.0, alpha: 1.0)
-            self.window?.rootViewController = slideMenuController
-            self.window?.makeKeyAndVisible()
+            let mainViewController = storyboard1.instantiateViewController(withIdentifier: "PersonalInfoVC") as! PersonalInfoVC
+            AppRouter.setupAppRootVC(mainVC: mainViewController)
         }
         
-        // Override point for customization after application launch.
         return true
     }
     
-    func permissionForAlert() {
+    func requestPermissionForAlerts() {
         
         let options: UNAuthorizationOptions = [.badge, .alert, .sound];
-        center.requestAuthorization(options: options) { (granted, error) in
-            if !granted {
-                print("Something went wrong")
-            }
-            else{
-                print("Premission Granted.!")
-                //self.setDefaultAlarm()
-            }
-        }
-        center.getNotificationSettings { (settings) in
-            if settings.authorizationStatus != .authorized {
-                // Notifications not allowed
-            }
+        UNUserNotificationCenter.current().requestAuthorization(options: options) { (granted, error) in
             
         }
-        UIApplication.shared.applicationIconBadgeNumber = 0 //new added
+        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+            
+        }
+        UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -128,7 +86,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     // Called when user cancel, open or select notification action
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        print(response.notification.request.content.userInfo)
+        
         completionHandler()
     }
     

@@ -1867,7 +1867,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Background" translatesAutoresizingMaskIntoConstraints="NO" id="tPy-mW-Jma">
                                 <rect key="frame" x="0.0" y="213" width="414" height="683"/>
                             </imageView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qkv-ZY-e07" customClass="UICircularProgressRingView" customModule="UICircularProgressRing">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qkv-ZY-e07" customClass="UICircularProgressRing" customModule="UICircularProgressRing">
                                 <rect key="frame" x="107" y="273" width="200" height="250"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -1948,7 +1948,7 @@
                         <outlet property="imgback" destination="dXV-re-n2y" id="Py5-B1-6yB"/>
                         <outlet property="lblWaterLeval" destination="bqJ-2I-AMn" id="Etn-BR-7LI"/>
                         <outlet property="lblWaterLevalPersentage" destination="qYj-SI-5rE" id="tXO-Al-EMD"/>
-                        <outlet property="progressRingView" destination="Qkv-ZY-e07" id="R3e-T4-EOm"/>
+                        <outlet property="progressRingView" destination="Qkv-ZY-e07" id="NMs-S5-ykH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iR8-JS-pQm" userLabel="First Responder" sceneMemberID="firstResponder"/>

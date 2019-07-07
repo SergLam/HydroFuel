@@ -26,6 +26,7 @@
 		7C59A05922D0A3D8005B474E /* LocalNotificationsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C59A05822D0A3D8005B474E /* LocalNotificationsService.swift */; };
 		7C59A05D22D0B582005B474E /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C59A05C22D0B582005B474E /* UserDefaultsManager.swift */; };
 		7C59A06322D23A92005B474E /* DataRecordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C59A06222D23A92005B474E /* DataRecordModel.swift */; };
+		7CA8984D22D28202007D3DD0 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA8984C22D28202007D3DD0 /* AppRouter.swift */; };
 		9DFDF4361D18266FA3A14C03 /* Pods_HydroFuel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD07F55ECDE656312122A720 /* Pods_HydroFuel.framework */; };
 		A72C719C213A5FF2008FB95F /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72C719B213A5FF2008FB95F /* HomeVC.swift */; };
 		A72C719E213A64EC008FB95F /* menucell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72C719D213A64EC008FB95F /* menucell.swift */; };
@@ -72,6 +73,7 @@
 		7C59A05822D0A3D8005B474E /* LocalNotificationsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsService.swift; sourceTree = "<group>"; };
 		7C59A05C22D0B582005B474E /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		7C59A06222D23A92005B474E /* DataRecordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataRecordModel.swift; sourceTree = "<group>"; };
+		7CA8984C22D28202007D3DD0 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
 		A72C719B213A5FF2008FB95F /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
 		A72C719D213A64EC008FB95F /* menucell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = menucell.swift; sourceTree = "<group>"; };
 		A72C719F213A776A008FB95F /* HistoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryVC.swift; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 				7C59A05622D08B57005B474E /* AlertPresenter.swift */,
 				7C59A05822D0A3D8005B474E /* LocalNotificationsService.swift */,
 				6DF23DED214A6F5A000A7DBB /* FMDB_SQL */,
+				7CA8984C22D28202007D3DD0 /* AppRouter.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -370,6 +373,7 @@
 				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
 				"${BUILT_PRODUCTS_DIR}/FSCalendar/FSCalendar.framework",
 				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SVProgressHUD/SVProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/SlideMenuControllerSwift/SlideMenuControllerSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/UICircularProgressRing/UICircularProgressRing.framework",
 				"${BUILT_PRODUCTS_DIR}/iShowcase/iShowcase.framework",
@@ -380,6 +384,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FSCalendar.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SVProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SlideMenuControllerSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UICircularProgressRing.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/iShowcase.framework",
@@ -441,6 +446,7 @@
 				7C59A04E22CFFBB2005B474E /* UIColor+Ext.swift in Sources */,
 				6DF23DFD214A6F7A000A7DBB /* FMDatabasePool.m in Sources */,
 				7C59A05922D0A3D8005B474E /* LocalNotificationsService.swift in Sources */,
+				7CA8984D22D28202007D3DD0 /* AppRouter.swift in Sources */,
 				6DF23E01214A77E7000A7DBB /* AFSQLWrapper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

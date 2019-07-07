@@ -138,7 +138,7 @@ final class MyStatisticVC: UIViewController {
             
         }
         
-        let set1: LineChartDataSet = LineChartDataSet(values: yVals1, label: "-- Water Intake")
+        let set1: LineChartDataSet = LineChartDataSet(entries: yVals1, label: "-- Water Intake")
         set1.axisDependency = .left // Line will correlate with left axis values
         
         set1.setColor(UIColor.blue)//.withAlphaComponent(0.1))

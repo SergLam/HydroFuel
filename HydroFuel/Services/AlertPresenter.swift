@@ -10,6 +10,14 @@ import UIKit
 
 final class AlertPresenter {
     
+    static func showErrorAlert(at vc: UIViewController, message: String) {
+        
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: "Ok", style: .default, handler: nil)
+        alert.addAction(action)
+        vc.present(alert, animated: true, completion: nil)
+    }
+    
     static func showResetAlert(at vc: UIViewController, yesAction: @escaping VoidClosure) {
         
         let alert = UIAlertController(title: "Are you sure to reset today log?", message: nil, preferredStyle: .alert)
