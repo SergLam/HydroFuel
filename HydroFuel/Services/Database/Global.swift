@@ -9,7 +9,7 @@
 import UIKit
 import Foundation
 
-class Global: NSObject {
+final class Global: NSObject {
     
     static let sharedInstance = Global()
     

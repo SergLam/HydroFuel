@@ -8,7 +8,10 @@
 
 import UIKit
 
-class DBManager {
+typealias DBOperationResult = (success: String, failure: String, status: Int)
+typealias DBRecordOperationResult = (arrData: [DataRecordModel], success: String, failure: String, status: Int)
+
+final class DBManager {
     
     static let shared = DBManager()
     private let dateFormatter = DateFormatter()
@@ -63,6 +66,18 @@ class DBManager {
         
         let operationResult = AFSQLWrapper.updateTable(strURL)
         return operationResult
+    }
+    
+    func resetCurrentProgress(waterQuantity: Int) -> (DBOperationResult, resetDate: String) {
+        
+        let today = Date().toLocalTime()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        let strDate = dateFormatter.string(from: today)
+        let strURL = "update HYDROFUELPERSINFO set REMAININGWATERQTY='\(waterQuantity)', TOTALDRINK='\(0)',TOTALATTEMPT='\(0)' where DATE='\(strDate)'"
+        
+        let result = AFSQLWrapper.updateTable(strURL)
+        return (result, strDate)
     }
     
 }

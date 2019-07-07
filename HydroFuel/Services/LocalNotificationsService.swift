@@ -10,7 +10,7 @@ import UIKit
 import UserNotifications
 import UserNotificationsUI
 
-class LocalNotificationsService {
+final class LocalNotificationsService {
     
     private static let notificationCenter = UNUserNotificationCenter.current()
     

@@ -10,7 +10,7 @@ import UIKit
 import FSCalendar
 import UICircularProgressRing
 
-class HistoryDetail: UIViewController {
+final class HistoryDetail: UIViewController {
 
     @IBOutlet weak var lblWaterLevalPersentage: UILabel!
     @IBOutlet weak var lblWaterLeval: UILabel!
@@ -92,16 +92,14 @@ class HistoryDetail: UIViewController {
         if data.status == 1 {
             print(data.success)
             let arrLocalData = data.arrData
-            let dictPrevious = (arrLocalData[0] as! NSDictionary).mutableCopy() as! NSMutableDictionary
+            let dictPrevious = arrLocalData[0]
             
             //let DATE = dictPrevious.value(forKey: "DATE") as! String
             
            
-            let WATERQTY = dictPrevious.value(forKey: "WATERQTY") as! Int
-            //let REMAININGWATERQTY = dictPrevious.value(forKey: "REMAININGWATERQTY") as! Int
-            //let TOTALDRINK = dictPrevious.value(forKey: "TOTALDRINK") as! Int
-            let TOTALATTEMPT = dictPrevious.value(forKey: "TOTALATTEMPT") as! Int
-            let WATERQTYPERATTEMPT = dictPrevious.value(forKey: "WATERQTYPERATTEMPT") as! Int
+            let WATERQTY = dictPrevious.waterQuantity
+            let TOTALATTEMPT = dictPrevious.totalAttempt
+            let WATERQTYPERATTEMPT = dictPrevious.waterQuantityPerAttempt
             
             let totalWater = TOTALATTEMPT * WATERQTYPERATTEMPT
             

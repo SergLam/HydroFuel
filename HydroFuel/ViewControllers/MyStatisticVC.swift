@@ -9,7 +9,7 @@
 import UIKit
 import Charts
 
-class MyStatisticVC: UIViewController {
+final class MyStatisticVC: UIViewController {
     
     @IBOutlet var lblnineteendays: UILabel!
     @IBOutlet var lblthirteendays: UILabel!
@@ -179,15 +179,15 @@ class MyStatisticVC: UIViewController {
         
         guard result.status == 1 else {
             self.arrDataForDates.add(0)
-            assertionFailure("\(result.failure)")
+            //assertionFailure("\(result.failure)")
             return
         }
         
         let arrLocalData = result.arrData
-        let dictPrevious = (arrLocalData[0] as! NSDictionary).mutableCopy() as! NSMutableDictionary
+        let dictPrevious = arrLocalData[0]
         
-        let TOTALATTEMPT = dictPrevious.value(forKey: "TOTALATTEMPT") as! Int
-        let WATERQTYPERATTEMPT = dictPrevious.value(forKey: "WATERQTYPERATTEMPT") as! Int
+        let TOTALATTEMPT = dictPrevious.totalAttempt
+        let WATERQTYPERATTEMPT = dictPrevious.waterQuantityPerAttempt
         
         let totalWater = TOTALATTEMPT * WATERQTYPERATTEMPT
         
@@ -202,10 +202,10 @@ class MyStatisticVC: UIViewController {
             let arrLocalData = data.arrData
             for element in arrLocalData {
                 
-                let dictPrevious = (element as! NSDictionary).mutableCopy() as! NSMutableDictionary
+                let dictPrevious = element
                 print("total atempt--",dictPrevious)
-                let TOTALATTEMPT = dictPrevious.value(forKey: "TOTALATTEMPT") as! Int
-                let WATERQTYPERATTEMPT = dictPrevious.value(forKey: "WATERQTYPERATTEMPT") as! Int
+                let TOTALATTEMPT = dictPrevious.totalAttempt
+                let WATERQTYPERATTEMPT = dictPrevious.waterQuantityPerAttempt
                 let totalWater = TOTALATTEMPT * WATERQTYPERATTEMPT
                 self.arrtotal.add(totalWater)
                 print("total",arrtotal)

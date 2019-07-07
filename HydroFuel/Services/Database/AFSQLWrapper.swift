@@ -1,13 +1,10 @@
 
 import Foundation
 
-typealias DBOperationResult = (success: String, failure: String, status: Int)
-typealias DBRecordOperationResult = (arrData: NSMutableArray, success: String, failure: String, status: Int)
-
-class AFSQLWrapper: NSObject {
+final class AFSQLWrapper: NSObject {
 
 //Class For Create Table And Create Database
-    class func createTable(_ strURL: String)  -> DBOperationResult {
+    class func createTable(_ strURL: String) -> DBOperationResult {
         var databasePath = String()
         let filemgr = FileManager.default
         var Success = String()
@@ -127,8 +124,8 @@ class AFSQLWrapper: NSObject {
             Status = 0
         }
 
-        
-        return (arrData,Success,Failure,Status)
+        let models = AFSQLWrapper.convertRawDataToModels(arrData)
+        return (models, Success, Failure, Status)
     }
     
 //Class For Select Data For Id from table
@@ -169,8 +166,8 @@ class AFSQLWrapper: NSObject {
             Status = 0
         }
         
-        
-        return (arrData,Success,Failure,Status)
+        let models = AFSQLWrapper.convertRawDataToModels(arrData)
+        return (models, Success, Failure, Status)
     }
 
 //Class For Update Data into Table
@@ -247,9 +244,31 @@ class AFSQLWrapper: NSObject {
             Status = 0
         }
         
-        
-        return (arrData,Success,Failure,Status)
+        let models = AFSQLWrapper.convertRawDataToModels(arrData)
+        return (models, Success, Failure, Status)
     }
 
+    
+    private static func convertRawDataToModels(_ data: NSMutableArray) -> [DataRecordModel] {
+        
+        var result: [DataRecordModel] = []
+        
+        for element in data {
+            let dict = element as! NSDictionary
+            let model = DataRecordModel(activityLevel: dict["ACTIVITYLAVEL"] as! String,
+                                        date: dict["DATE"] as! String,
+                                        gender: dict["GENDER"] as! String,
+                                        id: dict["ID"] as! Int,
+                                        remainingWaterQuantity: dict["REMAININGWATERQTY"] as! Int,
+                                        totalDrink: dict["TOTALDRINK"] as! Int,
+                                        totalAttempt: dict["TOTALATTEMPT"] as! Int,
+                                        waterQuantity: dict["WATERQTY"] as! Int,
+                                        waterQuantityPerAttempt: dict["WATERQTYPERATTEMPT"] as! Int,
+                                        weight: dict["WEIGHT"] as! Int)
+            result.append(model)
+        }
+        
+        return result
+    }
     
 }

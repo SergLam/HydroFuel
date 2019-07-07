@@ -119,7 +119,7 @@ final class UserDefaultsManager {
         }
     }
     
-    var shouldShowTutorial: Bool {
+    var isTutorialShown: Bool {
         get {
             return defaults.bool(forKey: #function)
         }

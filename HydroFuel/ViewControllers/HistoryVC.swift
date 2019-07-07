@@ -9,7 +9,7 @@
 import UIKit
 import FSCalendar
 
-class HistoryVC: UIViewController {
+final class HistoryVC: UIViewController {
 
     @IBOutlet var imgback: UIImageView!
     @IBOutlet var calendar: FSCalendar!

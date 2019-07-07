@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AlertPresenter {
+final class AlertPresenter {
     
     static func showResetAlert(at vc: UIViewController, yesAction: @escaping VoidClosure) {
         

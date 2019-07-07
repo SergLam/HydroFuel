@@ -32,8 +32,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var arraydate = NSMutableArray()
     var arrSetFixAlarmTime = NSMutableArray()
     var isAfterReset = false
-    var isToolTipShown = false
-    var isFirstNotif = false
     var timeselect = ""
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -41,18 +39,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IQKeyboardManager.sharedManager().enable = true
         
         UNUserNotificationCenter.current().delegate = self
-        
-        if UserDefaultsManager.shared.shouldShowTutorial == false {
-            isToolTipShown = UserDefaultsManager.shared.shouldShowTutorial
-        }else{
-            isToolTipShown = true
-        }
-        
-        if UserDefaultsManager.shared.isFirstNotification == false {
-            isFirstNotif = UserDefaultsManager.shared.isFirstNotification
-        } else{
-            isFirstNotif = true
-        }
         
         permissionForAlert()
         let storyboard1: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
@@ -140,20 +126,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 // MARK: - UNUserNotificationCenterDelegate
 extension AppDelegate: UNUserNotificationCenterDelegate {
     
+    // Called when user cancel, open or select notification action
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         print(response.notification.request.content.userInfo)
         completionHandler()
     }
     
+    // The method will be called on the delegate only if the application is in the foreground.
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        UIApplication.shared.applicationIconBadgeNumber = 0 //add new
-        print(notification.request.content.userInfo)
         
-        UIApplication.shared.applicationIconBadgeNumber = notification.request.content.userInfo["Badge"] as! Int
+        guard let badgeCount = notification.request.content.userInfo["Badge"] as? Int else {
+            assertionFailure("Unable to get badge count number")
+            return
+        }
+        UIApplication.shared.applicationIconBadgeNumber = badgeCount
         completionHandler([.alert, .badge, .sound])
-        badgeCount = notification.request.content.userInfo["Badge"] as! Int
+        self.badgeCount = badgeCount
         UserDefaultsManager.shared.isFirstNotification = false
-        isFirstNotif = false
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "NotifArrives"), object: nil)
     }
     

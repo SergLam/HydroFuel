@@ -9,7 +9,7 @@
 import UIKit
 import SlideMenuControllerSwift
 
-class menuVC: UIViewController {
+final class menuVC: UIViewController {
     
     @IBOutlet var tblview: UITableView!
     

@@ -14,13 +14,13 @@ import IQKeyboardManagerSwift
 import iShowcase
 import CTShowcase
 
-class AlertVCNew: UIViewController, iShowcaseDelegate {
+final class AlertVCNew: UIViewController {
     
     @IBOutlet weak var highlightview: UIView!
     @IBOutlet weak var btnMenu: UIButton!
     @IBOutlet weak var tblAlert: UITableView!
     @IBOutlet var imgback: UIImageView!
-    //let dateFormatter = DateFormatter()
+   
     let datePickerView = UIDatePicker()
     let datetime = Date()
     var timeTag = -1
@@ -28,7 +28,6 @@ class AlertVCNew: UIViewController, iShowcaseDelegate {
     var arrSetFixAlarmTime = NSMutableArray()
     var arrFixDates: [Date] = []
     var str = 0
-    var isTimeEdited = false
     var showcase = iShowcase()
     var strTimes = ""
     
@@ -45,7 +44,7 @@ class AlertVCNew: UIViewController, iShowcaseDelegate {
         
         showcase.delegate = self
         if UserDefaultsManager.shared.previousDate == nil {
-            if  appDelegate.isAfterReset == true{
+            if appDelegate.isAfterReset == true{
                 
                 imgback.isHidden = false
                 btnMenu.isHidden = false
@@ -53,7 +52,7 @@ class AlertVCNew: UIViewController, iShowcaseDelegate {
                 imgback.isHidden = true
                 btnMenu.isHidden = true
             }
-        }else{
+        } else {
             imgback.isHidden = false
             btnMenu.isHidden = false
         }
@@ -94,52 +93,36 @@ class AlertVCNew: UIViewController, iShowcaseDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        guard appDelegate.isToolTipShown else {
+        guard !UserDefaultsManager.shared.isTutorialShown else {
             return
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            self.showcase.setupShowcaseForTableView(self.tblAlert, withIndexPath: [0,0])
-            self.showcase.titleLabel.text = "Notifications tell you exactly how much to drink so pay attention! You can edit the notification times here."
-            self.showcase.titleLabel.font = UIFont (name: "Avenir Medium", size: 17)
-            self.showcase.detailsLabel.text = "\n\n      "
-            self.showcase.show()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+            self?.showFirstTutorialView()
         }
-        
     }
     
     @objc func handleDatePicker(sender: UIDatePicker) {
-        let dateFormatter = DateFormatter()
+        
         datePickerView.datePickerMode = .time
         dateFormatter.amSymbol = "AM"
         dateFormatter.pmSymbol = "PM"
-        //dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        dateFormatter.timeZone = TimeZone.current
         
-        print(sender.date.localiz)
-        if timeTag != 0{
-            print(arrSetFixAlarmTime[timeTag-1] as! String)
-            
-            let formattor = DateFormatter()
-            formattor.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
-            formattor.timeZone = TimeZone(identifier: "UTC")
-            if  appDelegate.resettime != "reset" {
-                print(String(describing: formattor.date(from: arrSetFixAlarmTime[timeTag-1] as! String)))
-                // datePickerView.minimumDate = (formattor.date(from: arrSetFixAlarmTime[timeTag-1] as! String))?.toGlobalTime()
-                //datePickerView.minimumDate = Date()
-            }
-        }else{
-            if  appDelegate.resettime != "reset" {
-                //datePickerView.minimumDate = Date()
-            }
-        }
+        dateFormatter.dateFormat = "HH:mm a"
+        arraydate[timeTag] = dateFormatter.string(from: sender.date)
         
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+
+        arrSetFixAlarmTime[timeTag] = dateFormatter.string(from: sender.date)
     }
     
-    func calculateWaterPerAlert(alertNumber: Int) -> String{
+    func calculateWaterPerAlert(alertNumber: Int) -> String {
+        
         if str * alertNumber < 1000{
-            if appDelegate.isFirstNotif == true {
+            if UserDefaultsManager.shared.isFirstNotification == true {
                 let text = "Drink down to the " + "\(1000 - (str * alertNumber))" + "ml mark, Open the App and Tap “Hydrate”"
                 return text
-            }else{
+            } else{
                 if alertNumber == 10
                 {
                     let text = "Finish the bottle. Congratulations you’re done for the day!"
@@ -263,14 +246,16 @@ class AlertVCNew: UIViewController, iShowcaseDelegate {
     }
     
     @IBAction func btnHomeclick(_ sender: UIButton) {
+        
         UserDefaults.standard.set(2, forKey: "fill")
         appDelegate.isAfterReset = false
+        
         if UserDefaultsManager.shared.previousDate == nil {
+            
             let today = Date().toLocalTime()
-            let dateFormattor = DateFormatter()
-            dateFormattor.dateFormat = "yyyy-MM-dd"
-            dateFormattor.timeZone = TimeZone(identifier: "UTC")
-            let strDate = dateFormattor.string(from: today)
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            dateFormatter.timeZone = TimeZone(identifier: "UTC")
+            let strDate = dateFormatter.string(from: today)
             
             UIApplication.shared.applicationIconBadgeNumber = 0
             appDelegate.badgeCount = 0
@@ -280,28 +265,30 @@ class AlertVCNew: UIViewController, iShowcaseDelegate {
             UserDefaultsManager.shared.lastCountOfAttempt = 0
             UserDefaultsManager.shared.lastDisplayedWaterLevel = 1000
         }
-        let formattor = DateFormatter()
-        formattor.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
-        formattor.timeZone = TimeZone(identifier: "UTC")
-        var arrForSort:[Date] = []
-        for j in 0..<arrFixDates.count {
-            let format1 = DateFormatter()
-            format1.dateFormat = "HH:mm"
-            format1.timeZone = TimeZone(identifier: "UTC")
-            let strDate2 = format1.string(from: arrFixDates[j])
-            arrForSort.append(format1.date(from: strDate2)!)
-        }
         
+        var arrForSort: [Date] = []
+        
+        dateFormatter.dateFormat = "HH:mm"
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        
+        for date in arrFixDates {
+            let strDate2 = dateFormatter.string(from: date)
+            arrForSort.append(dateFormatter.date(from: strDate2)!)
+        }
         
         let arrSortedDates = arrForSort.sorted(by: { $0.compare($1) == .orderedAscending })
         arrFixDates = ((arrSortedDates as NSArray).mutableCopy() as! NSMutableArray) as! [Date]
         
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        
         for (index, date) in arrFixDates.enumerated() {
             timeTag = index
             setAlarm(date, tag: index)
-            let dt = formattor.string(from: date)
+            let dt = dateFormatter.string(from: date)
             arrSetFixAlarmTime.replaceObject(at: index, with: dt)
         }
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             UserDefaultsManager.shared.alarmArrayDateTime = (self.arrSetFixAlarmTime as! [String])
             let vc = self.storyboard?.instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
@@ -366,30 +353,28 @@ extension AlertVCNew: UITableViewDelegate {
 // MARK: - UITextFieldDelegate
 extension AlertVCNew: UITextFieldDelegate {
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        
+    private func configureDateFormatter(for textField: UITextField) {
         datePickerView.datePickerMode = .time
         dateFormatter.amSymbol = "AM"
         dateFormatter.pmSymbol = "PM"
         dateFormatter.dateFormat = "hh:mm a"
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
         timeTag = textField.tag
-        datePickerView.datePickerMode = .time
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        
+        configureDateFormatter(for: textField)
+        
         textField.inputView = datePickerView
         datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         
-        datePickerView.datePickerMode = .time
-        dateFormatter.amSymbol = "AM"
-        dateFormatter.pmSymbol = "PM"
-        dateFormatter.dateFormat = "hh:mm a"
-        dateFormatter.timeZone = TimeZone(identifier: "UTC")
-        timeTag = textField.tag
+         configureDateFormatter(for: textField)
         
         arrSetFixAlarmTime.replaceObject(at: timeTag, with: "\(datePickerView.date.localiz)")
-        isTimeEdited = true
         arrFixDates.removeAll()
         
         for date in arrSetFixAlarmTime {
@@ -400,6 +385,20 @@ extension AlertVCNew: UITextFieldDelegate {
         }
         
         tblAlert.reloadData()
+    }
+    
+}
+
+// MARK: - iShowcaseDelegate
+extension AlertVCNew: iShowcaseDelegate {
+    
+    private func showFirstTutorialView() {
+        
+        showcase.setupShowcaseForTableView(self.tblAlert, withIndexPath: [0,0])
+        showcase.titleLabel.text = "Notifications tell you exactly how much to drink so pay attention! You can edit the notification times here."
+        showcase.titleLabel.font = UIFont.avenirMedium17
+        showcase.detailsLabel.text = "\n\n\n"
+        showcase.show()
     }
     
 }

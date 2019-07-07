@@ -10,7 +10,7 @@ import UIKit
 import iShowcase
 import CTShowcase
 
-class PersonalInfoVC: UIViewController {
+final class PersonalInfoVC: UIViewController {
     
     var weightCurrentVAle = Int(){
         didSet{
@@ -39,10 +39,11 @@ class PersonalInfoVC: UIViewController {
     var value = ""
     var ans = 0
     var lblvalue = Int()
-    var  num = Int()
+    var num = Int()
+    
     @IBOutlet var slider: UISlider!
     var dicdata = NSDictionary()
-    var dictPrevious = NSMutableDictionary()
+    var dictPrevious = DataRecordModel.defaultModel()
     var currentShowcase = 0
     var showcase = iShowcase()
     var caluculatedWaterLevelValue = 0
@@ -60,7 +61,7 @@ class PersonalInfoVC: UIViewController {
         weightCurrentVAle = 50
         ans = (Int(Double(weightCurrentVAle) * Double(0.033) * 1000) )
         lblwaterml.text =  "\(ans)"
-        num = checkForRoundValue()
+        num = getSuggestedWaterLevel()
         lblwaterml.text = "\(num)" + " " + "ml"
         
         self.navigationController?.navigationBar.isHidden = true
@@ -75,18 +76,14 @@ class PersonalInfoVC: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        guard appDelegate.isToolTipShown else {
+        
+        guard !UserDefaultsManager.shared.isTutorialShown else {
             return
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
             
-            self.showcase.setupShowcaseForView(self.lblkg)
-            self.showcase.titleLabel.text = "To work out your daily water intake goal please Select Your Weight"
-            self.showcase.titleLabel.font = UIFont (name: "Avenir Medium", size: 17)
-            self.showcase.detailsLabel.text = "      "
-            self.showcase.show()
+            self?.showFirstTutorialView()
         }
-        
     }
     
     @IBAction func btnClickedToChangeDailyTarget(_ sender: UIButton) {
@@ -97,7 +94,7 @@ class PersonalInfoVC: UIViewController {
             currentAmount += 500
         }else{
             //Minus
-            currentAmount = max(500,currentAmount-500)
+            currentAmount = max(500, currentAmount-500)
         }
         lblwaterml.text = "\(currentAmount)"
         num = currentAmount
@@ -133,7 +130,7 @@ class PersonalInfoVC: UIViewController {
         lblkg.text = "\(weightCurrentVAle) kg"
         caluculatedWaterLevelValue = (Int(Double(weightCurrentVAle) * Double(0.033) * 1000))
         lblwaterml.text = "\(caluculatedWaterLevelValue)"
-        num = checkForRoundValue()
+        num = getSuggestedWaterLevel()
         lblwaterml.text = "\(num)" + " " + "ml"
         if gander == "female"{
             ImglineFemale.image = UIImage(named: "femalebuttonblue")
@@ -184,13 +181,13 @@ class PersonalInfoVC: UIViewController {
             if gander == "female"
             {
                 lblwaterml.text = "\(Int(Double(caluculatedWaterLevelValue) + Double(1) * 1000))"
-                num = checkForRoundValue()
+                num = getSuggestedWaterLevel()
                 lblwaterml.text = "\(num)" + " " + "ml"
             }
             else
             {
                 lblwaterml.text =  "\(Int(Double(caluculatedWaterLevelValue) + Double(1.5) * 1000))"
-                num = checkForRoundValue()
+                num = getSuggestedWaterLevel()
                 lblwaterml.text = "\(num)"  + " " + "ml"
             }
         }else if  activity == "medium"{
@@ -200,14 +197,14 @@ class PersonalInfoVC: UIViewController {
             if gander == "female"
             {
                 lblwaterml.text = "\(Int(Double(caluculatedWaterLevelValue) + Double(0.5) * 1000))"
-                num = checkForRoundValue()
+                num = getSuggestedWaterLevel()
                 lblwaterml.text = "\(num)" + " " + "ml"
             }
             else
             {
                 // let num =  Int(Double(maleans) + Double(0.5) * 1000)
                 lblwaterml.text =  "\(Int(Double(caluculatedWaterLevelValue) + Double(1) * 1000))"
-                num = checkForRoundValue()
+                num = getSuggestedWaterLevel()
                 lblwaterml.text = "\(num)" + " " + "ml"
             }
         }else if activity == "low"{
@@ -217,24 +214,24 @@ class PersonalInfoVC: UIViewController {
             if gander == "female"
             {
                 lblwaterml.text = "\(caluculatedWaterLevelValue)"
-                num = checkForRoundValue()
+                num = getSuggestedWaterLevel()
                 lblwaterml.text = "\(num)" + " " + "ml"
                 
             }
             else
             {
                 lblwaterml.text =  "\(Int(Double(caluculatedWaterLevelValue) + Double(0.5) * 1000))"
-                num = checkForRoundValue()
+                num = getSuggestedWaterLevel()
                 lblwaterml.text = "\(num)"  + " " + "ml"
                 print(num)
             }
         }
     }
     
-    func caluCulateGenderValue(genderText:String, genderRation:Double) {
+    private func caluCulateGenderValue(genderText: String, genderRation: Double) {
         gander = genderText
         lblwaterml.text =  "\(Int(Double(caluculatedWaterLevelValue) + Double(genderRation) * 1000))"
-        num = checkForRoundValue()
+        num = getSuggestedWaterLevel()
         lblwaterml.text = "\(num)"  + " " + "ml"
     }
     
@@ -303,22 +300,21 @@ class PersonalInfoVC: UIViewController {
     @IBAction func SliderClick(_ sender: UISlider) {
         
     }
-    func validation() ->Bool
-    {
-        if lblkg.text == ""
-        {
-            showMyAlert(messageIs: "Please Choose Weight")
-        }
-        if gander == ""
-        {
-            showMyAlert(messageIs: "Please Choose Gender")
-        }
-        if activity == ""
-        {
-            showMyAlert(messageIs: "Please Choose Activity Level")
+    
+    private func validation() -> Bool {
+        
+        let inputData = [lblkg.text!, gander, activity]
+        let errorMessages = ["Please Choose Weight", "Please Choose Gender", "Please Choose Activity Level"]
+        
+        for (index, data) in inputData.enumerated() {
+            if data.isEmpty {
+                showMyAlert(messageIs: errorMessages[index])
+                return false
+            }
         }
         return true
     }
+    
     @IBAction func btnFemale(_ sender: UIButton) {
         gander = "female"
         caluculateTotalValue()
@@ -343,65 +339,61 @@ class PersonalInfoVC: UIViewController {
     }
     
     @IBAction func btndone(_ sender: UIButton) {
-        if validation(){
-            let alertController = UIAlertController(title: "", message: "Details Successfully Updated", preferredStyle: UIAlertController.Style.alert)
+        guard validation() else {
+            return
+        }
+        let alertController = UIAlertController(title: "", message: "Details Successfully Updated", preferredStyle: UIAlertController.Style.alert)
+        
+        let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default) { [unowned self] (result) -> Void in
             
-            let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default) { [unowned self] (result) -> Void in
+            let lblanss: Int = self.num / 10
+            
+            UserDefaults.standard.set(lblanss, forKey: "lblml")
+            UserDefaults.standard.set(self.gander, forKey: "gander")
+            UserDefaults.standard.set(self.activity, forKey: "activity")
+            UserDefaults.standard.set(self.weightCurrentVAle, forKey: "kg")
+            UserDefaults.standard.set(1, forKey: "fill")
+            UserDefaults.standard.set(self.num, forKey: "MainWaterQuantityKey")
+            if self.dictPrevious == DataRecordModel.defaultModel() {
                 
-                let lblanss: Int = self.num / 10
+                let today = Date().toLocalTime()
                 
-                UserDefaults.standard.set(lblanss, forKey: "lblml")
-                UserDefaults.standard.set(self.gander, forKey: "gander")
-                UserDefaults.standard.set(self.activity, forKey: "activity")
-                UserDefaults.standard.set(self.weightCurrentVAle, forKey: "kg")
-                UserDefaults.standard.set(1, forKey: "fill")
-                UserDefaults.standard.set(self.num, forKey: "MainWaterQuantityKey")
-                if self.dictPrevious.count == 0{
-                    
-                    let today = Date().toLocalTime()
-                    
-                    self.dateFormatter.dateFormat = "yyyy-MM-dd"
-                    self.dateFormatter.timeZone = TimeZone(identifier: "UTC")
-                    let strDate = self.dateFormatter.string(from: today)
-                    
-                    self.insertData(DATE: strDate, WEIGHT: self.weightCurrentVAle, GENDER: self.gander, ACTIVITYLAVEL: self.activity, WATERQTY: self.num, REMAININGWATERQTY: self.num, TOTALDRINK: 0, TOTALATTEMPT: 0, WATERQTYPERATTEMPT: lblanss)
-                }else{
-                    
-                    let totalDrinksCount = self.dictPrevious.value(forKey: "TOTALDRINK") as! Int
-                    
-                    let totalDrinkWater = lblanss*totalDrinksCount
-                    let remainingWaterQty = self.num - totalDrinkWater
-                    
-                    self.updateData(WEIGHT: self.weightCurrentVAle, GENDER: self.gander, ACTIVITYLAVEL: self.activity, WATERQTY: self.num, REMAININGWATERQTY: remainingWaterQty, TOTALDRINK: totalDrinksCount, WATERQTYPERATTEMPT: lblanss)
-                }
+                self.dateFormatter.dateFormat = "yyyy-MM-dd"
+                self.dateFormatter.timeZone = TimeZone(identifier: "UTC")
+                let strDate = self.dateFormatter.string(from: today)
                 
+                self.insertData(DATE: strDate, WEIGHT: self.weightCurrentVAle, GENDER: self.gander, ACTIVITYLAVEL: self.activity, WATERQTY: self.num, REMAININGWATERQTY: self.num, TOTALDRINK: 0, TOTALATTEMPT: 0, WATERQTYPERATTEMPT: lblanss)
+            }else{
+                
+                let totalDrinksCount = self.dictPrevious.totalDrink
+                
+                let totalDrinkWater = lblanss*totalDrinksCount
+                let remainingWaterQty = self.num - totalDrinkWater
+                
+                self.updateData(WEIGHT: self.weightCurrentVAle, GENDER: self.gander, ACTIVITYLAVEL: self.activity, WATERQTY: self.num, REMAININGWATERQTY: remainingWaterQty, TOTALDRINK: totalDrinksCount, WATERQTYPERATTEMPT: lblanss)
             }
-            alertController.addAction(okAction)
-            
-            self.present(alertController, animated: true, completion: nil)
             
         }
+        alertController.addAction(okAction)
         
+        self.present(alertController, animated: true, completion: nil)
     }
     
     @IBAction func btnmenuclick(_ sender: UIButton) {
-        if appDelegate.menuvar == "hide"
-        {
+        
+        if appDelegate.menuvar == "hide" {
             btnmenu.isHidden = true
             imgmenu.isHidden = true
             self.toggleRight()
-        }
-        else{
+        } else {
             appDelegate.menuvar = "show"
             btnmenu.isHidden = false
             imgmenu.isHidden = false
             self.toggleLeft()
-            
-            
         }
     }
     
-    //MARK:- SQL Database Handler
+    // MARK: - SQL Database Handler
     
     func insertData(DATE: String, WEIGHT: Int, GENDER: String, ACTIVITYLAVEL: String, WATERQTY: Int, REMAININGWATERQTY: Int, TOTALDRINK: Int, TOTALATTEMPT: Int, WATERQTYPERATTEMPT: Int) -> Void {
         
@@ -420,7 +412,7 @@ class PersonalInfoVC: UIViewController {
     }
     
     func updateData(WEIGHT: Int, GENDER: String, ACTIVITYLAVEL: String, WATERQTY: Int, REMAININGWATERQTY: Int, TOTALDRINK: Int, WATERQTYPERATTEMPT: Int){
-
+        
         let result = DBManager.shared.updateData(weight: WEIGHT, gender: GENDER, activityLevel: ACTIVITYLAVEL, waterQty: WATERQTY, remainingWaterQty: REMAININGWATERQTY, totalDrink: TOTALDRINK, waterQtyPerAttempt: WATERQTYPERATTEMPT)
         
         guard result.status == 1 else {
@@ -432,7 +424,7 @@ class PersonalInfoVC: UIViewController {
         self.navigationController!.pushViewController(vc!, animated: true)
     }
     
-    func searchDataForUpdate() {
+    private func searchDataForUpdate() {
         
         let today = Date()
         dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -445,35 +437,13 @@ class PersonalInfoVC: UIViewController {
             return
         }
         let arrLocalData = data.arrData
-        dictPrevious = (arrLocalData[0] as! NSDictionary).mutableCopy() as! NSMutableDictionary
+        dictPrevious = arrLocalData[0]
     }
     
     
-    func checkForRoundValue() -> Int {
-        var number = 0
+    private func getSuggestedWaterLevel() -> Int {
         
-        let value = Int(lblwaterml.text!)!
-        if value < 500 {
-            let num = 500 - value
-            number = value + num
-        }else if value > 500 {
-            if value < 1000 {
-                let num = 1000 - value
-                number = value + num
-            }else{
-                let temp = value/1000
-                let data = ("\(temp)000")
-                let figureData = value - Int(data)!
-                if figureData < 500 {
-                    let num = 500 - figureData
-                    number = value + num
-                }else{
-                    let num = 1000 - figureData
-                    number = value + num
-                }
-            }
-        }
-        return number
+        return Int(lblwaterml.text!)!
     }
     
     @IBAction func btnutctime(_ sender: UIButton) {
@@ -489,27 +459,33 @@ extension PersonalInfoVC: iShowcaseDelegate {
         currentShowcase += 1
     }
     
+    private func showFirstTutorialView() {
+        
+        showcase.detailsLabel.text = " "
+        showcase.titleLabel.font = UIFont.avenirMedium17
+        
+        showcase.setupShowcaseForView(self.lblkg)
+        showcase.titleLabel.text = "To work out your daily water intake goal please Select Your Weight"
+        
+        showcase.show()
+    }
+    
     func iShowcaseDismissed(_ showcase: iShowcase) {
-        self.showcase.titleLabel.font = UIFont.avenirMedium17
         
         switch currentShowcase {
         case 1:
             self.showcase.setupShowcaseForView(self.btnmale)
             self.showcase.titleLabel.text = "Select your Gender"
-            self.showcase.titleLabel.setNeedsDisplay(CGRect(x: 50, y: 50, width: 0, height: 0))
-            self.showcase.detailsLabel.text = "     "
             self.showcase.show()
             
         case 2:
             self.showcase.setupShowcaseForView(self.imgmedium)
             self.showcase.titleLabel.text = "Select your Activity level"
-            self.showcase.detailsLabel.text = "     "
             self.showcase.show()
             
         case 3:
             self.showcase.setupShowcaseForView(self.lblwaterml)
             self.showcase.titleLabel.text = "This is your suggested daily water intake"
-            self.showcase.detailsLabel.text = "      "
             self.showcase.show()
             
         default:

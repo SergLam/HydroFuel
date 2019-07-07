@@ -13,9 +13,9 @@ import SafariServices
 import iShowcase
 import CTShowcase
 
-class HomeVC: UIViewController {
+final class HomeVC: UIViewController {
     
-    var dictPrevious = NSMutableDictionary()
+    var previousModel: DataRecordModel!
     
     @IBOutlet var conBottomWater: NSLayoutConstraint!
     @IBOutlet weak var demowaterlevel: UILabel!
@@ -47,15 +47,7 @@ class HomeVC: UIViewController {
     
     @IBOutlet var conTopvideoMarker: NSLayoutConstraint!
     
-    var DATE = ""
-    var WEIGHT = 0
-    var GENDER = ""
-    var ACTIVITYLAVEL = ""
-    var WATERQTY = 0
-    var REMAININGWATERQTY = 0
-    var TOTALDRINK = 0
-    var TOTALATTEMPT = 0
-    var WATERQTYPERATTEMPT = 0
+    var currentModel = DataRecordModel.defaultModel()
     
     var lastCountOfAttempt = 0
     var waterPerAttempt = 0
@@ -79,13 +71,10 @@ class HomeVC: UIViewController {
         super.viewDidLoad()
         
         showcase.delegate = self
-        
-        
         dateFormatter.dateFormat = "HH:mm"
         strTimes = dateFormatter.string(from: Date())
         print(strTimes)
         
-        //createDB()
         let arrTime = UserDefaultsManager.shared.alarmArrayDateTime! as NSArray
         arrSetFixAlarmTime = arrTime.mutableCopy() as! NSMutableArray
         if UIDevice().userInterfaceIdiom == .phone {
@@ -119,21 +108,21 @@ class HomeVC: UIViewController {
                 conTopBottleCount.constant = 25
                 self.conTopvideoMarker.constant = 38
                 createDB()
-                if WATERQTY>5500 {
+                if currentModel.waterQuantity > 5500 {
                     self.differenceWater = 0.1
-                }else if WATERQTY>4500 {
+                }else if currentModel.waterQuantity > 4500 {
                     self.differenceWater = 0.2
                 }
-                else if WATERQTY>4000 {
+                else if currentModel.waterQuantity > 4000 {
                     self.differenceWater = 0.3
                 }
-                else if WATERQTY>3500 {
+                else if currentModel.waterQuantity > 3500 {
                     self.differenceWater = 0.4
-                }else if WATERQTY==3500 {
+                }else if currentModel.waterQuantity == 3500 {
                     self.differenceWater = 0.5
-                }else if WATERQTY==3000 {
+                }else if currentModel.waterQuantity == 3000 {
                     self.differenceWater = 0
-                }else if WATERQTY==2500 {
+                }else if currentModel.waterQuantity == 2500 {
                     self.differenceWater = 0.1
                 }else{
                     self.differenceWater = 0.2
@@ -147,21 +136,21 @@ class HomeVC: UIViewController {
                 conTopBottleCount.constant = 25
                 self.conTopvideoMarker.constant = 38
                 createDB()
-                if WATERQTY>5500 {
+                if currentModel.waterQuantity > 5500 {
                     self.differenceWater = 0.1
-                }else if WATERQTY>4500 {
+                }else if currentModel.waterQuantity > 4500 {
                     self.differenceWater = 0.2
                 }
-                else if WATERQTY>4000 {
+                else if currentModel.waterQuantity > 4000 {
                     self.differenceWater = 0.3
                 }
-                else if WATERQTY>3500 {
+                else if currentModel.waterQuantity > 3500 {
                     self.differenceWater = 0.4
-                }else if WATERQTY==3500 {
+                }else if currentModel.waterQuantity == 3500 {
                     self.differenceWater = 0.5
-                }else if WATERQTY==3000 {
+                }else if currentModel.waterQuantity == 3000 {
                     self.differenceWater = 0
-                }else if WATERQTY==2500 {
+                }else if currentModel.waterQuantity == 2500 {
                     self.differenceWater = 0.1
                 }else{
                     self.differenceWater = 0.2
@@ -180,22 +169,22 @@ class HomeVC: UIViewController {
                 conBottomTab.constant = 15
                 conTopBottleCount.constant = 25
                 createDB()
-                if WATERQTY>5500 {
+                if currentModel.waterQuantity > 5500 {
                     self.differenceWater = 0.1
                 }
-                else if WATERQTY>5000 {
+                else if currentModel.waterQuantity > 5000 {
                     self.differenceWater = 0.4
                 }
-                else if WATERQTY>4500 {
+                else if currentModel.waterQuantity > 4500 {
                     self.differenceWater = 0.2
                 }
-                else if WATERQTY>4000 {
+                else if currentModel.waterQuantity > 4000 {
                     self.differenceWater = 0
-                }else if WATERQTY>3000 {
+                }else if currentModel.waterQuantity > 3000 {
                     self.differenceWater = 0.2
-                }else if WATERQTY==2500 {
+                }else if currentModel.waterQuantity == 2500 {
                     self.differenceWater = 0.3
-                }else if WATERQTY==2000 {
+                }else if currentModel.waterQuantity == 2000 {
                     self.differenceWater = 0.2
                 }else{
                     self.differenceWater = 0
@@ -216,25 +205,18 @@ class HomeVC: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        if appDelegate.isToolTipShown == true {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                
-                self.notificationvideDomo.isHidden = false
-                self.showcase.setupShowcaseForView(self.lblWaterLavel)
-                self.showcase.titleLabel.text = "Water level 1: This shows you how full the bottle is."
-                self.showcase.titleLabel.font = UIFont (name: "Avenir Medium", size: 17)
-                self.showcase.detailsLabel.text = "\n"
-                self.showcase.show()
-                
-            }
-        }else{
+        
+        guard !UserDefaultsManager.shared.isTutorialShown else {
             self.notificationvideDomo.isHidden = true
+            DispatchQueue.main.async {
+                self.notifMarkerView.isHidden = false
+                self.fartuMarkerView.isHidden = false
+                self.countWaterLevalAsNotif()
+            }
+            return
         }
-        DispatchQueue.main.asyncAfter(deadline: .now()) {
-            self.notifMarkerView.isHidden = false
-            self.fartuMarkerView.isHidden = false
-            // self.notificationvideDomo.isHidden = false
-            self.countWaterLevalAsNotif()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            self?.showFirstTutorialView()
         }
     }
     
@@ -249,9 +231,9 @@ class HomeVC: UIViewController {
     @objc func NotifArrives() {
         if appDelegate.badgeCount != 0 {
             btnHydrate.backgroundColor = UIColor.enableColour
-            var waterAsPerNotif = appDelegate.badgeCount * self.WATERQTYPERATTEMPT
+            var waterAsPerNotif = appDelegate.badgeCount * currentModel.waterQuantityPerAttempt
             if waterAsPerNotif == 0 {
-                waterAsPerNotif = self.WATERQTYPERATTEMPT
+                waterAsPerNotif = self.currentModel.waterQuantityPerAttempt
             }
             
             let floatData = Double(waterAsPerNotif)/1000.0
@@ -270,7 +252,7 @@ class HomeVC: UIViewController {
             else{
                 if bottleNumberAsNotif == tottleBottle {
                     let outerViewHeight = Int(self.viewOuter.frame.size.height)
-                    let leval1 = Double(self.WATERQTY).truncatingRemainder(dividingBy: 1000.0)
+                    let leval1 = Double(currentModel.waterQuantity).truncatingRemainder(dividingBy: 1000.0)
                     print(leval1)
                     if leval1 == 0 {
                         self.conHeightWaterLeval.constant = self.viewOuter.frame.size.height
@@ -293,14 +275,14 @@ class HomeVC: UIViewController {
             }
             
             
-            let needWater = appDelegate.badgeCount * self.WATERQTYPERATTEMPT
+            let needWater = appDelegate.badgeCount * currentModel.waterQuantityPerAttempt
             let leval = Double(needWater).truncatingRemainder(dividingBy: 1000.0)
             print(leval)
             let outerViewHeight = Int(self.viewOuter.frame.size.height)
             
             lblBottleCount.text = "Bottle \(bottleNumberAsNotif) of \(tottleBottle)"
             if bottleNumberAsNotif == tottleBottle {
-                let leval1 = Double(self.WATERQTY).truncatingRemainder(dividingBy: 1000.0)
+                let leval1 = Double(currentModel.waterQuantity).truncatingRemainder(dividingBy: 1000.0)
                 print(leval1)
                 let decreasingHeightPerAttempt = Double((Double(outerViewHeight) * leval)/1000) + self.differenceWater
                 let diff = Double((Double(outerViewHeight) * leval1)/1000) + self.differenceWater
@@ -321,7 +303,7 @@ class HomeVC: UIViewController {
             }else{
                 //let decreasingHeightPerAttempt = Double((Double(outerViewHeight) * leval)/1000) + self.differenceWater
                 
-                let leval1 = Double(self.WATERQTY).truncatingRemainder(dividingBy: 1000.0)
+                let leval1 = Double(currentModel.waterQuantity).truncatingRemainder(dividingBy: 1000.0)
                 print(leval1)
                 let decreasingHeightPerAttempt = Double((Double(outerViewHeight) * leval)/1000) + self.differenceWater
                 let diff = Double((Double(outerViewHeight) * leval1)/1000) + self.differenceWater
@@ -348,30 +330,20 @@ class HomeVC: UIViewController {
     }
     
     func checkForAutoNotif() {
+        
         var localNotifCount = 0
         for i in 0...9 {
-            let format = DateFormatter()
-            format.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
-            format.timeZone = TimeZone(identifier: "UTC")
-            let checkDate = format.date(from: arrSetFixAlarmTime[i] as! String)
             
-            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+            dateFormatter.timeZone = TimeZone(identifier: "UTC")
+            let checkDate = dateFormatter.date(from: arrSetFixAlarmTime[i] as! String)
+            
             dateFormatter.dateFormat = "HH:mm"
             dateFormatter.timeZone = TimeZone(identifier: "UTC")
             
-            let formatter = DateFormatter()
-            formatter.dateFormat = "HH:mm"
-            formatter.timeZone = TimeZone(identifier: "UTC")
-            let strDate1 = formatter.string(from: Date())
-            print(strDate1)
+            let strDate2 = dateFormatter.string(from: checkDate!)
             
-            
-            let format1 = DateFormatter()
-            format1.dateFormat = "HH:mm"
-            format1.timeZone = TimeZone(identifier: "UTC")
-            let strDate2 = format1.string(from: checkDate!)
-            print(strDate2)
-            if   (dateFormatter.date(from: strDate2))! <= (dateFormatter.date(from: strTimes))!
+            if (dateFormatter.date(from: strDate2))! <= (dateFormatter.date(from: strTimes))!
             {
                 localNotifCount += 1
                 appDelegate.badgeCount = localNotifCount
@@ -389,9 +361,9 @@ class HomeVC: UIViewController {
     
     func countWaterLevalAsNotif() {
         
-        var waterAsPerNotif = appDelegate.badgeCount * self.WATERQTYPERATTEMPT
+        var waterAsPerNotif = appDelegate.badgeCount * currentModel.waterQuantityPerAttempt
         if waterAsPerNotif == 0 {
-            waterAsPerNotif = self.WATERQTYPERATTEMPT
+            waterAsPerNotif = currentModel.waterQuantityPerAttempt
         }
         let floatData = Double(waterAsPerNotif)/1000.0
         let intData = Double(waterAsPerNotif/1000)
@@ -503,7 +475,7 @@ class HomeVC: UIViewController {
                 }else{
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         
-                        if self.TOTALATTEMPT == 0
+                        if self.currentModel.totalAttempt == 0
                         {
                             self.conHeightWaterLeval.constant = self.viewOuter.frame.size.height
                             self.lblBottleCount.text = "Bottle \(bottleNumberAsNotif) of \(self.tottleBottle)"
@@ -580,7 +552,7 @@ class HomeVC: UIViewController {
             conTopNotifMarker.constant = -15
             lblWaterLavel.text = "\(1000)"
         }
-        if appDelegate.isToolTipShown != true {
+        if UserDefaultsManager.shared.isTutorialShown != true {
             checkForAutoNotif()
         }
     }
@@ -645,7 +617,7 @@ class HomeVC: UIViewController {
         btnHydrate.isUserInteractionEnabled = false
         let totalDrink = appDelegate.badgeCount - lastCountOfAttempt
         print("totalDrink--",totalDrink)
-        let remainingWaterQty = self.REMAININGWATERQTY - (totalDrink*WATERQTYPERATTEMPT)
+        let remainingWaterQty = currentModel.remainingWaterQuantity - (totalDrink*currentModel.waterQuantityPerAttempt)
         print("remainingWaterQty--",remainingWaterQty)
         self.lblWaterToDrink.text = "\(remainingWaterQty)ml"
         self.conHeightWaterLeval.constant = CGFloat(UserDefaultsManager.shared.lastWaterConstraint)
@@ -668,17 +640,17 @@ class HomeVC: UIViewController {
         }else{
             notifMarkerView.isHidden = false
         }
-        let lastBottle = Int(self.WATERQTY/1000) + 1
+        let lastBottle = Int(currentModel.waterQuantity/1000) + 1
         let totalDrink = appDelegate.badgeCount - lastCountOfAttempt
         counter += 1
         if counter <= totalDrink {
             
             let outerViewHeight = Int(self.viewOuter.frame.size.height)
-            let leval1 = Double(self.WATERQTY).truncatingRemainder(dividingBy: 1000.0)
+            let leval1 = Double(currentModel.waterQuantity).truncatingRemainder(dividingBy: 1000.0)
             print(leval1)
             let lastBottleWater = CGFloat((Double(outerViewHeight)*leval1)/1000)
             var heightConstant = CGFloat()
-            let decreasingHeightPerAttempt = Double((outerViewHeight*self.WATERQTYPERATTEMPT)/1000) + self.differenceWater
+            let decreasingHeightPerAttempt = Double((outerViewHeight*currentModel.waterQuantityPerAttempt)/1000) + self.differenceWater
             
             if CGFloat(decreasingHeightPerAttempt) > self.conHeightWaterLeval.constant {
                 
@@ -688,7 +660,7 @@ class HomeVC: UIViewController {
                 UIView.animate(withDuration: 1.0, animations: {
                     self.conHeightWaterLeval.constant = 0
                     
-                    leval = self.WATERQTYPERATTEMPT - Int(self.lblWaterLavel.text!)!
+                    leval = self.currentModel.waterQuantityPerAttempt - Int(self.lblWaterLavel.text!)!
                     self.lblWaterLavel.text = "0"
                     self.view.layoutIfNeeded()
                     self.view.layer.removeAllAnimations()
@@ -707,7 +679,7 @@ class HomeVC: UIViewController {
                     UIView.animate(withDuration: 1.0) {
                         if lastBottle == self.bottleCount + 1 {
                             self.conHeightWaterLeval.constant = CGFloat(Double(lastBottleWater - (CGFloat(decreasingHeightPerAttempt) - heightConstant)).rounded(toPlaces: 6)) - CGFloat(self.differenceWater)
-                            let leval1 = Double(self.WATERQTY).truncatingRemainder(dividingBy: 1000.0)
+                            let leval1 = Double(self.currentModel.waterQuantity).truncatingRemainder(dividingBy: 1000.0)
                             print(leval1)
                             let valuelevel = "\((1000 - Int(leval1)) - leval)"
                             self.lblWaterLavel.text = valuelevel
@@ -742,7 +714,7 @@ class HomeVC: UIViewController {
                 UIView.animate(withDuration: 1.0) {
                     
                     self.conHeightWaterLeval.constant = CGFloat(Double(self.conHeightWaterLeval.constant - CGFloat(decreasingHeightPerAttempt)).rounded(toPlaces: 6)) - CGFloat(self.differenceWater)
-                    let valuelevel = "\(Int(self.lblWaterLavel.text!)! - self.WATERQTYPERATTEMPT)"
+                    let valuelevel = "\(Int(self.lblWaterLavel.text!)! - self.currentModel.waterQuantityPerAttempt)"
                     self.lblWaterLavel.text = valuelevel
                     if self.counter == 10 {
                         self.conHeightWaterLeval.constant = 0
@@ -759,7 +731,7 @@ class HomeVC: UIViewController {
             
             timer.invalidate()
             notifMarkerView.isHidden = true
-            let remainingWaterQty = self.REMAININGWATERQTY - (totalDrink*WATERQTYPERATTEMPT)
+            let remainingWaterQty = currentModel.remainingWaterQuantity - (totalDrink * currentModel.waterQuantityPerAttempt)
             updateData(REMAININGWATERQTY: remainingWaterQty, TOTALATTEMPT: appDelegate.badgeCount)
             lastCountOfAttempt = appDelegate.badgeCount
             UserDefaultsManager.shared.lastWaterConstraint = Int(conHeightWaterLeval.constant)
@@ -778,43 +750,33 @@ class HomeVC: UIViewController {
     
     
     func searchDataForUpdate() {
-        let today = Date().toLocalTime()
-        let dateFormattor = DateFormatter()
-        dateFormattor.dateFormat = "yyyy-MM-dd"
-        dateFormattor.timeZone = TimeZone(identifier: "UTC")
-        let strDate = dateFormattor.string(from: today)
-        let strURL = "SELECT * FROM HYDROFUELPERSINFO where DATE='\(strDate)'"
-        print(strURL)
         
-        let data = AFSQLWrapper.selectIdDataTable(strURL)
-        print(data)
+        let today = Date().toLocalTime()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        let strDate = dateFormatter.string(from: today)
+        
+        let data = DBManager.shared.selectAllByDate(strDate)
+
         if data.status == 1 {
             
-            print(data.success)
             let arrLocalData = data.arrData
-            dictPrevious = (arrLocalData[0] as! NSDictionary).mutableCopy() as! NSMutableDictionary
+            previousModel = arrLocalData[0]
             
-            self.DATE = dictPrevious.value(forKey: "DATE") as! String
-            self.WEIGHT = dictPrevious.value(forKey: "WEIGHT") as! Int
-            self.GENDER = dictPrevious.value(forKey: "GENDER") as! String
-            self.ACTIVITYLAVEL = dictPrevious.value(forKey: "ACTIVITYLAVEL") as! String
-            self.WATERQTY = dictPrevious.value(forKey: "WATERQTY") as! Int
-            
-            let floatData = Double(self.WATERQTY)/1000.0
-            let intData = Double(self.WATERQTY/1000)
+            let floatData = Double(currentModel.waterQuantity)/1000.0
+            let intData = Double(currentModel.waterQuantity/1000)
             if intData < floatData {
-                self.tottleBottle = (self.WATERQTY/1000) + 1
+                self.tottleBottle = (currentModel.waterQuantity/1000) + 1
             }else{
-                self.tottleBottle = (self.WATERQTY/1000)
+                self.tottleBottle = (currentModel.waterQuantity/1000)
             }
-            self.REMAININGWATERQTY = dictPrevious.value(forKey: "REMAININGWATERQTY") as! Int
-            self.TOTALDRINK = dictPrevious.value(forKey: "TOTALDRINK") as! Int
-            self.TOTALATTEMPT = dictPrevious.value(forKey: "TOTALATTEMPT") as! Int
-            self.WATERQTYPERATTEMPT = dictPrevious.value(forKey: "WATERQTYPERATTEMPT") as! Int
-            let remainingWaterQty = self.REMAININGWATERQTY - (TOTALDRINK*WATERQTYPERATTEMPT)
+            
+            currentModel.remainingWaterQuantity = previousModel.remainingWaterQuantity
+            currentModel.totalDrink = previousModel.totalDrink
+            currentModel.totalAttempt = previousModel.totalAttempt
+            currentModel.waterQuantityPerAttempt = previousModel.waterQuantityPerAttempt
+            let remainingWaterQty = currentModel.remainingWaterQuantity - (currentModel.totalDrink * currentModel.waterQuantityPerAttempt)
             self.lblWaterToDrink.text = "\(remainingWaterQty)ml"
-            
-            
             
         } else {
             print(data.failure)
@@ -889,10 +851,8 @@ class HomeVC: UIViewController {
         conTopNotifMarker.constant = -15
         appDelegate.resettime = "reset"
         UserDefaultsManager.shared.lastDisplayedWaterLevel = Int(lblWaterLavel.text!)!
-
+        
         searchDataForUpdate()
-        
-        
     }
     
     func showData() {
@@ -906,13 +866,13 @@ class HomeVC: UIViewController {
         
         if data.status == 1 {
             let arrLocalData = data.arrData
-            dictPrevious = (arrLocalData[arrLocalData.count-1] as! NSDictionary).mutableCopy() as! NSMutableDictionary
+            previousModel = arrLocalData[arrLocalData.count-1]
             
             
-            let WEIGHT1 = dictPrevious.value(forKey: "WEIGHT") as! Int
-            let GENDER1 = dictPrevious.value(forKey: "GENDER") as! String
-            let ACTIVITYLAVEL1 = dictPrevious.value(forKey: "ACTIVITYLAVEL") as! String
-            let WATERQTY1 = dictPrevious.value(forKey: "WATERQTY") as! Int
+            let WEIGHT1 = previousModel.weight
+            let GENDER1 = previousModel.gender
+            let ACTIVITYLAVEL1 = previousModel.activityLevel
+            let WATERQTY1 = previousModel.waterQuantity
             
             let floatData = Double(WATERQTY1)/1000.0
             let intData = Double(WATERQTY1/1000)
@@ -921,8 +881,7 @@ class HomeVC: UIViewController {
             }else{
                 self.tottleBottle = (WATERQTY1/1000)
             }
-            let WATERQTYPERATTEMPT1 = dictPrevious.value(forKey: "WATERQTYPERATTEMPT") as! Int
-            
+            let WATERQTYPERATTEMPT1 = previousModel.waterQuantityPerAttempt
             
             self.insertData(DATE: strDate, WEIGHT: WEIGHT1, GENDER: GENDER1, ACTIVITYLAVEL: ACTIVITYLAVEL1, WATERQTY: WATERQTY1, REMAININGWATERQTY: WATERQTY1, TOTALDRINK: 0, TOTALATTEMPT: 0, WATERQTYPERATTEMPT: WATERQTYPERATTEMPT1)
             
@@ -930,43 +889,39 @@ class HomeVC: UIViewController {
         
     }
     
-    func resetData(){
-        let today = Date().toLocalTime()
-        let dateFormattor = DateFormatter()
-        dateFormattor.dateFormat = "yyyy-MM-dd"
-        dateFormattor.timeZone = TimeZone(identifier: "UTC")
-        let strDate = dateFormattor.string(from: today)
-        let strURL = "update HYDROFUELPERSINFO set REMAININGWATERQTY='\(self.WATERQTY)', TOTALDRINK='\(0)',TOTALATTEMPT='\(0)' where DATE='\(strDate)'"
-        print(strURL)
+    func resetData() {
         
-        let data = AFSQLWrapper.updateTable(strURL)
-        print(data)
+        let result = DBManager.shared.resetCurrentProgress(waterQuantity: currentModel.waterQuantity)
+        
         btnHydrate.backgroundColor = UIColor.disableColour
-        if data.status == 1 {
-            UIApplication.shared.applicationIconBadgeNumber = 0
-            appDelegate.badgeCount = 0
-            lastCountOfAttempt = 0
-            bottleCount = 1
-            prevWaterLeval = viewOuter.frame.size.height
-            conHeightWaterLeval.constant = viewOuter.frame.size.height
-            
-            UserDefaultsManager.shared.lastWaterConstraint = Int(conHeightWaterLeval.constant)
-            UserDefaultsManager.shared.bottleCount = 1
-            UserDefaultsManager.shared.previousDate = strDate
-            UserDefaultsManager.shared.lastCountOfAttempt = 0
-            UserDefaultsManager.shared.prevWaterLevel = Double(viewOuter.frame.size.height).rounded(toPlaces: 6)
-            UserDefaultsManager.shared.lastDisplayedWaterLevel = 1000
-            lblBottleCount.text = "Bottle \(bottleCount) of \(tottleBottle)"
-            notifMarkerView.isHidden = true
-            lblWaterLavel.text = "\(1000)"
-            
-            lblNotifWaterLavel.text = ""
-            conTopNotifMarker.constant = -15
-            appDelegate.resettime = "reset"
-            UserDefaultsManager.shared.lastDisplayedWaterLevel  = Int(lblWaterLavel.text!)!
-            searchDataForUpdate()
-            
+        guard result.0.status == 1 else {
+            return
         }
+        
+        appDelegate.badgeCount = 0
+        lastCountOfAttempt = 0
+        bottleCount = 1
+        prevWaterLeval = viewOuter.frame.size.height
+        
+        conHeightWaterLeval.constant = viewOuter.frame.size.height
+        
+        UserDefaultsManager.shared.lastWaterConstraint = Int(conHeightWaterLeval.constant)
+        UserDefaultsManager.shared.bottleCount = 1
+        UserDefaultsManager.shared.previousDate = result.resetDate
+        UserDefaultsManager.shared.lastCountOfAttempt = 0
+        UserDefaultsManager.shared.prevWaterLevel = Double(viewOuter.frame.size.height).rounded(toPlaces: 6)
+        UserDefaultsManager.shared.lastDisplayedWaterLevel = 1000
+        lblBottleCount.text = "Bottle \(bottleCount) of \(tottleBottle)"
+        notifMarkerView.isHidden = true
+        lblWaterLavel.text = "\(1000)"
+        
+        lblNotifWaterLavel.text = ""
+        conTopNotifMarker.constant = -15
+        appDelegate.resettime = "reset"
+        UserDefaultsManager.shared.lastDisplayedWaterLevel  = Int(lblWaterLavel.text!)!
+        searchDataForUpdate()
+        
+        
     }
     
 }
@@ -978,40 +933,42 @@ extension HomeVC: iShowcaseDelegate {
         currentShowcase += 1
     }
     
-    func iShowcaseDismissed(_ showcase: iShowcase) {
+    private func showFirstTutorialView() {
         
-        self.showcase.titleLabel.font = UIFont.avenirMedium17
+        notificationvideDomo.isHidden = false
+        showcase.setupShowcaseForView(lblWaterLavel)
+        showcase.titleLabel.text = "Water level 1: This shows you how full the bottle is."
+        showcase.titleLabel.font = UIFont.avenirMedium17
+        showcase.detailsLabel.text = "\n"
+        showcase.show()
+    }
+    
+    func iShowcaseDismissed(_ showcase: iShowcase) {
         
         switch currentShowcase {
         case 1:
             self.showcase.setupShowcaseForView(self.demowaterlevel)
             self.showcase.titleLabel.text = "Water level 2: This shows you where you need to drink to."
-            self.showcase.detailsLabel.text = "      "
             self.showcase.show()
             
         case 2:
             self.notificationvideDomo.isHidden = true
             self.showcase.setupShowcaseForView(self.btnHydrate)
             self.showcase.titleLabel.text = "Once you’ve drank… Tap ‘Hydrate’ and the water level will update automatically."
-            self.showcase.detailsLabel.text = "     "
             self.showcase.show()
             
         case 3:
             self.showcase.setupShowcaseForView(self.btnReset)
             self.showcase.titleLabel.text = "Click here to reset today’s intake."
-            self.showcase.detailsLabel.text = "      "
             self.showcase.show()
             
         case 4:
             self.showcase.setupShowcaseForView(self.imgBottle)
             self.showcase.titleLabel.text = "You’re Done! Fill up your bottle and lets get started!"
-            self.showcase.detailsLabel.text = "      "
             self.showcase.show()
             
-            
         default:
-            UserDefaultsManager.shared.shouldShowTutorial = false
-            appDelegate.isToolTipShown = false
+            UserDefaultsManager.shared.isTutorialShown = true
             print("Default")
             checkForAutoNotif()
             
