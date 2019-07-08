@@ -11,9 +11,9 @@ import SlideMenuControllerSwift
 import StoreKit
 import SVProgressHUD
 
-final class menuVC: UIViewController {
+final class menuVC: UIViewController, AppStoreOpenable {
     
-    @IBOutlet var tblview: UITableView!
+    @IBOutlet private weak var tblview: UITableView!
     
     @objc var mainViewController: UIViewController!
     @objc var HomeVC: UIViewController!
@@ -25,10 +25,13 @@ final class menuVC: UIViewController {
     
     var arrayname = ["Home", "History", "Modify Alerts", "My Statistics", "Buy",
                      "Personal Info", "Help & About Us", "Rate & Review"]
-    var arrayimg = ["homeimg", "history", "alarm", "graph", "shoppingcartblack",
-                    "personal", "help", "rateandreview"]
-    var arrayimgblue = ["homeblue", "historyblue", "alarm_selected", "graphblue",
-                        "shoppingcartblue", "settingblue", "help", "rateandreview"]
+    var arrayimg = [R.image.homeimg(), R.image.history(), R.image.alarm(),
+                    R.image.graph(), R.image.shoppingcartblack(), R.image.personal(),
+                    R.image.help(), R.image.rateandreview()]
+    
+    var arrayimgblue = [R.image.homeblue(), R.image.historyblue(), R.image.alarm_selected(),
+                        R.image.graphblue(), R.image.shoppingcartblue(), R.image.settingblue(),
+                        R.image.help(), R.image.rateandreview()]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,16 +55,16 @@ extension menuVC: UITableViewDataSource {
         }
         
         cell.lblname.text = arrayname[indexPath.row]
-        cell.imgview.image = UIImage(named:arrayimg[indexPath.row])
+        cell.imgview.image = arrayimg[indexPath.row]
         
         cell.lineview.isHidden = indexPath.row != 3
         
         if appDelegate.menuName == arrayname[indexPath.row] {
             cell.lblname.textColor = UIColor.bgcolor
-            cell.imgview.image = UIImage(named: arrayimgblue[indexPath.row])
+            cell.imgview.image = arrayimgblue[indexPath.row]
         } else {
             cell.lblname.textColor = UIColor.black
-            cell.imgview.image = UIImage(named: arrayimg[indexPath.row])
+            cell.imgview.image = arrayimg[indexPath.row]
         }
         return cell
     }
@@ -117,7 +120,7 @@ extension menuVC: UITableViewDelegate {
             
         case 5:
             appDelegate.backvar = "static"
-            appDelegate.menuvar = "show"
+            appDelegate.isMenuIconHidden = false
             
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let HomeVC = storyboard.instantiateViewController(withIdentifier: "PersonalInfoVC") as!  PersonalInfoVC
@@ -130,11 +133,9 @@ extension menuVC: UITableViewDelegate {
             }
             UIApplication.shared.open(url, options: [:]) { (_) in }
         case 7:
-//            guard let url = URL(string: "https://itunes.apple.com/us/app/buddyball/id1432543329?ls=1&mt=8") else {
-//                return
-//            }
-//            UIApplication.shared.open(url, options: [:]) { (_) in }
-            viewProductInAppStore()
+            let storeVC = SKStoreProductViewController()
+            storeVC.delegate = self
+            viewProductAtAppStore(storeVC: storeVC)
             
         default:
             assertionFailure("Unknown row value, plese update this method")
@@ -147,32 +148,10 @@ extension menuVC: UITableViewDelegate {
     
 }
 
-
 // MARK: - SKStoreProductViewControllerDelegate
 extension menuVC: SKStoreProductViewControllerDelegate {
-    
-    private func viewProductInAppStore() {
-        
-        let storeViewController = SKStoreProductViewController()
-        storeViewController.delegate = self
-        let parameters = [SKStoreProductParameterITunesItemIdentifier : 1432543329]
-        SVProgressHUD.show(withStatus: "Opening AppStore...")
-        
-        storeViewController.loadProduct(withParameters: parameters) { [weak self] (loaded, error) -> Void in
-            SVProgressHUD.dismiss()
-            guard let _self = self else {
-                return
-            }
-            if loaded {
-                _self.present(storeViewController, animated: true, completion: nil)
-            } else if let error = error {
-                AlertPresenter.showErrorAlert(at: _self, message: error.localizedDescription)
-            }
-        }
-    }
     
     func productViewControllerDidFinish(_ viewController: SKStoreProductViewController) {
         viewController.dismiss(animated: true, completion: nil)
     }
-    
 }

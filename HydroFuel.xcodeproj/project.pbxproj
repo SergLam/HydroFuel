@@ -26,6 +26,9 @@
 		7C59A05922D0A3D8005B474E /* LocalNotificationsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C59A05822D0A3D8005B474E /* LocalNotificationsService.swift */; };
 		7C59A05D22D0B582005B474E /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C59A05C22D0B582005B474E /* UserDefaultsManager.swift */; };
 		7C59A06322D23A92005B474E /* DataRecordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C59A06222D23A92005B474E /* DataRecordModel.swift */; };
+		7C6007A922D3D37700FBDD11 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6007A822D3D37700FBDD11 /* R.generated.swift */; };
+		7C6007AC22D3D68800FBDD11 /* AppStoreOpenable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6007AB22D3D68800FBDD11 /* AppStoreOpenable.swift */; };
+		7C6007AE22D3DF9F00FBDD11 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7C6007AD22D3DF9F00FBDD11 /* Localizable.strings */; };
 		7CA167FE22D3067D00274D89 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA167FD22D3067D00274D89 /* User.swift */; };
 		7CA1680022D3109400274D89 /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA167FF22D3109400274D89 /* UIView+Ext.swift */; };
 		7CA8984D22D28202007D3DD0 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA8984C22D28202007D3DD0 /* AppRouter.swift */; };
@@ -75,6 +78,9 @@
 		7C59A05822D0A3D8005B474E /* LocalNotificationsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsService.swift; sourceTree = "<group>"; };
 		7C59A05C22D0B582005B474E /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		7C59A06222D23A92005B474E /* DataRecordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataRecordModel.swift; sourceTree = "<group>"; };
+		7C6007A822D3D37700FBDD11 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = "<group>"; };
+		7C6007AB22D3D68800FBDD11 /* AppStoreOpenable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreOpenable.swift; sourceTree = "<group>"; };
+		7C6007AD22D3DF9F00FBDD11 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		7CA167FD22D3067D00274D89 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		7CA167FF22D3109400274D89 /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
 		7CA8984C22D28202007D3DD0 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
@@ -177,6 +183,8 @@
 				A796B06521391CDF00FD85A1 /* Fonts */,
 				7C59A04D22CFFBB2005B474E /* UIColor+Ext.swift */,
 				7C59A04F22D06B26005B474E /* UIFont+Ext.swift */,
+				7C6007A822D3D37700FBDD11 /* R.generated.swift */,
+				7C6007AD22D3DF9F00FBDD11 /* Localizable.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -233,6 +241,14 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		7C6007AA22D3D67300FBDD11 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				7C6007AB22D3D68800FBDD11 /* AppStoreOpenable.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
 		9834042595A6A2FDBF07E7CF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -262,6 +278,7 @@
 		A7505898213916FA00CA3878 /* HydroFuel */ = {
 			isa = PBXGroup;
 			children = (
+				7C6007AA22D3D67300FBDD11 /* Protocols */,
 				7C59A06122D23A77005B474E /* Models */,
 				7C59A05522D08B27005B474E /* Services */,
 				7C59A04422CFF9D6005B474E /* Extenstions */,
@@ -302,6 +319,7 @@
 			buildConfigurationList = A75058A8213916FA00CA3878 /* Build configuration list for PBXNativeTarget "HydroFuel" */;
 			buildPhases = (
 				E928F0E0B641290808D3F0C8 /* [CP] Check Pods Manifest.lock */,
+				7C6007A722D3D1FD00FBDD11 /* R.swift */,
 				A7505892213916FA00CA3878 /* Sources */,
 				A7505893213916FA00CA3878 /* Frameworks */,
 				A7505894213916FA00CA3878 /* Resources */,
@@ -359,6 +377,7 @@
 				A796B06921391CDF00FD85A1 /* Avenir-Book.ttf in Resources */,
 				A75058A4213916FA00CA3878 /* LaunchScreen.storyboard in Resources */,
 				A75058A1213916FA00CA3878 /* Assets.xcassets in Resources */,
+				7C6007AE22D3DF9F00FBDD11 /* Localizable.strings in Resources */,
 				A796B06B21391CDF00FD85A1 /* Avenir-Roman.ttf in Resources */,
 				A796B06A21391CDF00FD85A1 /* Avenir-Light.ttf in Resources */,
 				A750589F213916FA00CA3878 /* Main.storyboard in Resources */,
@@ -368,6 +387,26 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		7C6007A722D3D1FD00FBDD11 /* R.swift */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$TEMP_DIR/rswift-lastrun",
+			);
+			name = R.swift;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				$SRCROOT/HydroFuel/Resources/R.generated.swift,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/HydroFuel/Resources/R.generated.swift\"\n";
+		};
 		B9262F07074B349E4A1D803B /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -379,6 +418,7 @@
 				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
 				"${BUILT_PRODUCTS_DIR}/FSCalendar/FSCalendar.framework",
 				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/R.swift.Library/Rswift.framework",
 				"${BUILT_PRODUCTS_DIR}/SVProgressHUD/SVProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/SlideMenuControllerSwift/SlideMenuControllerSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/UICircularProgressRing/UICircularProgressRing.framework",
@@ -390,6 +430,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FSCalendar.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Rswift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SVProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SlideMenuControllerSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UICircularProgressRing.framework",
@@ -437,6 +478,7 @@
 				A72C71A2213A7781008FB95F /* HistoryDetail.swift in Sources */,
 				7C59A04C22CFFB0E005B474E /* String+Ext.swift in Sources */,
 				6DF23DF9214A6F7A000A7DBB /* FMDatabaseQueue.m in Sources */,
+				7C6007AC22D3D68800FBDD11 /* AppStoreOpenable.swift in Sources */,
 				A72C71A4213A7795008FB95F /* MyStatisticVC.swift in Sources */,
 				7CA1680022D3109400274D89 /* UIView+Ext.swift in Sources */,
 				7C59A05222D074B4005B474E /* Date+Ext.swift in Sources */,
@@ -452,6 +494,7 @@
 				6DF23DFB214A6F7A000A7DBB /* FMDatabaseAdditions.m in Sources */,
 				6DF23DFC214A6F7A000A7DBB /* FMDatabase.m in Sources */,
 				7C59A04E22CFFBB2005B474E /* UIColor+Ext.swift in Sources */,
+				7C6007A922D3D37700FBDD11 /* R.generated.swift in Sources */,
 				6DF23DFD214A6F7A000A7DBB /* FMDatabasePool.m in Sources */,
 				7C59A05922D0A3D8005B474E /* LocalNotificationsService.swift in Sources */,
 				7CA8984D22D28202007D3DD0 /* AppRouter.swift in Sources */,

@@ -11,15 +11,15 @@ import Charts
 
 final class MyStatisticVC: UIViewController {
     
-    @IBOutlet var lblnineteendays: UILabel!
-    @IBOutlet var lblthirteendays: UILabel!
-    @IBOutlet var lblsevendays: UILabel!
+    @IBOutlet private weak var lblnineteendays: UILabel!
+    @IBOutlet private weak var lblthirteendays: UILabel!
+    @IBOutlet private weak var lblsevendays: UILabel!
     var DateArr = [String]()
     
     var unitsSold = [Double]()
-    weak var axisFormatDelegate: IAxisValueFormatter?
-    @IBOutlet var imgback: UIImageView!
-    @IBOutlet var linechart: LineChartView!
+    private weak var axisFormatDelegate: IAxisValueFormatter?
+    @IBOutlet private weak var imgback: UIImageView!
+    @IBOutlet private weak var linechart: LineChartView!
     var arrDates = NSMutableArray()
     var arrDataForDates = NSMutableArray()
     var arrtotal = NSMutableArray()
@@ -72,7 +72,7 @@ final class MyStatisticVC: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
+        super.viewWillAppear(animated)
         switch appDelegate.backvar {
             
         case "static":

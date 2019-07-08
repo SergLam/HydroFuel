@@ -16,10 +16,10 @@ import CTShowcase
 
 final class AlertVCNew: UIViewController {
     
-    @IBOutlet weak var highlightview: UIView!
-    @IBOutlet weak var btnMenu: UIButton!
-    @IBOutlet weak var tblAlert: UITableView!
-    @IBOutlet var imgback: UIImageView!
+    @IBOutlet private weak var highlightview: UIView!
+    @IBOutlet private weak var btnMenu: UIButton!
+    @IBOutlet private weak var tblAlert: UITableView!
+    @IBOutlet private weak var imgback: UIImageView!
    
     let datePickerView = UIDatePicker()
     let datetime = Date()

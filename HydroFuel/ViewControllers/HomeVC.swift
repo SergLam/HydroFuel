@@ -12,40 +12,41 @@ import UIKit
 import SafariServices
 import iShowcase
 import CTShowcase
+import StoreKit
 
-final class HomeVC: UIViewController {
+final class HomeVC: UIViewController, AppStoreOpenable {
     
     var previousModel: DataRecordModel!
     
-    @IBOutlet var conBottomWater: NSLayoutConstraint!
-    @IBOutlet weak var demowaterlevel: UILabel!
-    @IBOutlet weak var lblBottleCount: UILabel!
-    @IBOutlet weak var viewOuter: UIView!
-    @IBOutlet weak var conTopBlueBG: NSLayoutConstraint!
+    @IBOutlet private weak var conBottomWater: NSLayoutConstraint!
+    @IBOutlet private weak var demowaterlevel: UILabel!
+    @IBOutlet private weak var lblBottleCount: UILabel!
+    @IBOutlet private weak var viewOuter: UIView!
+    @IBOutlet private weak var conTopBlueBG: NSLayoutConstraint!
     
-    @IBOutlet weak var conImgTrailing: NSLayoutConstraint!
-    @IBOutlet weak var conHeightWaterLeval: NSLayoutConstraint!
+    @IBOutlet private weak var conImgTrailing: NSLayoutConstraint!
+    @IBOutlet private weak var conHeightWaterLeval: NSLayoutConstraint!
     
-    @IBOutlet weak var conImgLeading: NSLayoutConstraint!
+    @IBOutlet private weak var conImgLeading: NSLayoutConstraint!
     
-    @IBOutlet weak var lblWaterToDrink: UILabel!
-    @IBOutlet weak var fartuMarkerView: UIView!
-    @IBOutlet weak var lblWaterLavel: UILabel!
+    @IBOutlet private weak var lblWaterToDrink: UILabel!
+    @IBOutlet private weak var fartuMarkerView: UIView!
+    @IBOutlet private weak var lblWaterLavel: UILabel!
     
-    @IBOutlet weak var notifMarkerView: UIView!
-    @IBOutlet weak var lblNotifWaterLavel: UILabel!
-    @IBOutlet weak var conTopNotifMarker: NSLayoutConstraint!
+    @IBOutlet private weak var notifMarkerView: UIView!
+    @IBOutlet private weak var lblNotifWaterLavel: UILabel!
+    @IBOutlet private weak var conTopNotifMarker: NSLayoutConstraint!
     
-    @IBOutlet weak var notificationvideDomo: UIView!
-    @IBOutlet weak var btnReset: UIButton!
-    @IBOutlet weak var btnHydrate: UIButton!
-    @IBOutlet weak var conBottomTab: NSLayoutConstraint!
+    @IBOutlet private weak var notificationvideDomo: UIView!
+    @IBOutlet private weak var btnReset: UIButton!
+    @IBOutlet private weak var btnHydrate: UIButton!
+    @IBOutlet private weak var conBottomTab: NSLayoutConstraint!
     
-    @IBOutlet weak var conTopBottleCount: NSLayoutConstraint!
+    @IBOutlet private weak var conTopBottleCount: NSLayoutConstraint!
     
-    @IBOutlet weak var imgBottle: UIImageView!
+    @IBOutlet private weak var imgBottle: UIImageView!
     
-    @IBOutlet var conTopvideoMarker: NSLayoutConstraint!
+    @IBOutlet private weak var conTopvideoMarker: NSLayoutConstraint!
     
     var currentModel = DataRecordModel.defaultModel()
     
@@ -592,12 +593,9 @@ final class HomeVC: UIViewController {
     
     @IBAction func btnRateusclick(_ sender: UIButton) {
         
-        guard let url = URL(string: "https://itunes.apple.com/us/app/buddyball/id1432543329?ls=1&mt=8") else {
-            return
-        }
-        UIApplication.shared.open(url, options: [:]) { (_) in
-            
-        }
+        let storeVC = SKStoreProductViewController()
+        storeVC.delegate = self
+        viewProductAtAppStore(storeVC: storeVC)
     }
     
     
@@ -937,7 +935,7 @@ extension HomeVC: iShowcaseDelegate {
         
         notificationvideDomo.isHidden = false
         showcase.setupShowcaseForView(lblWaterLavel)
-        showcase.titleLabel.text = "Water level 1: This shows you how full the bottle is."
+        showcase.titleLabel.text = Localizable.homeTutorialFirstStep()
         showcase.titleLabel.font = UIFont.avenirMedium17
         showcase.detailsLabel.text = "\n"
         showcase.show()
@@ -948,23 +946,23 @@ extension HomeVC: iShowcaseDelegate {
         switch currentShowcase {
         case 1:
             self.showcase.setupShowcaseForView(self.demowaterlevel)
-            self.showcase.titleLabel.text = "Water level 2: This shows you where you need to drink to."
+            self.showcase.titleLabel.text = Localizable.homeTutorialSecondStep()
             self.showcase.show()
             
         case 2:
             self.notificationvideDomo.isHidden = true
             self.showcase.setupShowcaseForView(self.btnHydrate)
-            self.showcase.titleLabel.text = "Once you’ve drank… Tap ‘Hydrate’ and the water level will update automatically."
+            self.showcase.titleLabel.text = Localizable.homeTutorialThirdStep()
             self.showcase.show()
             
         case 3:
             self.showcase.setupShowcaseForView(self.btnReset)
-            self.showcase.titleLabel.text = "Click here to reset today’s intake."
+            self.showcase.titleLabel.text = Localizable.homeTutorialFourthStep()
             self.showcase.show()
             
         case 4:
             self.showcase.setupShowcaseForView(self.imgBottle)
-            self.showcase.titleLabel.text = "You’re Done! Fill up your bottle and lets get started!"
+            self.showcase.titleLabel.text = Localizable.homeTutorialFifthStep()
             self.showcase.show()
             
         default:
@@ -975,4 +973,12 @@ extension HomeVC: iShowcaseDelegate {
         }
     }
     
+}
+
+// MARK: - SKStoreProductViewControllerDelegate
+extension HomeVC: SKStoreProductViewControllerDelegate {
+    
+    func productViewControllerDidFinish(_ viewController: SKStoreProductViewController) {
+        viewController.dismiss(animated: true, completion: nil)
+    }
 }

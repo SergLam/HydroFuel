@@ -12,18 +12,12 @@ import CTShowcase
 
 final class PersonalInfoVC: UIViewController {
     
-    var weightCurrentVAle = Int(){
-        didSet{
-            caluculateTotalValue()
-        }
-    }
-    
     @IBOutlet private weak var btnMinus: UIButton!
     @IBOutlet private weak var btnPlus: UIButton!
     @IBOutlet private weak var imgmenu: UIImageView!
     @IBOutlet private weak var btnmenu: UIButton!
     
-    @IBOutlet private weak var lblwaterml: UILabel!
+    @IBOutlet weak var suggestedWatelVolumeLabel: UILabel!
     
     @IBOutlet private weak var imghigh: UIImageView!
     @IBOutlet private weak var imgmedium: UIImageView!
@@ -38,12 +32,25 @@ final class PersonalInfoVC: UIViewController {
     @IBOutlet private weak var lblkg: UILabel!
     @IBOutlet private weak var slider: UISlider!
     
-    private let activeFemaleImage = UIImage(named: "femalebuttonblue")
-    private let inActiveFemaleImage = UIImage(named: "femalebuttonblack")
+    private let activeFemaleImage = R.image.femalebuttonblue()
+    private let inActiveFemaleImage = R.image.femalebuttonblack()
     
-    private let activeMaleImage = UIImage(named: "malebuttonblue")
-    private let inActiveMaleImage = UIImage(named: "malebuttonblack")
+    private let activeMaleImage = R.image.malebuttonblue()
+    private let inActiveMaleImage = R.image.malebuttonblack()
 
+    private let selectedLowActImage = R.image.standingbuttonblue()
+    private let unSelectedLowActImage = R.image.standingbuttonblack()
+    private let selectedMediumActImage = R.image.walkingbuttonblue()
+    private let unSelectedMediumActImage = R.image.walkingbuttonblue()
+    private let selectedHighActImage = R.image.runningbuttonblue()
+    private let unSelectedHighActImage = R.image.runningbuttonblack()
+    
+    var weightCurrentVAle = Int(){
+        didSet{
+            caluculateTotalValue()
+        }
+    }
+    
     var maleans = 0
     var ans1 = 0
     
@@ -71,9 +78,9 @@ final class PersonalInfoVC: UIViewController {
         lblkg.text = "50" + "Kg"
         weightCurrentVAle = 50
         ans = (Int(Double(weightCurrentVAle) * Double(0.033) * 1000) )
-        lblwaterml.text =  "\(ans)"
+        suggestedWatelVolumeLabel.text =  "\(ans)"
         num = getSuggestedWaterLevel()
-        lblwaterml.text = "\(num)" + " " + "ml"
+        suggestedWatelVolumeLabel.text = "\(num)"
         Imgmalegrayline.image = activeMaleImage
         
         navigationController?.navigationBar.isHidden = true
@@ -102,7 +109,7 @@ final class PersonalInfoVC: UIViewController {
     
     @IBAction func btnClickedToChangeDailyTarget(_ sender: UIButton) {
         
-        var currentAmount = Int((lblwaterml.text ?? "0").replacingOccurrences(of: " ml", with: "")) ?? 0
+        var currentAmount = Int(suggestedWatelVolumeLabel.text ?? "0") ?? 0
         if sender.tag == 1{
             //Plus
             currentAmount += 500
@@ -110,9 +117,8 @@ final class PersonalInfoVC: UIViewController {
             //Minus
             currentAmount = max(500, currentAmount-500)
         }
-        lblwaterml.text = "\(currentAmount)"
+        suggestedWatelVolumeLabel.text = "\(currentAmount)"
         num = currentAmount
-        lblwaterml.text = "\(currentAmount)" + " ml"
         caluculatedWaterLevelValue = currentAmount
         resetValues()
     }
@@ -144,10 +150,7 @@ final class PersonalInfoVC: UIViewController {
         
         lblkg.text = "\(weightCurrentVAle) kg"
         caluculatedWaterLevelValue = (Int(Double(weightCurrentVAle) * Double(0.033) * 1000))
-        lblwaterml.text = "\(caluculatedWaterLevelValue)"
-        num = getSuggestedWaterLevel()
-        lblwaterml.text = "\(num)" + " " + "ml"
-        lblwaterml.text = "\(caluculatedWaterLevelValue)"  + " " + "ml"
+        suggestedWatelVolumeLabel.text = "\(caluculatedWaterLevelValue)"
         
         switch user.activityLevel {
       
@@ -160,9 +163,9 @@ final class PersonalInfoVC: UIViewController {
                 Imgmalegrayline.image = gender == .female ? inActiveMaleImage : activeMaleImage
                 num = getSuggestedWaterLevel()
                 
-                imglow.image = activity == .low ? UIImage(named: "standingbuttonblue") : UIImage(named: "standingbuttonblack")
-                imgmedium.image = activity == .medium ? UIImage(named: "walkingbuttonblue") : UIImage(named: "walkingbuttonblack")
-                imghigh.image = activity == .high ? UIImage(named: "runningbuttonblue") : UIImage(named: "runningbuttonblack")
+                imglow.image = activity == .low ? selectedLowActImage : unSelectedLowActImage
+                imgmedium.image = activity == .medium ? selectedMediumActImage : unSelectedMediumActImage
+                imghigh.image = activity == .high ? selectedHighActImage : unSelectedHighActImage
                 
                 switch activity {
                     
@@ -193,15 +196,16 @@ final class PersonalInfoVC: UIViewController {
     
     private func caluCulateGenderValue(genderText: String, genderRation: Double) {
         user.gender = Gender(rawValue: genderText)
-        lblwaterml.text = "\(Int(Double(caluculatedWaterLevelValue) + Double(genderRation) * 1000))"
+        suggestedWatelVolumeLabel.text = "\(Int(Double(caluculatedWaterLevelValue) + Double(genderRation) * 1000))"
         num = getSuggestedWaterLevel()
-        lblwaterml.text = "\(num)"  + " " + "ml"
+        suggestedWatelVolumeLabel.text = "\(num)"
     }
     
     @objc func panGesture(gesture: UIPanGestureRecognizer) {
+        
         let currentPoint = gesture.location(in: slider)
         let percentage = currentPoint.x/slider.bounds.size.width;
-        let delta = Float(percentage) *  (slider.maximumValue - slider.minimumValue)
+        let delta = Float(percentage) * (slider.maximumValue - slider.minimumValue)
         let value1 = slider.minimumValue + delta
         slider.setValue(value1, animated: true)
         if value == "abcd"{
@@ -214,15 +218,16 @@ final class PersonalInfoVC: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         if UserDefaults.standard.value(forKey: "fill") != nil{
             searchDataForUpdate()
-        }else{
+        } else {
             let tempDate = "2000-12-31"
             DBManager.shared.firstInsertData(date: tempDate, weight: 0, gender: "Male", activityLevel: "Low", waterQty: 0, remainingWaterQty: 0, totalDrink: 0, totalAttempt: 0, waterQtyPerAttempt: 0)
         }
 
         
-        if let userObj2 = UserDefaultsManager.shared.userWeight {
+        if let userObj2 = user.weight {
             
             lblkg.text = String(describing: userObj2)
             slider.value = Float(userObj2)
@@ -230,22 +235,20 @@ final class PersonalInfoVC: UIViewController {
             slider.value = Float(weightCurrentVAle)
         }
         caluculateTotalValue()
-        if appDelegate.menuvar == "hide"
-        {
-            btnmenu.isHidden = true
-            imgmenu.isHidden = true
-        }
-        else{
-            appDelegate.menuvar = "show"
-            btnmenu.isHidden = false
-            imgmenu.isHidden = false
+        btnmenu.isHidden = appDelegate.isMenuIconHidden
+        imgmenu.isHidden = appDelegate.isMenuIconHidden
+        
+        if appDelegate.isMenuIconHidden == true {
+
+        } else {
+            appDelegate.isMenuIconHidden = false
         }
         if let WATERQTY = UserDefaults.standard.value(forKey:"MainWaterQuantityKey") as? Int {
             caluculatedWaterLevelValue = (WATERQTY)
             num = WATERQTY
             print(caluculatedWaterLevelValue)
             print(caluculatedWaterLevelValue)
-            lblwaterml.text = "\(caluculatedWaterLevelValue)"  + " " + "ml"
+            suggestedWatelVolumeLabel.text = "\(caluculatedWaterLevelValue)"
         }
     }
     
@@ -329,16 +332,15 @@ final class PersonalInfoVC: UIViewController {
     
     @IBAction func btnmenuclick(_ sender: UIButton) {
         
-        let isButtonsHidden = appDelegate.menuvar == "hide"
-        btnmenu.isHidden = isButtonsHidden
-        imgmenu.isHidden = isButtonsHidden
+        btnmenu.isHidden = appDelegate.isMenuIconHidden
+        imgmenu.isHidden = appDelegate.isMenuIconHidden
         
-        if appDelegate.menuvar == "hide" {
-            self.toggleRight()
-        } else {
-            appDelegate.menuvar = "show"
-            self.toggleLeft()
+        guard appDelegate.isMenuIconHidden else {
+            appDelegate.isMenuIconHidden = false
+            toggleLeft()
+            return
         }
+        toggleRight()
     }
     
     // MARK: - SQL Database Handler
@@ -391,7 +393,7 @@ final class PersonalInfoVC: UIViewController {
     
     private func getSuggestedWaterLevel() -> Int {
         
-        return Int(lblwaterml.text!)!
+        return Int(suggestedWatelVolumeLabel.text!)!
     }
     
     @IBAction func btnutctime(_ sender: UIButton) {
@@ -413,7 +415,7 @@ extension PersonalInfoVC: iShowcaseDelegate {
         showcase.titleLabel.font = UIFont.avenirMedium17
         
         showcase.setupShowcaseForView(self.lblkg)
-        showcase.titleLabel.text = "To work out your daily water intake goal please Select Your Weight"
+        showcase.titleLabel.text = Localizable.personalInfoTutorialFirstStep()
         
         showcase.show()
     }
@@ -423,17 +425,17 @@ extension PersonalInfoVC: iShowcaseDelegate {
         switch currentShowcase {
         case 1:
             self.showcase.setupShowcaseForView(self.btnmale)
-            self.showcase.titleLabel.text = "Select your Gender"
+            self.showcase.titleLabel.text = Localizable.personalInfoTutorialSecondStep()
             self.showcase.show()
             
         case 2:
             self.showcase.setupShowcaseForView(self.imgmedium)
-            self.showcase.titleLabel.text = "Select your Activity level"
+            self.showcase.titleLabel.text = Localizable.personalInfoTutorialThirdStep()
             self.showcase.show()
             
         case 3:
-            self.showcase.setupShowcaseForView(self.lblwaterml)
-            self.showcase.titleLabel.text = "This is your suggested daily water intake"
+            self.showcase.setupShowcaseForView(self.suggestedWatelVolumeLabel)
+            self.showcase.titleLabel.text = Localizable.personalInfoTutorialFourthStep()
             self.showcase.show()
             
         default:

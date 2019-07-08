@@ -1,0 +1,20 @@
+/* 
+  Localizable.strings
+  HydroFuel
+
+  Created by Serg Liamthev on 7/8/19.
+  Copyright © 2019 Stegowl. All rights reserved.
+*/
+
+    /// Personal info
+"personal-info.tutorial.first-step" = "To work out your daily water intake goal please Select Your Weight";
+"personal-info.tutorial.second-step" = "Select your Gender";
+"personal-info.tutorial.third-step" = "Select your Activity level";
+"personal-info.tutorial.fourth-step" = "This is your suggested daily water intake";
+
+    /// Home screen
+"home.tutorial.first-step" = "Water level 1: This shows you how full the bottle is.";
+"home.tutorial.second-step" = "Water level 2: This shows you where you need to drink to.";
+"home.tutorial.third-step" = "Once you’ve drank… Tap ‘Hydrate’ and the water level will update automatically.";
+"home.tutorial.fourth-step" = "Click here to reset today’s intake.";
+"home.tutorial.fifth-step" = "You’re Done! Fill up your bottle and lets get started!";

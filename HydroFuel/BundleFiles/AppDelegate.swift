@@ -11,8 +11,10 @@ import SlideMenuControllerSwift
 import IQKeyboardManagerSwift
 import UserNotifications
 import UserNotificationsUI
+import Rswift
 
 typealias VoidClosure = () -> ()
+typealias Localizable = R.string.localizable
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var backvar = "static"
     var menuName = ""
-    var menuvar = ""
+    var isMenuIconHidden: Bool = true
     var resettime = "change"
     
     var badgeCount = UIApplication.shared.applicationIconBadgeNumber
@@ -53,7 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
         } else {
             
-            menuvar = "hide"
+            isMenuIconHidden = true
             let mainViewController = storyboard1.instantiateViewController(withIdentifier: "PersonalInfoVC") as! PersonalInfoVC
             AppRouter.setupAppRootVC(mainVC: mainViewController)
         }

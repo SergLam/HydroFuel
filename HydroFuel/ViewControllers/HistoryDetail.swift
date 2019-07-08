@@ -14,7 +14,7 @@ final class HistoryDetail: UIViewController {
     
     @IBOutlet private weak var lblWaterLevalPersentage: UILabel!
     @IBOutlet private weak var lblWaterLeval: UILabel!
-    @IBOutlet weak var progressRingView: UICircularProgressRing!
+    @IBOutlet private weak var progressRingView: UICircularProgressRing!
     @IBOutlet private var imgback: UIImageView!
     @IBOutlet private var calendar: FSCalendar!
     
@@ -58,10 +58,10 @@ final class HistoryDetail: UIViewController {
         
         if appDelegate.backvar == "static" {
             appDelegate.backvar = "static"
-            imgback.image = UIImage(named: "menu")
+            imgback.image = R.image.menu()
         } else {
             appDelegate.backvar = "abc"
-            imgback.image = UIImage(named: "backk")
+            imgback.image = R.image.backk()
             
         }
         self.navigationController?.popViewController(animated: true)

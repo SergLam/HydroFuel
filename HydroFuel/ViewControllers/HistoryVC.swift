@@ -11,8 +11,8 @@ import FSCalendar
 
 final class HistoryVC: UIViewController {
 
-    @IBOutlet var imgback: UIImageView!
-    @IBOutlet var calendar: FSCalendar!
+    @IBOutlet private weak var imgback: UIImageView!
+    @IBOutlet private weak var calendar: FSCalendar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,12 +23,8 @@ final class HistoryVC: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
-        if appDelegate.backvar == "static" {
-            imgback.image = UIImage(named: "menu")
-        } else{
-            imgback.image = UIImage(named: "backk")
-        }
+        super.viewWillAppear(animated)
+        imgback.image = appDelegate.backvar == "static" ? R.image.menu() : R.image.backk()
     }
 
     @IBAction func btnmenuclick(_ sender: UIButton) {
@@ -52,12 +48,7 @@ extension HistoryVC: FSCalendarDelegate {
         
         switch appDelegate.backvar {
             
-        case "static":
-            let vc = storyBoard.instantiateViewController(withIdentifier: "HistoryDetail") as! HistoryDetail
-            vc.showDate = date.toLocalTime()
-            self.navigationController?.pushViewController(vc, animated: true)
-            
-        case "graph":
+        case "static", "graph":
             let vc = storyBoard.instantiateViewController(withIdentifier: "HistoryDetail") as! HistoryDetail
             vc.showDate = date.toLocalTime()
             self.navigationController?.pushViewController(vc, animated: true)
@@ -68,11 +59,6 @@ extension HistoryVC: FSCalendarDelegate {
             vc.showDate = date.toLocalTime()
             self.navigationController?.pushViewController(vc, animated: true)
         }
-    }
-    
-    func calendarCurrentPageDidChange(_ calendar: FSCalendar) {
-        let currentMonth = calendar.currentPage
-        debugPrint("this is the current Month \(currentMonth)")
     }
     
     func calendar(_ calendar: FSCalendar, shouldSelect date: Date, at monthPosition: FSCalendarMonthPosition) -> Bool {

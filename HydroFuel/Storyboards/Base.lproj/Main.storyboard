@@ -442,7 +442,7 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="KPe-2V-hLM">
-                                                                <rect key="frame" x="93.5" y="52" width="123" height="30"/>
+                                                                <rect key="frame" x="78.5" y="52" width="153.5" height="30"/>
                                                                 <subviews>
                                                                     <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Bo-Qa-vhI">
                                                                         <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
@@ -470,8 +470,14 @@
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ml" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C0y-Ml-tzc">
+                                                                        <rect key="frame" x="93" y="0.0" width="20.5" height="30"/>
+                                                                        <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="18"/>
+                                                                        <nil key="textColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
                                                                     <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MYa-0h-rYd">
-                                                                        <rect key="frame" x="93" y="0.0" width="30" height="30"/>
+                                                                        <rect key="frame" x="123.5" y="0.0" width="30" height="30"/>
                                                                         <color key="backgroundColor" red="0.01272361074" green="0.54648077490000002" blue="0.85799533130000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="width" constant="30" id="Qpq-RG-e0u"/>
@@ -656,8 +662,8 @@
                         <outlet property="imgmedium" destination="WNz-JG-lRT" id="q8G-C0-Z3n"/>
                         <outlet property="imgmenu" destination="195-s3-OXX" id="Qgl-fB-Zct"/>
                         <outlet property="lblkg" destination="QlC-Te-6oL" id="d1e-HK-5TI"/>
-                        <outlet property="lblwaterml" destination="vgK-Sh-J7m" id="10K-6W-Pyt"/>
                         <outlet property="slider" destination="phH-dz-j5C" id="6hl-tr-aWZ"/>
+                        <outlet property="suggestedWatelVolumeLabel" destination="vgK-Sh-J7m" id="ytH-mr-PWX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
