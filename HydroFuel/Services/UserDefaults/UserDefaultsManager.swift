@@ -164,9 +164,9 @@ final class UserDefaultsManager {
     /**
      Selected user weight
      */
-    var userWeight: Int {
+    var userWeight: Int? {
         get {
-            return defaults.integer(forKey: #function)
+            return defaults.value(forKey: #function) as? Int
         }
         set {
             defaults.set(newValue, forKey: #function)

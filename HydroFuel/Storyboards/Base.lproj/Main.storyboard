@@ -129,9 +129,6 @@
                                                                 <color key="minimumTrackTintColor" red="0.28194114565849304" green="0.58800464868545532" blue="0.9540289044380188" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <color key="maximumTrackTintColor" red="0.28194114565849304" green="0.58800464868545532" blue="0.9540289044380188" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <color key="thumbTintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                                <connections>
-                                                                    <action selector="SliderClick:" destination="BYZ-38-t0r" eventType="valueChanged" id="YfY-gI-vsd"/>
-                                                                </connections>
                                                             </slider>
                                                         </subviews>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -189,9 +186,6 @@
                                                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="femalebuttonblack" translatesAutoresizingMaskIntoConstraints="NO" id="dvC-NQ-hiW">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="52.5" height="48"/>
                                                                             </imageView>
-                                                                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Female Button" translatesAutoresizingMaskIntoConstraints="NO" id="8L5-L5-FHz">
-                                                                                <rect key="frame" x="8" y="8" width="36.5" height="40"/>
-                                                                            </imageView>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="24U-cO-bGM">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="52.5" height="48"/>
                                                                                 <connections>
@@ -201,17 +195,13 @@
                                                                         </subviews>
                                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                         <constraints>
-                                                                            <constraint firstItem="8L5-L5-FHz" firstAttribute="top" secondItem="MDU-E1-4yW" secondAttribute="top" constant="8" id="3PR-BS-Mod"/>
                                                                             <constraint firstItem="24U-cO-bGM" firstAttribute="leading" secondItem="MDU-E1-4yW" secondAttribute="leading" id="561-zn-VaD"/>
-                                                                            <constraint firstAttribute="bottom" secondItem="8L5-L5-FHz" secondAttribute="bottom" id="BSM-GA-GU6"/>
                                                                             <constraint firstAttribute="bottom" secondItem="dvC-NQ-hiW" secondAttribute="bottom" id="HKT-PA-CaI"/>
-                                                                            <constraint firstItem="8L5-L5-FHz" firstAttribute="leading" secondItem="MDU-E1-4yW" secondAttribute="leading" constant="8" id="aUN-ez-5Za"/>
                                                                             <constraint firstItem="dvC-NQ-hiW" firstAttribute="leading" secondItem="MDU-E1-4yW" secondAttribute="leading" id="dxs-oW-RQ9"/>
                                                                             <constraint firstAttribute="trailing" secondItem="24U-cO-bGM" secondAttribute="trailing" id="fgJ-cW-bxs"/>
                                                                             <constraint firstAttribute="bottom" secondItem="24U-cO-bGM" secondAttribute="bottom" id="hFn-Uu-bs7"/>
                                                                             <constraint firstAttribute="trailing" secondItem="dvC-NQ-hiW" secondAttribute="trailing" id="hNM-Xt-pia"/>
                                                                             <constraint firstItem="dvC-NQ-hiW" firstAttribute="top" secondItem="MDU-E1-4yW" secondAttribute="top" id="idv-7e-bPV"/>
-                                                                            <constraint firstAttribute="trailing" secondItem="8L5-L5-FHz" secondAttribute="trailing" constant="8" id="miH-Za-iWS"/>
                                                                             <constraint firstItem="24U-cO-bGM" firstAttribute="top" secondItem="MDU-E1-4yW" secondAttribute="top" id="xyj-0C-WfW"/>
                                                                         </constraints>
                                                                     </view>
@@ -220,9 +210,6 @@
                                                                         <subviews>
                                                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="malebuttonblack" translatesAutoresizingMaskIntoConstraints="NO" id="1a1-nJ-cPz">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="52.5" height="48"/>
-                                                                            </imageView>
-                                                                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Male Button" translatesAutoresizingMaskIntoConstraints="NO" id="Pwq-CJ-IBF">
-                                                                                <rect key="frame" x="8" y="8" width="36.5" height="40"/>
                                                                             </imageView>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="epc-Q1-fLL">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="52.5" height="48"/>
@@ -233,15 +220,11 @@
                                                                         </subviews>
                                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                         <constraints>
-                                                                            <constraint firstItem="Pwq-CJ-IBF" firstAttribute="leading" secondItem="o5c-gV-HK9" secondAttribute="leading" constant="8" id="32y-GD-sxq"/>
                                                                             <constraint firstItem="epc-Q1-fLL" firstAttribute="top" secondItem="o5c-gV-HK9" secondAttribute="top" id="3wZ-9n-eaR"/>
                                                                             <constraint firstItem="1a1-nJ-cPz" firstAttribute="leading" secondItem="o5c-gV-HK9" secondAttribute="leading" id="BOF-mY-CwJ"/>
                                                                             <constraint firstAttribute="trailing" secondItem="1a1-nJ-cPz" secondAttribute="trailing" id="Eoy-Zv-clw"/>
-                                                                            <constraint firstAttribute="trailing" secondItem="Pwq-CJ-IBF" secondAttribute="trailing" constant="8" id="Gql-Dt-0UK"/>
-                                                                            <constraint firstItem="Pwq-CJ-IBF" firstAttribute="top" secondItem="o5c-gV-HK9" secondAttribute="top" constant="8" id="Nw2-83-RTH"/>
                                                                             <constraint firstItem="epc-Q1-fLL" firstAttribute="leading" secondItem="o5c-gV-HK9" secondAttribute="leading" id="Uh6-A9-r9K"/>
                                                                             <constraint firstAttribute="bottom" secondItem="epc-Q1-fLL" secondAttribute="bottom" id="W4H-2f-MZF"/>
-                                                                            <constraint firstAttribute="bottom" secondItem="Pwq-CJ-IBF" secondAttribute="bottom" id="cd1-JJ-9Ue"/>
                                                                             <constraint firstAttribute="bottom" secondItem="1a1-nJ-cPz" secondAttribute="bottom" id="fyA-yt-IbE"/>
                                                                             <constraint firstAttribute="trailing" secondItem="epc-Q1-fLL" secondAttribute="trailing" id="psb-c1-mYr"/>
                                                                             <constraint firstItem="1a1-nJ-cPz" firstAttribute="top" secondItem="o5c-gV-HK9" secondAttribute="top" id="z4Q-gK-CWm"/>
@@ -464,10 +447,19 @@
                                                                     <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Bo-Qa-vhI">
                                                                         <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
                                                                         <color key="backgroundColor" red="0.01272361074" green="0.54648077490000002" blue="0.85799533130000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="30" id="Fqh-Pe-iJT"/>
+                                                                            <constraint firstAttribute="width" constant="30" id="X6A-9D-gyr"/>
+                                                                        </constraints>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                         <state key="normal" title="+">
                                                                             <color key="titleColor" red="0.98823529409999999" green="0.91764705879999997" blue="0.88235294119999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         </state>
+                                                                        <userDefinedRuntimeAttributes>
+                                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                                <real key="value" value="15"/>
+                                                                            </userDefinedRuntimeAttribute>
+                                                                        </userDefinedRuntimeAttributes>
                                                                         <connections>
                                                                             <action selector="btnClickedToChangeDailyTarget:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Sl3-dG-9eR"/>
                                                                         </connections>
@@ -489,6 +481,11 @@
                                                                         <state key="normal" title="-">
                                                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         </state>
+                                                                        <userDefinedRuntimeAttributes>
+                                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                                <real key="value" value="15"/>
+                                                                            </userDefinedRuntimeAttribute>
+                                                                        </userDefinedRuntimeAttributes>
                                                                         <connections>
                                                                             <action selector="btnClickedToChangeDailyTarget:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3CU-fd-u7y"/>
                                                                         </connections>
@@ -2130,8 +2127,6 @@
         <image name="Background" width="1024" height="1920"/>
         <image name="Brand Name" width="941" height="153"/>
         <image name="Dotted Line" width="1149" height="28"/>
-        <image name="Female Button" width="458" height="438"/>
-        <image name="Male Button" width="218" height="147"/>
         <image name="Slab Button" width="727" height="200"/>
         <image name="backk" width="96" height="96"/>
         <image name="bouder2" width="1024" height="457"/>

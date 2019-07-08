@@ -18,30 +18,41 @@ final class PersonalInfoVC: UIViewController {
         }
     }
     
-    @IBOutlet weak var btnMinus: UIButton!
-    @IBOutlet weak var btnPlus: UIButton!
-    @IBOutlet var imgmenu: UIImageView!
-    @IBOutlet var btnmenu: UIButton!
-    @IBOutlet var lblwaterml: UILabel!
-    @IBOutlet var imghigh: UIImageView!
-    @IBOutlet var imgmedium: UIImageView!
-    @IBOutlet var imglow: UIImageView!
-    @IBOutlet var btnfemale: UIButton!
-    @IBOutlet var btnmale: UIButton!
-    @IBOutlet var ImglineFemale: UIImageView!
-    @IBOutlet var Imgmalegrayline: UIImageView!
-    @IBOutlet var lblkg: UILabel!
+    @IBOutlet private weak var btnMinus: UIButton!
+    @IBOutlet private weak var btnPlus: UIButton!
+    @IBOutlet private weak var imgmenu: UIImageView!
+    @IBOutlet private weak var btnmenu: UIButton!
     
+    @IBOutlet private weak var lblwaterml: UILabel!
+    
+    @IBOutlet private weak var imghigh: UIImageView!
+    @IBOutlet private weak var imgmedium: UIImageView!
+    @IBOutlet private weak var imglow: UIImageView!
+    
+    @IBOutlet private weak var btnfemale: UIButton!
+    @IBOutlet private weak var btnmale: UIButton!
+    
+    @IBOutlet private weak var ImglineFemale: UIImageView!
+    @IBOutlet private weak var Imgmalegrayline: UIImageView!
+    
+    @IBOutlet private weak var lblkg: UILabel!
+    @IBOutlet private weak var slider: UISlider!
+    
+    private let activeFemaleImage = UIImage(named: "femalebuttonblue")
+    private let inActiveFemaleImage = UIImage(named: "femalebuttonblack")
+    
+    private let activeMaleImage = UIImage(named: "malebuttonblue")
+    private let inActiveMaleImage = UIImage(named: "malebuttonblack")
+
     var maleans = 0
     var ans1 = 0
-    var gander = ""
-    var activity = ""
+    
+    var user = User()
+    
     var value = ""
     var ans = 0
-    var lblvalue = Int()
     var num = Int()
     
-    @IBOutlet var slider: UISlider!
     var dicdata = NSDictionary()
     var dictPrevious = DataRecordModel.defaultModel()
     var currentShowcase = 0
@@ -55,23 +66,18 @@ final class PersonalInfoVC: UIViewController {
         DBManager.shared.createDB()
         
         showcase.delegate = self
-        let panGesture = UIPanGestureRecognizer(target: self, action:  #selector(panGesture(gesture:)))
-        self.slider.addGestureRecognizer(panGesture)
+        configureWeightSlider()
+
         lblkg.text = "50" + "Kg"
         weightCurrentVAle = 50
         ans = (Int(Double(weightCurrentVAle) * Double(0.033) * 1000) )
         lblwaterml.text =  "\(ans)"
         num = getSuggestedWaterLevel()
         lblwaterml.text = "\(num)" + " " + "ml"
+        Imgmalegrayline.image = activeMaleImage
         
-        self.navigationController?.navigationBar.isHidden = true
-        slider.setThumbImage(UIImage(named: "round1"), for: .normal)
+        navigationController?.navigationBar.isHidden = true
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-        slider.isContinuous = true
-        btnPlus.layer.cornerRadius = btnPlus.frame.height / 2
-        btnPlus.clipsToBounds = true
-        btnMinus.layer.cornerRadius = btnMinus.frame.height / 2
-        btnMinus.clipsToBounds = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -84,6 +90,14 @@ final class PersonalInfoVC: UIViewController {
             
             self?.showFirstTutorialView()
         }
+    }
+    
+    private func configureWeightSlider() {
+        
+        let panGesture = UIPanGestureRecognizer(target: self, action:  #selector(panGesture(gesture:)))
+        slider.addGestureRecognizer(panGesture)
+        slider.isContinuous = true
+        slider.setThumbImage(UIImage(named: "round1"), for: .normal)
     }
     
     @IBAction func btnClickedToChangeDailyTarget(_ sender: UIButton) {
@@ -126,59 +140,54 @@ final class PersonalInfoVC: UIViewController {
         }
     }
     
-    func caluculateTotalValue(){
+    private func caluculateTotalValue() {
+        
         lblkg.text = "\(weightCurrentVAle) kg"
         caluculatedWaterLevelValue = (Int(Double(weightCurrentVAle) * Double(0.033) * 1000))
         lblwaterml.text = "\(caluculatedWaterLevelValue)"
         num = getSuggestedWaterLevel()
         lblwaterml.text = "\(num)" + " " + "ml"
-        if gander == "female"{
-            ImglineFemale.image = UIImage(named: "femalebuttonblue")
-            Imgmalegrayline.image = UIImage(named: "malebuttonblack")
-        }else{
-            ImglineFemale.image = UIImage(named: "femalebuttonblack")
-            Imgmalegrayline.image = UIImage(named: "malebuttonblue")
-        }
         lblwaterml.text = "\(caluculatedWaterLevelValue)"  + " " + "ml"
-        if activity == "low"
-        {
-            if gander == "female"
-            {
-                caluCulateGenderValue(genderText: "female", genderRation: 0)
+        
+        switch user.activityLevel {
+      
+        case .some(let activity):
+            
+            switch user.gender {
+            case .some(let gender):
+                
+                ImglineFemale.image = gender == .female ? activeFemaleImage : inActiveFemaleImage
+                Imgmalegrayline.image = gender == .female ? inActiveMaleImage : activeMaleImage
+                
+                switch activity {
+                case .low:
+                    let genderRation = gender == .male ? 0.5 : 0
+                    caluCulateGenderValue(genderText: gender.rawValue, genderRation: genderRation)
+                    
+                case .medium:
+                    let genderRation = gender == .male ? 1 : 0.5
+                    caluCulateGenderValue(genderText: gender.rawValue, genderRation: genderRation)
+                    
+                case .high:
+                    let genderRation = gender == .male ? 1.5 : 1
+                    caluCulateGenderValue(genderText: gender.rawValue, genderRation: genderRation)
+                    
+                }
+                
+            case .none:
+                caluCulateGenderValue(genderText: Gender.male.rawValue, genderRation: 0.5)
             }
-            else
-            {
-                caluCulateGenderValue(genderText: "male", genderRation: 0.5)
-            }
+            
+            
+        case .none:
+            caluCulateGenderValue(genderText: Gender.male.rawValue, genderRation: 0.5)
         }
-        else if activity == "medium"
-        {
-            if gander == "female"
-            {
-                caluCulateGenderValue(genderText: "female", genderRation: 0.5)
-            }
-            else
-            {
-                caluCulateGenderValue(genderText: "male", genderRation: 1)
-            }
-        }
-        else if activity == "high"{
-            if gander == "female"
-            {
-                caluCulateGenderValue(genderText: "female", genderRation: 1)
-            }
-            else
-            {
-                caluCulateGenderValue(genderText: "male", genderRation: 1.5)
-            }
-        }else{
-            caluCulateGenderValue(genderText: "male", genderRation: 0.5)
-        }
-        if activity == "high"{
+        
+        if user.activityLevel == .high {
             imghigh.image = UIImage(named: "runningbuttonblue")
             imglow.image = UIImage(named: "standingbuttonblack")
             imgmedium.image = UIImage(named: "walkingbuttonblack")
-            if gander == "female"
+            if user.gender == .female
             {
                 lblwaterml.text = "\(Int(Double(caluculatedWaterLevelValue) + Double(1) * 1000))"
                 num = getSuggestedWaterLevel()
@@ -190,11 +199,11 @@ final class PersonalInfoVC: UIViewController {
                 num = getSuggestedWaterLevel()
                 lblwaterml.text = "\(num)"  + " " + "ml"
             }
-        }else if  activity == "medium"{
+        }else if user.activityLevel == .medium {
             imghigh.image = UIImage(named: "runningbuttonblack")
             imglow.image = UIImage(named: "standingbuttonblack")
             imgmedium.image = UIImage(named: "walkingbuttonblue")
-            if gander == "female"
+            if user.gender == .female
             {
                 lblwaterml.text = "\(Int(Double(caluculatedWaterLevelValue) + Double(0.5) * 1000))"
                 num = getSuggestedWaterLevel()
@@ -207,11 +216,11 @@ final class PersonalInfoVC: UIViewController {
                 num = getSuggestedWaterLevel()
                 lblwaterml.text = "\(num)" + " " + "ml"
             }
-        }else if activity == "low"{
+        }else if user.activityLevel == .low {
             imghigh.image = UIImage(named: "runningbuttonblack")
             imglow.image = UIImage(named: "standingbuttonblue")
             imgmedium.image = UIImage(named: "walkingbuttonblack")
-            if gander == "female"
+            if user.gender == .female
             {
                 lblwaterml.text = "\(caluculatedWaterLevelValue)"
                 num = getSuggestedWaterLevel()
@@ -229,7 +238,7 @@ final class PersonalInfoVC: UIViewController {
     }
     
     private func caluCulateGenderValue(genderText: String, genderRation: Double) {
-        gander = genderText
+        user.gender = Gender(rawValue: genderText)
         lblwaterml.text =  "\(Int(Double(caluculatedWaterLevelValue) + Double(genderRation) * 1000))"
         num = getSuggestedWaterLevel()
         lblwaterml.text = "\(num)"  + " " + "ml"
@@ -257,23 +266,12 @@ final class PersonalInfoVC: UIViewController {
             let tempDate = "2000-12-31"
             DBManager.shared.firstInsertData(date: tempDate, weight: 0, gender: "Male", activityLevel: "Low", waterQty: 0, remainingWaterQty: 0, totalDrink: 0, totalAttempt: 0, waterQtyPerAttempt: 0)
         }
-        if UserDefaultsManager.shared.userGender != nil {
-            
-            let userObj = UserDefaultsManager.shared.userGender!
-            gander = userObj
-        }
-        if UserDefaultsManager.shared.userActivityLevel != nil {
-            
-            let  userObj1 = UserDefaultsManager.shared.userActivityLevel!
-            activity = userObj1
-        }
+
         
-        if UserDefaultsManager.shared.userWeight == 0 {
+        if let userObj2 = UserDefaultsManager.shared.userWeight {
             
-            let userObj2 = UserDefaultsManager.shared.userWeight
-            
-            lblkg.text = "\(userObj2)"
-            slider.value = Float(truncating: NSNumber(value: userObj2))
+            lblkg.text = String(describing: userObj2)
+            slider.value = Float(userObj2)
             weightCurrentVAle = Int(lblkg.text!)!
             slider.value = Float(weightCurrentVAle)
         }
@@ -297,13 +295,9 @@ final class PersonalInfoVC: UIViewController {
         }
     }
     
-    @IBAction func SliderClick(_ sender: UISlider) {
-        
-    }
-    
     private func validation() -> Bool {
         
-        let inputData = [lblkg.text!, gander, activity]
+        let inputData = [lblkg.text!, user.gender?.rawValue ?? "", user.activityLevel?.rawValue ?? ""]
         let errorMessages = ["Please Choose Weight", "Please Choose Gender", "Please Choose Activity Level"]
         
         for (index, data) in inputData.enumerated() {
@@ -316,25 +310,25 @@ final class PersonalInfoVC: UIViewController {
     }
     
     @IBAction func btnFemale(_ sender: UIButton) {
-        gander = "female"
+        user.gender = .female
         caluculateTotalValue()
     }
     @IBAction func btnselectMale(_ sender: UIButton) {
-        gander = "male"
+        user.gender = .male
         caluculateTotalValue()
     }
     @IBAction func btnHighClick(_ sender: UIButton) {
-        activity = "high"
+        user.activityLevel = .high
         caluculateTotalValue()
     }
     
     @IBAction func btnMediumClick(_ sender: UIButton) {
-        activity = "medium"
+        user.activityLevel = .medium
         caluculateTotalValue()
     }
     
     @IBAction func btnLowClick(_ sender: UIButton) {
-        activity = "low"
+        user.activityLevel = .low
         caluculateTotalValue()
     }
     
@@ -349,9 +343,9 @@ final class PersonalInfoVC: UIViewController {
             let lblanss: Int = self.num / 10
             
             UserDefaults.standard.set(lblanss, forKey: "lblml")
-            UserDefaults.standard.set(self.gander, forKey: "gander")
-            UserDefaults.standard.set(self.activity, forKey: "activity")
-            UserDefaults.standard.set(self.weightCurrentVAle, forKey: "kg")
+            UserDefaultsManager.shared.userGender = self.user.gender?.rawValue ?? ""
+            UserDefaultsManager.shared.userActivityLevel = self.user.activityLevel?.rawValue ?? ""
+            UserDefaultsManager.shared.userWeight = self.user.weight
             UserDefaults.standard.set(1, forKey: "fill")
             UserDefaults.standard.set(self.num, forKey: "MainWaterQuantityKey")
             if self.dictPrevious == DataRecordModel.defaultModel() {
@@ -362,7 +356,7 @@ final class PersonalInfoVC: UIViewController {
                 self.dateFormatter.timeZone = TimeZone(identifier: "UTC")
                 let strDate = self.dateFormatter.string(from: today)
                 
-                self.insertData(DATE: strDate, WEIGHT: self.weightCurrentVAle, GENDER: self.gander, ACTIVITYLAVEL: self.activity, WATERQTY: self.num, REMAININGWATERQTY: self.num, TOTALDRINK: 0, TOTALATTEMPT: 0, WATERQTYPERATTEMPT: lblanss)
+                self.insertData(DATE: strDate, WEIGHT: self.weightCurrentVAle, GENDER: self.user.gender?.rawValue ?? "", ACTIVITYLAVEL: self.user.activityLevel?.rawValue ?? "", WATERQTY: self.num, REMAININGWATERQTY: self.num, TOTALDRINK: 0, TOTALATTEMPT: 0, WATERQTYPERATTEMPT: lblanss)
             }else{
                 
                 let totalDrinksCount = self.dictPrevious.totalDrink
@@ -370,7 +364,7 @@ final class PersonalInfoVC: UIViewController {
                 let totalDrinkWater = lblanss*totalDrinksCount
                 let remainingWaterQty = self.num - totalDrinkWater
                 
-                self.updateData(WEIGHT: self.weightCurrentVAle, GENDER: self.gander, ACTIVITYLAVEL: self.activity, WATERQTY: self.num, REMAININGWATERQTY: remainingWaterQty, TOTALDRINK: totalDrinksCount, WATERQTYPERATTEMPT: lblanss)
+                self.updateData(WEIGHT: self.weightCurrentVAle, GENDER: self.user.gender?.rawValue ?? "", ACTIVITYLAVEL: self.user.activityLevel?.rawValue ?? "", WATERQTY: self.num, REMAININGWATERQTY: remainingWaterQty, TOTALDRINK: totalDrinksCount, WATERQTYPERATTEMPT: lblanss)
             }
             
         }
@@ -381,21 +375,21 @@ final class PersonalInfoVC: UIViewController {
     
     @IBAction func btnmenuclick(_ sender: UIButton) {
         
+        let isButtonsHidden = appDelegate.menuvar == "hide"
+        btnmenu.isHidden = isButtonsHidden
+        imgmenu.isHidden = isButtonsHidden
+        
         if appDelegate.menuvar == "hide" {
-            btnmenu.isHidden = true
-            imgmenu.isHidden = true
             self.toggleRight()
         } else {
             appDelegate.menuvar = "show"
-            btnmenu.isHidden = false
-            imgmenu.isHidden = false
             self.toggleLeft()
         }
     }
     
     // MARK: - SQL Database Handler
     
-    func insertData(DATE: String, WEIGHT: Int, GENDER: String, ACTIVITYLAVEL: String, WATERQTY: Int, REMAININGWATERQTY: Int, TOTALDRINK: Int, TOTALATTEMPT: Int, WATERQTYPERATTEMPT: Int) -> Void {
+    private func insertData(DATE: String, WEIGHT: Int, GENDER: String, ACTIVITYLAVEL: String, WATERQTY: Int, REMAININGWATERQTY: Int, TOTALDRINK: Int, TOTALATTEMPT: Int, WATERQTYPERATTEMPT: Int) -> Void {
         
         let result = DBManager.shared.insertData(date: DATE, weight: WEIGHT, gender: GENDER, activityLevel: ACTIVITYLAVEL, waterQty: WATERQTY, remainingWaterQty: REMAININGWATERQTY, totalDrink: TOTALDRINK, totalAttempt: TOTALATTEMPT, waterQtyPerAttempt: WATERQTYPERATTEMPT)
         
@@ -411,7 +405,7 @@ final class PersonalInfoVC: UIViewController {
         
     }
     
-    func updateData(WEIGHT: Int, GENDER: String, ACTIVITYLAVEL: String, WATERQTY: Int, REMAININGWATERQTY: Int, TOTALDRINK: Int, WATERQTYPERATTEMPT: Int){
+    private func updateData(WEIGHT: Int, GENDER: String, ACTIVITYLAVEL: String, WATERQTY: Int, REMAININGWATERQTY: Int, TOTALDRINK: Int, WATERQTYPERATTEMPT: Int){
         
         let result = DBManager.shared.updateData(weight: WEIGHT, gender: GENDER, activityLevel: ACTIVITYLAVEL, waterQty: WATERQTY, remainingWaterQty: REMAININGWATERQTY, totalDrink: TOTALDRINK, waterQtyPerAttempt: WATERQTYPERATTEMPT)
         
