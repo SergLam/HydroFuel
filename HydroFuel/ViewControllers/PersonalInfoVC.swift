@@ -158,88 +158,42 @@ final class PersonalInfoVC: UIViewController {
                 
                 ImglineFemale.image = gender == .female ? activeFemaleImage : inActiveFemaleImage
                 Imgmalegrayline.image = gender == .female ? inActiveMaleImage : activeMaleImage
+                num = getSuggestedWaterLevel()
+                
+                imglow.image = activity == .low ? UIImage(named: "standingbuttonblue") : UIImage(named: "standingbuttonblack")
+                imgmedium.image = activity == .medium ? UIImage(named: "walkingbuttonblue") : UIImage(named: "walkingbuttonblack")
+                imghigh.image = activity == .high ? UIImage(named: "runningbuttonblue") : UIImage(named: "runningbuttonblack")
                 
                 switch activity {
+                    
                 case .low:
+
                     let genderRation = gender == .male ? 0.5 : 0
                     caluCulateGenderValue(genderText: gender.rawValue, genderRation: genderRation)
                     
                 case .medium:
+                    
                     let genderRation = gender == .male ? 1 : 0.5
                     caluCulateGenderValue(genderText: gender.rawValue, genderRation: genderRation)
                     
                 case .high:
+                    
                     let genderRation = gender == .male ? 1.5 : 1
                     caluCulateGenderValue(genderText: gender.rawValue, genderRation: genderRation)
-                    
                 }
                 
             case .none:
                 caluCulateGenderValue(genderText: Gender.male.rawValue, genderRation: 0.5)
             }
             
-            
         case .none:
             caluCulateGenderValue(genderText: Gender.male.rawValue, genderRation: 0.5)
-        }
-        
-        if user.activityLevel == .high {
-            imghigh.image = UIImage(named: "runningbuttonblue")
-            imglow.image = UIImage(named: "standingbuttonblack")
-            imgmedium.image = UIImage(named: "walkingbuttonblack")
-            if user.gender == .female
-            {
-                lblwaterml.text = "\(Int(Double(caluculatedWaterLevelValue) + Double(1) * 1000))"
-                num = getSuggestedWaterLevel()
-                lblwaterml.text = "\(num)" + " " + "ml"
-            }
-            else
-            {
-                lblwaterml.text =  "\(Int(Double(caluculatedWaterLevelValue) + Double(1.5) * 1000))"
-                num = getSuggestedWaterLevel()
-                lblwaterml.text = "\(num)"  + " " + "ml"
-            }
-        }else if user.activityLevel == .medium {
-            imghigh.image = UIImage(named: "runningbuttonblack")
-            imglow.image = UIImage(named: "standingbuttonblack")
-            imgmedium.image = UIImage(named: "walkingbuttonblue")
-            if user.gender == .female
-            {
-                lblwaterml.text = "\(Int(Double(caluculatedWaterLevelValue) + Double(0.5) * 1000))"
-                num = getSuggestedWaterLevel()
-                lblwaterml.text = "\(num)" + " " + "ml"
-            }
-            else
-            {
-                // let num =  Int(Double(maleans) + Double(0.5) * 1000)
-                lblwaterml.text =  "\(Int(Double(caluculatedWaterLevelValue) + Double(1) * 1000))"
-                num = getSuggestedWaterLevel()
-                lblwaterml.text = "\(num)" + " " + "ml"
-            }
-        }else if user.activityLevel == .low {
-            imghigh.image = UIImage(named: "runningbuttonblack")
-            imglow.image = UIImage(named: "standingbuttonblue")
-            imgmedium.image = UIImage(named: "walkingbuttonblack")
-            if user.gender == .female
-            {
-                lblwaterml.text = "\(caluculatedWaterLevelValue)"
-                num = getSuggestedWaterLevel()
-                lblwaterml.text = "\(num)" + " " + "ml"
-                
-            }
-            else
-            {
-                lblwaterml.text =  "\(Int(Double(caluculatedWaterLevelValue) + Double(0.5) * 1000))"
-                num = getSuggestedWaterLevel()
-                lblwaterml.text = "\(num)"  + " " + "ml"
-                print(num)
-            }
         }
     }
     
     private func caluCulateGenderValue(genderText: String, genderRation: Double) {
         user.gender = Gender(rawValue: genderText)
-        lblwaterml.text =  "\(Int(Double(caluculatedWaterLevelValue) + Double(genderRation) * 1000))"
+        lblwaterml.text = "\(Int(Double(caluculatedWaterLevelValue) + Double(genderRation) * 1000))"
         num = getSuggestedWaterLevel()
         lblwaterml.text = "\(num)"  + " " + "ml"
     }
