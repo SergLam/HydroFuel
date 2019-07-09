@@ -87,6 +87,22 @@ extension DataManager {
         return Array(records)
     }
     
+    func updateAllByDate(strDate: String, remainingWaterQuantity: Int, totalAttepmt: Int) {
+        
+        let predicate = equalityPredicate(dateFieldName, strDate)
+        let records = readAllResult(object: DataRecordModel.self).filter(predicate)
+        do {
+            try realm.write {
+                records.forEach {
+                    $0.remainingWaterQuantity = remainingWaterQuantity
+                    $0.totalAttempt = totalAttepmt
+                }
+            }
+        } catch {
+            assertionFailure(error.localizedDescription)
+        }
+    }
+    
     func resetProgress(_ waterQuantity: Int) {
         
         let today = Date().toLocalTime()
@@ -99,6 +115,7 @@ extension DataManager {
         do {
             try realm.write {
                 records.forEach {
+                    $0.remainingWaterQuantity = waterQuantity
                     $0.totalDrink = 0
                     $0.totalAttempt = 0
                 }

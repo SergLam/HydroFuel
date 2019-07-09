@@ -232,9 +232,9 @@ final class HomeVC: UIViewController, AppStoreOpenable {
     @objc func NotifArrives() {
         if appDelegate.badgeCount != 0 {
             btnHydrate.backgroundColor = UIColor.enableColour
-            var waterAsPerNotif = appDelegate.badgeCount * currentModel.waterQuantityPerAttempt
+            var waterAsPerNotif = appDelegate.badgeCount * currentModel.waterPerAttempt
             if waterAsPerNotif == 0 {
-                waterAsPerNotif = self.currentModel.waterQuantityPerAttempt
+                waterAsPerNotif = self.currentModel.waterPerAttempt
             }
             
             let floatData = Double(waterAsPerNotif)/1000.0
@@ -276,7 +276,7 @@ final class HomeVC: UIViewController, AppStoreOpenable {
             }
             
             
-            let needWater = appDelegate.badgeCount * currentModel.waterQuantityPerAttempt
+            let needWater = appDelegate.badgeCount * currentModel.waterPerAttempt
             let leval = Double(needWater).truncatingRemainder(dividingBy: 1000.0)
             print(leval)
             let outerViewHeight = Int(self.viewOuter.frame.size.height)
@@ -362,9 +362,9 @@ final class HomeVC: UIViewController, AppStoreOpenable {
     
     func countWaterLevalAsNotif() {
         
-        var waterAsPerNotif = appDelegate.badgeCount * currentModel.waterQuantityPerAttempt
+        var waterAsPerNotif = appDelegate.badgeCount * currentModel.waterPerAttempt
         if waterAsPerNotif == 0 {
-            waterAsPerNotif = currentModel.waterQuantityPerAttempt
+            waterAsPerNotif = currentModel.waterPerAttempt
         }
         let floatData = Double(waterAsPerNotif)/1000.0
         let intData = Double(waterAsPerNotif/1000)
@@ -615,7 +615,7 @@ final class HomeVC: UIViewController, AppStoreOpenable {
         btnHydrate.isUserInteractionEnabled = false
         let totalDrink = appDelegate.badgeCount - lastCountOfAttempt
         print("totalDrink--",totalDrink)
-        let remainingWaterQty = currentModel.remainingWaterQuantity - (totalDrink*currentModel.waterQuantityPerAttempt)
+        let remainingWaterQty = currentModel.remainingWaterQuantity - (totalDrink*currentModel.waterPerAttempt)
         print("remainingWaterQty--",remainingWaterQty)
         self.lblWaterToDrink.text = "\(remainingWaterQty)ml"
         self.conHeightWaterLeval.constant = CGFloat(UserDefaultsManager.shared.lastWaterConstraint)
@@ -648,7 +648,7 @@ final class HomeVC: UIViewController, AppStoreOpenable {
             print(leval1)
             let lastBottleWater = CGFloat((Double(outerViewHeight)*leval1)/1000)
             var heightConstant = CGFloat()
-            let decreasingHeightPerAttempt = Double((outerViewHeight*currentModel.waterQuantityPerAttempt)/1000) + self.differenceWater
+            let decreasingHeightPerAttempt = Double((outerViewHeight*currentModel.waterPerAttempt)/1000) + self.differenceWater
             
             if CGFloat(decreasingHeightPerAttempt) > self.conHeightWaterLeval.constant {
                 
@@ -658,7 +658,7 @@ final class HomeVC: UIViewController, AppStoreOpenable {
                 UIView.animate(withDuration: 1.0, animations: {
                     self.conHeightWaterLeval.constant = 0
                     
-                    leval = self.currentModel.waterQuantityPerAttempt - Int(self.lblWaterLavel.text!)!
+                    leval = self.currentModel.waterPerAttempt - Int(self.lblWaterLavel.text!)!
                     self.lblWaterLavel.text = "0"
                     self.view.layoutIfNeeded()
                     self.view.layer.removeAllAnimations()
@@ -712,7 +712,7 @@ final class HomeVC: UIViewController, AppStoreOpenable {
                 UIView.animate(withDuration: 1.0) {
                     
                     self.conHeightWaterLeval.constant = CGFloat(Double(self.conHeightWaterLeval.constant - CGFloat(decreasingHeightPerAttempt)).rounded(toPlaces: 6)) - CGFloat(self.differenceWater)
-                    let valuelevel = "\(Int(self.lblWaterLavel.text!)! - self.currentModel.waterQuantityPerAttempt)"
+                    let valuelevel = "\(Int(self.lblWaterLavel.text!)! - self.currentModel.waterPerAttempt)"
                     self.lblWaterLavel.text = valuelevel
                     if self.counter == 10 {
                         self.conHeightWaterLeval.constant = 0
@@ -729,8 +729,8 @@ final class HomeVC: UIViewController, AppStoreOpenable {
             
             timer.invalidate()
             notifMarkerView.isHidden = true
-            let remainingWaterQty = currentModel.remainingWaterQuantity - (totalDrink * currentModel.waterQuantityPerAttempt)
-            updateData(REMAININGWATERQTY: remainingWaterQty, TOTALATTEMPT: appDelegate.badgeCount)
+            let remainingWaterQty = currentModel.remainingWaterQuantity - (totalDrink * currentModel.waterPerAttempt)
+            updateData(remainingWaterQty: remainingWaterQty, totalAttempt: appDelegate.badgeCount)
             lastCountOfAttempt = appDelegate.badgeCount
             UserDefaultsManager.shared.lastWaterConstraint = Int(conHeightWaterLeval.constant)
             UserDefaultsManager.shared.lastCountOfAttempt = lastCountOfAttempt
@@ -754,48 +754,39 @@ final class HomeVC: UIViewController, AppStoreOpenable {
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
         let strDate = dateFormatter.string(from: today)
         
-        let data = DBManager.shared.selectAllByDate(strDate)
-
-        if data.status == 1 {
-            
-            let arrLocalData = data.arrData
-            previousModel = arrLocalData[0]
-            
-            let floatData = Double(currentModel.waterQuantity)/1000.0
-            let intData = Double(currentModel.waterQuantity/1000)
-            if intData < floatData {
-                self.tottleBottle = (currentModel.waterQuantity/1000) + 1
-            }else{
-                self.tottleBottle = (currentModel.waterQuantity/1000)
-            }
-            
-            currentModel.remainingWaterQuantity = previousModel.remainingWaterQuantity
-            currentModel.totalDrink = previousModel.totalDrink
-            currentModel.totalAttempt = previousModel.totalAttempt
-            currentModel.waterQuantityPerAttempt = previousModel.waterQuantityPerAttempt
-            let remainingWaterQty = currentModel.remainingWaterQuantity - (currentModel.totalDrink * currentModel.waterQuantityPerAttempt)
-            self.lblWaterToDrink.text = "\(remainingWaterQty)ml"
-            
-        } else {
-            print(data.failure)
+        let data = DataManager.shared.selectAllByDate(strDate)
+        previousModel = data.first
+        
+        let floatData = Double(currentModel.waterQuantity)/1000.0
+        let intData = Double(currentModel.waterQuantity/1000)
+        if intData < floatData {
+            self.tottleBottle = (currentModel.waterQuantity/1000) + 1
+        }else{
+            self.tottleBottle = (currentModel.waterQuantity/1000)
         }
+        
+        currentModel.remainingWaterQuantity = previousModel.remainingWaterQuantity
+        currentModel.totalDrink = previousModel.totalDrink
+        currentModel.totalAttempt = previousModel.totalAttempt
+        currentModel.waterPerAttempt = previousModel.waterPerAttempt
+        let remainingWaterQty = currentModel.remainingWaterQuantity - (currentModel.totalDrink * currentModel.waterPerAttempt)
+        self.lblWaterToDrink.text = "\(remainingWaterQty)ml"
+        
+        
         
     }
     
-    func updateData(REMAININGWATERQTY: Int, TOTALATTEMPT: Int){
+    func updateData(remainingWaterQty: Int, totalAttempt: Int) {
+        
         let today = Date().toLocalTime()
         let dateFormattor = DateFormatter()
         dateFormattor.dateFormat = "yyyy-MM-dd"
         dateFormattor.timeZone = TimeZone(identifier: "UTC")
         let strDate = dateFormattor.string(from: today)
-        let strURL = "update HYDROFUELPERSINFO set REMAININGWATERQTY='\(REMAININGWATERQTY)', TOTALATTEMPT='\(TOTALATTEMPT)' where DATE='\(strDate)'"
-        print(strURL)
-        
-        let data = AFSQLWrapper.updateTable(strURL)
-        print(data)
-        if data.status == 1 {
-            searchDataForUpdate()
-        }
+
+        DataManager.shared.updateAllByDate(strDate: strDate,
+                                           remainingWaterQuantity: remainingWaterQty, totalAttepmt: totalAttempt)
+        searchDataForUpdate()
     }
     
     
@@ -806,35 +797,28 @@ final class HomeVC: UIViewController, AppStoreOpenable {
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
         let strDate = dateFormatter.string(from: today)
         
-        DBManager.shared.createDB()
-        
-        if UserDefaultsManager.shared.previousDate != nil{
-            let previousDate = UserDefaultsManager.shared.previousDate
-            if previousDate == strDate {
-                searchDataForUpdate()
-            }else{
-                showData()
-            }
-        }else{
+        guard let previousDate = UserDefaultsManager.shared.previousDate else {
             searchDataForUpdate()
+            return
+        }
+        if previousDate == strDate {
+            searchDataForUpdate()
+        } else{
+            showData()
         }
     }
     
-    func insertData(DATE: String, WEIGHT: Int, GENDER: String, ACTIVITYLAVEL: String, WATERQTY: Int, REMAININGWATERQTY: Int, TOTALDRINK: Int, TOTALATTEMPT: Int, WATERQTYPERATTEMPT: Int) -> Void {
+    func insertData(_ data: DataRecordModel) -> Void {
         
-        let result = DBManager.shared.insertData(date: DATE, weight: WEIGHT, gender: ACTIVITYLAVEL, activityLevel: ACTIVITYLAVEL, waterQty: WATERQTY, remainingWaterQty: REMAININGWATERQTY, totalDrink: TOTALDRINK, totalAttempt: TOTALATTEMPT, waterQtyPerAttempt: WATERQTYPERATTEMPT)
+        let result = DataManager.shared.write(value: [data])
         
-        guard result.status == 1 else {
-            assertionFailure("\(result.failure)")
-            return
-        }
         UIApplication.shared.applicationIconBadgeNumber = 0
         appDelegate.badgeCount = 0
         lastCountOfAttempt = 0
         bottleCount = 1
         prevWaterLeval = viewOuter.frame.size.height
         conHeightWaterLeval.constant = viewOuter.frame.size.height
-        UserDefaultsManager.shared.previousDate = DATE
+        UserDefaultsManager.shared.previousDate = ""//DATE
         UserDefaultsManager.shared.lastWaterConstraint = Int(conHeightWaterLeval.constant)
         UserDefaultsManager.shared.bottleCount = 1
         UserDefaultsManager.shared.lastCountOfAttempt = 0
@@ -860,41 +844,29 @@ final class HomeVC: UIViewController, AppStoreOpenable {
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
         let strDate = dateFormatter.string(from: today)
         
-        let data = DBManager.shared.selectAll()
         
-        if data.status == 1 {
-            let arrLocalData = data.arrData
-            previousModel = arrLocalData[arrLocalData.count-1]
-            
-            
-            let WEIGHT1 = previousModel.weight
-            let GENDER1 = previousModel.gender
-            let ACTIVITYLAVEL1 = previousModel.activityLevel
-            let WATERQTY1 = previousModel.waterQuantity
-            
-            let floatData = Double(WATERQTY1)/1000.0
-            let intData = Double(WATERQTY1/1000)
-            if intData < floatData {
-                self.tottleBottle = (WATERQTY1/1000) + 1
-            }else{
-                self.tottleBottle = (WATERQTY1/1000)
-            }
-            let WATERQTYPERATTEMPT1 = previousModel.waterQuantityPerAttempt
-            
-            self.insertData(DATE: strDate, WEIGHT: WEIGHT1, GENDER: GENDER1, ACTIVITYLAVEL: ACTIVITYLAVEL1, WATERQTY: WATERQTY1, REMAININGWATERQTY: WATERQTY1, TOTALDRINK: 0, TOTALATTEMPT: 0, WATERQTYPERATTEMPT: WATERQTYPERATTEMPT1)
-            
+        let data = DataManager.shared.readAll(object: DataRecordModel.self)
+        
+        previousModel = data.last
+    
+        let floatData = Double(previousModel.waterQuantity)/1000.0
+        let intData = Double(previousModel.waterQuantity/1000)
+        if intData < floatData {
+            self.tottleBottle = (previousModel.waterQuantity/1000) + 1
+        } else {
+            self.tottleBottle = (previousModel.waterQuantity/1000)
         }
-        
+
+        let dataModel = DataRecordModel(activity: previousModel.activityLevel, date: strDate,
+                                        gender: previousModel.gender, remainingWater: previousModel.waterQuantity, totalDrink: 0, totalAttempt: 0, waterQuantity: previousModel.waterQuantity, waterPerAttempt: previousModel.waterPerAttempt, weight: previousModel.weight)
+        self.insertData(dataModel)
     }
     
     func resetData() {
         
-        let result = DBManager.shared.resetCurrentProgress(waterQuantity: currentModel.waterQuantity)
+        DataManager.shared.resetProgress(currentModel.waterQuantity)
         
         btnHydrate.backgroundColor = UIColor.disableColour
-        guard result.0.status == 1 else {
-            return
-        }
         
         appDelegate.badgeCount = 0
         lastCountOfAttempt = 0
@@ -905,7 +877,7 @@ final class HomeVC: UIViewController, AppStoreOpenable {
         
         UserDefaultsManager.shared.lastWaterConstraint = Int(conHeightWaterLeval.constant)
         UserDefaultsManager.shared.bottleCount = 1
-        UserDefaultsManager.shared.previousDate = result.resetDate
+        UserDefaultsManager.shared.previousDate = ""//result.resetDate
         UserDefaultsManager.shared.lastCountOfAttempt = 0
         UserDefaultsManager.shared.prevWaterLevel = Double(viewOuter.frame.size.height).rounded(toPlaces: 6)
         UserDefaultsManager.shared.lastDisplayedWaterLevel = 1000

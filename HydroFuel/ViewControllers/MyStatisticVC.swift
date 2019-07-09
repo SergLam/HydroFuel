@@ -141,7 +141,7 @@ final class MyStatisticVC: UIViewController {
         let set1: LineChartDataSet = LineChartDataSet(entries: yVals1, label: "-- Water Intake")
         set1.axisDependency = .left // Line will correlate with left axis values
         
-        set1.setColor(UIColor.blue)//.withAlphaComponent(0.1))
+        set1.setColor(UIColor.blue)
         set1.setCircleColor(UIColor.blue)
         set1.circleRadius = 3.0
         set1.fillAlpha = 65 / 255.0
@@ -190,89 +190,6 @@ final class MyStatisticVC: UIViewController {
     }
     
     func showData() {
-        
-        let data = DataManager.shared.readAll(object: DataRecordModel)
-        if data.status == 1 {
-            
-            let arrLocalData = data.arrData
-            for element in arrLocalData {
-                
-                let dictPrevious = element
-                print("total atempt--",dictPrevious)
-                let TOTALATTEMPT = dictPrevious.totalAttempt
-                let WATERQTYPERATTEMPT = dictPrevious.waterQuantityPerAttempt
-                let totalWater = TOTALATTEMPT * WATERQTYPERATTEMPT
-                self.arrtotal.add(totalWater)
-                print("total",arrtotal)
-            }
-            
-            print(arrLocalData.count)
-            
-            if arrLocalData.count < 7
-            {
-                for j in 0..<arrtotal.count
-                {
-                    let ans =  ((arrtotal[j]) as AnyObject) as! Int
-                    let ans1 = (ans / Int(arrLocalData.count))
-                    lblsevendays.text = "\(ans1)" + " " +  "ml"
-                    print("ans1 is",ans1)
-                    print("ans is",ans)
-                }
-            }
-            else  if arrLocalData.count > 7
-            {
-                for j in 0..<7
-                {
-                    let ans =  ((arrtotal[j]) as AnyObject) as! Int
-                    let ans1 = (ans / 7)
-                    lblsevendays.text = "\(ans1)" + " " +  "ml"
-                    print("ans1 is",ans1)
-                }
-            }
-            if arrLocalData.count < 30
-            {
-                for j in 0..<arrtotal.count
-                {
-                    let ans =  ((arrtotal[j]) as AnyObject) as! Int
-                    let ans1 = (ans / Int(arrLocalData.count))
-                    lblthirteendays.text = "\(ans1)" + " " +  "ml"
-                    print("ans1 is",ans1)
-                    print("ans is",ans)
-                }
-            }
-            else  if arrLocalData.count > 30
-            {
-                for j in 0..<30
-                {
-                    let ans =  ((arrtotal[j]) as AnyObject) as! Int
-                    let ans1 = (ans / 30)
-                    lblthirteendays.text = "\(ans1)" + " " +  "ml"
-                    print("ans1 is",ans1)
-                }
-            }
-            if arrLocalData.count < 90
-            {
-                for j in 0..<arrtotal.count
-                {
-                    let ans =  ((arrtotal[j]) as AnyObject) as! Int
-                    let ans1 = (ans / Int(arrLocalData.count))
-                    lblnineteendays.text = "\(ans1)" + " " +  "ml"
-                    print("ans1 is",ans1)
-                    print("ans is",ans)
-                }
-            }
-            else if arrLocalData.count > 90
-            {
-                for j in 0..<90
-                {
-                    let ans =  ((arrtotal[j]) as AnyObject) as! Int
-                    let ans1 = (ans / 90)
-                    lblnineteendays.text = "\(ans1)" + " " +  "ml"
-                    print("ans1 is",ans1)
-                }
-            }
-            
-        }
         
     }
     

@@ -37,7 +37,7 @@ final class PersonalInfoVC: UIViewController {
     
     private let activeMaleImage = R.image.malebuttonblue()
     private let inActiveMaleImage = R.image.malebuttonblack()
-
+    
     private let selectedLowActImage = R.image.standingbuttonblue()
     private let unSelectedLowActImage = R.image.standingbuttonblack()
     private let selectedMediumActImage = R.image.walkingbuttonblue()
@@ -70,11 +70,10 @@ final class PersonalInfoVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        DBManager.shared.createDB()
         
         showcase.delegate = self
         configureWeightSlider()
-
+        
         lblkg.text = "50" + "Kg"
         weightCurrentVAle = 50
         ans = (Int(Double(weightCurrentVAle) * Double(0.033) * 1000) )
@@ -125,25 +124,21 @@ final class PersonalInfoVC: UIViewController {
     
     func resetValues() {
         let today = Date().toLocalTime()
-        let dateFormattor = DateFormatter()
-        dateFormattor.dateFormat = "yyyy-MM-dd"
-        dateFormattor.timeZone = TimeZone(identifier: "UTC")
-        let strDate = dateFormattor.string(from: today)
-        let strURL = "update HYDROFUELPERSINFO set REMAININGWATERQTY='\(self.num)', TOTALDRINK='\(0)',TOTALATTEMPT='\(0)' where DATE='\(strDate)'"
-        print(strURL)
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        let strDate = dateFormatter.string(from: today)
         
-        let data = AFSQLWrapper.updateTable(strURL)
-        print(data)
-        if data.status == 1 {
-            UIApplication.shared.applicationIconBadgeNumber = 0
-            appDelegate.badgeCount = 0
-            UserDefaultsManager.shared.lastWaterConstraint = 200
-            UserDefaultsManager.shared.bottleCount = 1
-            UserDefaultsManager.shared.previousDate = strDate
-            UserDefaultsManager.shared.lastCountOfAttempt = 0
-            UserDefaultsManager.shared.lastDisplayedWaterLevel = 1000
-            appDelegate.resettime = "reset"
-        }
+        DataManager.shared.resetProgress(self.num)
+        
+        UIApplication.shared.applicationIconBadgeNumber = 0
+        appDelegate.badgeCount = 0
+        UserDefaultsManager.shared.lastWaterConstraint = 200
+        UserDefaultsManager.shared.bottleCount = 1
+        UserDefaultsManager.shared.previousDate = strDate
+        UserDefaultsManager.shared.lastCountOfAttempt = 0
+        UserDefaultsManager.shared.lastDisplayedWaterLevel = 1000
+        appDelegate.resettime = "reset"
+        
     }
     
     private func caluculateTotalValue() {
@@ -152,50 +147,43 @@ final class PersonalInfoVC: UIViewController {
         caluculatedWaterLevelValue = (Int(Double(weightCurrentVAle) * Double(0.033) * 1000))
         suggestedWatelVolumeLabel.text = "\(caluculatedWaterLevelValue)"
         
-        switch user.activityLevel {
-      
-        case .some(let activity):
-            
-            switch user.gender {
-            case .some(let gender):
-                
-                ImglineFemale.image = gender == .female ? activeFemaleImage : inActiveFemaleImage
-                Imgmalegrayline.image = gender == .female ? inActiveMaleImage : activeMaleImage
-                num = getSuggestedWaterLevel()
-                
-                imglow.image = activity == .low ? selectedLowActImage : unSelectedLowActImage
-                imgmedium.image = activity == .medium ? selectedMediumActImage : unSelectedMediumActImage
-                imghigh.image = activity == .high ? selectedHighActImage : unSelectedHighActImage
-                
-                switch activity {
-                    
-                case .low:
-
-                    let genderRation = gender == .male ? 0.5 : 0
-                    caluCulateGenderValue(genderText: gender.rawValue, genderRation: genderRation)
-                    
-                case .medium:
-                    
-                    let genderRation = gender == .male ? 1 : 0.5
-                    caluCulateGenderValue(genderText: gender.rawValue, genderRation: genderRation)
-                    
-                case .high:
-                    
-                    let genderRation = gender == .male ? 1.5 : 1
-                    caluCulateGenderValue(genderText: gender.rawValue, genderRation: genderRation)
-                }
-                
-            case .none:
-                caluCulateGenderValue(genderText: Gender.male.rawValue, genderRation: 0.5)
-            }
-            
-        case .none:
-            caluCulateGenderValue(genderText: Gender.male.rawValue, genderRation: 0.5)
+        caluCulateGenderValue(genderText: Gender.male.rawValue, genderRation: 0.5)
+        
+        guard let activity = Activity(rawValue: user.activityLevel) else {
+            assertionFailure("Invalid activity raw value")
+            return
         }
+        
+        guard let gender = Gender(rawValue: user.gender) else {
+            assertionFailure("Invalid gender raw value")
+            return
+        }
+        
+        ImglineFemale.image = gender == .female ? activeFemaleImage : inActiveFemaleImage
+        Imgmalegrayline.image = gender == .female ? inActiveMaleImage : activeMaleImage
+        num = getSuggestedWaterLevel()
+        
+        imglow.image = activity == .low ? selectedLowActImage : unSelectedLowActImage
+        imgmedium.image = activity == .medium ? selectedMediumActImage : unSelectedMediumActImage
+        imghigh.image = activity == .high ? selectedHighActImage : unSelectedHighActImage
+        
+        let genderRation: Double
+        switch activity {
+        case .low:
+            genderRation = gender == .male ? 0.5 : 0
+            
+        case .medium:
+            genderRation = gender == .male ? 1 : 0.5
+            
+        case .high:
+            genderRation = gender == .male ? 1.5 : 1
+            
+        }
+        caluCulateGenderValue(genderText: gender.rawValue, genderRation: genderRation)
     }
     
     private func caluCulateGenderValue(genderText: String, genderRation: Double) {
-        user.gender = Gender(rawValue: genderText)
+        user.gender = genderText
         suggestedWatelVolumeLabel.text = "\(Int(Double(caluculatedWaterLevelValue) + Double(genderRation) * 1000))"
         num = getSuggestedWaterLevel()
         suggestedWatelVolumeLabel.text = "\(num)"
@@ -223,14 +211,14 @@ final class PersonalInfoVC: UIViewController {
             searchDataForUpdate()
         } else {
             let tempDate = "2000-12-31"
-            DBManager.shared.firstInsertData(date: tempDate, weight: 0, gender: "Male", activityLevel: "Low", waterQty: 0, remainingWaterQty: 0, totalDrink: 0, totalAttempt: 0, waterQtyPerAttempt: 0)
+            DataManager.shared.write(value: [DataRecordModel.defaultModel()])
         }
-
         
-        if let userObj2 = user.weight {
+        
+        if user.weight != 0 {
             
-            lblkg.text = String(describing: userObj2)
-            slider.value = Float(userObj2)
+            lblkg.text = "\(user.weight)"
+            slider.value = Float(user.weight)
             weightCurrentVAle = Int(lblkg.text!)!
             slider.value = Float(weightCurrentVAle)
         }
@@ -239,7 +227,7 @@ final class PersonalInfoVC: UIViewController {
         imgmenu.isHidden = appDelegate.isMenuIconHidden
         
         if appDelegate.isMenuIconHidden == true {
-
+            
         } else {
             appDelegate.isMenuIconHidden = false
         }
@@ -254,7 +242,7 @@ final class PersonalInfoVC: UIViewController {
     
     private func validation() -> Bool {
         
-        let inputData = [lblkg.text!, user.gender?.rawValue ?? "", user.activityLevel?.rawValue ?? ""]
+        let inputData = [lblkg.text!, user.gender, user.activityLevel]
         let errorMessages = ["Please Choose Weight", "Please Choose Gender", "Please Choose Activity Level"]
         
         for (index, data) in inputData.enumerated() {
@@ -267,25 +255,25 @@ final class PersonalInfoVC: UIViewController {
     }
     
     @IBAction func btnFemale(_ sender: UIButton) {
-        user.gender = .female
+        user.gender = Gender.male.rawValue
         caluculateTotalValue()
     }
     @IBAction func btnselectMale(_ sender: UIButton) {
-        user.gender = .male
+        user.gender = Gender.male.rawValue
         caluculateTotalValue()
     }
     @IBAction func btnHighClick(_ sender: UIButton) {
-        user.activityLevel = .high
+        user.activityLevel = Activity.high.rawValue
         caluculateTotalValue()
     }
     
     @IBAction func btnMediumClick(_ sender: UIButton) {
-        user.activityLevel = .medium
+        user.activityLevel = Activity.medium.rawValue
         caluculateTotalValue()
     }
     
     @IBAction func btnLowClick(_ sender: UIButton) {
-        user.activityLevel = .low
+        user.activityLevel = Activity.low.rawValue
         caluculateTotalValue()
     }
     
@@ -300,28 +288,27 @@ final class PersonalInfoVC: UIViewController {
             let lblanss: Int = self.num / 10
             
             UserDefaults.standard.set(lblanss, forKey: "lblml")
-            UserDefaultsManager.shared.userGender = self.user.gender?.rawValue ?? ""
-            UserDefaultsManager.shared.userActivityLevel = self.user.activityLevel?.rawValue ?? ""
-            UserDefaultsManager.shared.userWeight = self.user.weight
             UserDefaults.standard.set(1, forKey: "fill")
             UserDefaults.standard.set(self.num, forKey: "MainWaterQuantityKey")
+            
+            let today = Date().toLocalTime()
+            
+            self.dateFormatter.dateFormat = "yyyy-MM-dd"
+            self.dateFormatter.timeZone = TimeZone(identifier: "UTC")
+            let strDate = self.dateFormatter.string(from: today)
+            let data = DataRecordModel(activity: self.user.activityLevel, date: strDate,
+                                       gender: self.user.gender, remainingWater: self.num,
+                                       totalDrink: 0, totalAttempt: 0, waterQuantity: self.num,
+                                       waterPerAttempt: lblanss, weight: self.weightCurrentVAle)
+            
             if self.dictPrevious == DataRecordModel.defaultModel() {
                 
-                let today = Date().toLocalTime()
-                
-                self.dateFormatter.dateFormat = "yyyy-MM-dd"
-                self.dateFormatter.timeZone = TimeZone(identifier: "UTC")
-                let strDate = self.dateFormatter.string(from: today)
-                
-                self.insertData(DATE: strDate, WEIGHT: self.weightCurrentVAle, GENDER: self.user.gender?.rawValue ?? "", ACTIVITYLAVEL: self.user.activityLevel?.rawValue ?? "", WATERQTY: self.num, REMAININGWATERQTY: self.num, TOTALDRINK: 0, TOTALATTEMPT: 0, WATERQTYPERATTEMPT: lblanss)
+                self.insertData(data)
             }else{
                 
-                let totalDrinksCount = self.dictPrevious.totalDrink
-                
-                let totalDrinkWater = lblanss*totalDrinksCount
-                let remainingWaterQty = self.num - totalDrinkWater
-                
-                self.updateData(WEIGHT: self.weightCurrentVAle, GENDER: self.user.gender?.rawValue ?? "", ACTIVITYLAVEL: self.user.activityLevel?.rawValue ?? "", WATERQTY: self.num, REMAININGWATERQTY: remainingWaterQty, TOTALDRINK: totalDrinksCount, WATERQTYPERATTEMPT: lblanss)
+                data.totalDrink = lblanss * self.dictPrevious.totalDrink
+                data.remainingWaterQuantity = self.num - (lblanss * self.dictPrevious.totalDrink)
+                self.updateData(data)
             }
             
         }
@@ -345,33 +332,28 @@ final class PersonalInfoVC: UIViewController {
     
     // MARK: - SQL Database Handler
     
-    private func insertData(DATE: String, WEIGHT: Int, GENDER: String, ACTIVITYLAVEL: String, WATERQTY: Int, REMAININGWATERQTY: Int, TOTALDRINK: Int, TOTALATTEMPT: Int, WATERQTYPERATTEMPT: Int) -> Void {
+    private func insertData(_ data: DataRecordModel) -> Void {
         
-        let result = DBManager.shared.insertData(date: DATE, weight: WEIGHT, gender: GENDER, activityLevel: ACTIVITYLAVEL, waterQty: WATERQTY, remainingWaterQty: REMAININGWATERQTY, totalDrink: TOTALDRINK, totalAttempt: TOTALATTEMPT, waterQtyPerAttempt: WATERQTYPERATTEMPT)
-        
-        guard result.status == 1 else {
-            assertionFailure("\(result.failure)")
+        DataManager.shared.write(value: [data])
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let vc = storyboard.instantiateViewController(withIdentifier: "AlertVCNew") as? AlertVCNew else {
+            assertionFailure("Unable to instantiateViewController")
             return
         }
-        
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "AlertVCNew") as? AlertVCNew
         appDelegate.resettime = "reset"
-        navigationController!.pushViewController(vc!, animated: true)
+        navigationController!.pushViewController(vc, animated: true)
         
     }
     
-    private func updateData(WEIGHT: Int, GENDER: String, ACTIVITYLAVEL: String, WATERQTY: Int, REMAININGWATERQTY: Int, TOTALDRINK: Int, WATERQTYPERATTEMPT: Int){
+    private func updateData(_ data: DataRecordModel) {
         
-        let result = DBManager.shared.updateData(weight: WEIGHT, gender: GENDER, activityLevel: ACTIVITYLAVEL, waterQty: WATERQTY, remainingWaterQty: REMAININGWATERQTY, totalDrink: TOTALDRINK, waterQtyPerAttempt: WATERQTYPERATTEMPT)
-        
-        guard result.status == 1 else {
-            assertionFailure("\(result.failure)")
+        DataManager.shared.update(value: [data])
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let vc = storyboard.instantiateViewController(withIdentifier: "HomeVC") as? HomeVC else {
+            assertionFailure("Unable to instantiateViewController")
             return
         }
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "HomeVC") as? HomeVC
-        navigationController!.pushViewController(vc!, animated: true)
+        navigationController!.pushViewController(vc, animated: true)
     }
     
     private func searchDataForUpdate() {
@@ -380,14 +362,11 @@ final class PersonalInfoVC: UIViewController {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
         let strDate = dateFormatter.string(from: today)
-        let data = DBManager.shared.selectAllByDate(strDate)
-        
-        guard data.status == 1  else {
-            assertionFailure("\(data.failure)")
+        let records = DataManager.shared.selectAllByDate(strDate)
+        guard let lastRecord = records.first else {
             return
         }
-        let arrLocalData = data.arrData
-        dictPrevious = arrLocalData[0]
+        dictPrevious = lastRecord
     }
     
     
