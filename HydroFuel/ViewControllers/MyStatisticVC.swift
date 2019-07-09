@@ -175,19 +175,14 @@ final class MyStatisticVC: UIViewController {
     
     func searchDataForProgress(strDate: String) {
         
-        let result = DBManager.shared.selectAllByDate(strDate)
+        let result = DataManager.shared.selectAllByDate(strDate)
         
-        guard result.status == 1 else {
-            self.arrDataForDates.add(0)
-            //assertionFailure("\(result.failure)")
+        guard let dictPrevious = result.first else {
             return
         }
         
-        let arrLocalData = result.arrData
-        let dictPrevious = arrLocalData[0]
-        
         let TOTALATTEMPT = dictPrevious.totalAttempt
-        let WATERQTYPERATTEMPT = dictPrevious.waterQuantityPerAttempt
+        let WATERQTYPERATTEMPT = dictPrevious.waterPerAttempt
         
         let totalWater = TOTALATTEMPT * WATERQTYPERATTEMPT
         
@@ -196,7 +191,7 @@ final class MyStatisticVC: UIViewController {
     
     func showData() {
         
-        let data = DBManager.shared.selectAll()
+        let data = DataManager.shared.readAll(object: DataRecordModel)
         if data.status == 1 {
             
             let arrLocalData = data.arrData

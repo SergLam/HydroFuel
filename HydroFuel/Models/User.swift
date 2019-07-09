@@ -7,12 +7,25 @@
 //
 
 import Foundation
+import RealmSwift
 
-struct User {
+class User: Object {
     
-    var gender: Gender? = Gender(rawValue: UserDefaultsManager.shared.userGender ?? "")
-    var activityLevel: Activity? = Activity(rawValue: UserDefaultsManager.shared.userActivityLevel ?? "")
-    var weight: Int? = UserDefaultsManager.shared.userWeight
+    var id = NSUUID().uuidString.lowercased()
+    var gender: String = ""
+    var activityLevel: String = ""
+    var weight: Int = 0
+    
+    override class func primaryKey() -> String? {
+        return "id"
+    }
+    
+    convenience required init(gender: String, activityLevel: String, weight: Int) {
+        self.init()
+        self.gender = gender
+        self.activityLevel = activityLevel
+        self.weight = weight
+    }
 }
 
 enum Gender: String {

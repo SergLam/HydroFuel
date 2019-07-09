@@ -136,42 +136,6 @@ final class UserDefaultsManager {
             defaults.set(newValue, forKey: #function)
         }
     }
-    
-    /**
-     Selected user gender
-     */
-    var userGender: String? {
-        get {
-            return defaults.string(forKey: #function)
-        }
-        set {
-            defaults.set(newValue, forKey: #function)
-        }
-    }
-    
-    /**
-     Selected user activity level
-     */
-    var userActivityLevel: String? {
-        get {
-            return defaults.string(forKey: #function)
-        }
-        set {
-            defaults.set(newValue, forKey: #function)
-        }
-    }
-    
-    /**
-     Selected user weight
-     */
-    var userWeight: Int? {
-        get {
-            return defaults.value(forKey: #function) as? Int
-        }
-        set {
-            defaults.set(newValue, forKey: #function)
-        }
-    }
-    
+        
 }
 

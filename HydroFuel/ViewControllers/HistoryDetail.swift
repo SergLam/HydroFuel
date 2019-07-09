@@ -84,18 +84,15 @@ final class HistoryDetail: UIViewController {
     
     private func searchDataForProgress(strDate: String) {
         
-        let data = DBManager.shared.selectAllByDate(strDate)
+        displayProgressData(totalWater: 0, waterQty: 0)
         
-        guard data.status == 1 else {
-            displayProgressData(totalWater: 0, waterQty: 0)
+        let records = DataManager.shared.selectAllByDate(strDate)
+        guard let dictPrevious = records.first else {
             return
         }
-        let arrLocalData = data.arrData
-        let dictPrevious = arrLocalData[0]
-        
         let warerQty = dictPrevious.waterQuantity
         let totalAttempt = dictPrevious.totalAttempt
-        let waterQtyPerAttempt = dictPrevious.waterQuantityPerAttempt
+        let waterQtyPerAttempt = dictPrevious.waterPerAttempt
         
         let totalWater = totalAttempt * waterQtyPerAttempt
         
