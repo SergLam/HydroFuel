@@ -45,11 +45,7 @@ final class PersonalInfoVC: UIViewController {
     private let selectedHighActImage = R.image.runningbuttonblue()
     private let unSelectedHighActImage = R.image.runningbuttonblack()
     
-    var weightCurrentVAle = Int(){
-        didSet{
-            caluculateTotalValue()
-        }
-    }
+    var weightCurrentVAle: Int = 0
     
     var maleans = 0
     var ans1 = 0
@@ -206,11 +202,11 @@ final class PersonalInfoVC: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
         super.viewWillAppear(animated)
         if UserDefaults.standard.value(forKey: "fill") != nil{
             searchDataForUpdate()
         } else {
-            let tempDate = "2000-12-31"
             DataManager.shared.write(value: [DataRecordModel.defaultModel()])
         }
         
@@ -222,7 +218,7 @@ final class PersonalInfoVC: UIViewController {
             weightCurrentVAle = Int(lblkg.text!)!
             slider.value = Float(weightCurrentVAle)
         }
-        caluculateTotalValue()
+        //caluculateTotalValue()
         btnmenu.isHidden = appDelegate.isMenuIconHidden
         imgmenu.isHidden = appDelegate.isMenuIconHidden
         

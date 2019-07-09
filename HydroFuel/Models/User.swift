@@ -11,10 +11,10 @@ import RealmSwift
 
 class User: Object {
     
-    var id = NSUUID().uuidString.lowercased()
-    var gender: String = ""
-    var activityLevel: String = ""
-    var weight: Int = 0
+    @objc dynamic var id = NSUUID().uuidString.lowercased()
+    @objc dynamic var gender: String = ""
+    @objc dynamic var activityLevel: String = ""
+    @objc dynamic var weight: Int = 0
     
     override class func primaryKey() -> String? {
         return "id"

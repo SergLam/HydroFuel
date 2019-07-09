@@ -76,8 +76,8 @@ final class HomeVC: UIViewController, AppStoreOpenable {
         strTimes = dateFormatter.string(from: Date())
         print(strTimes)
         
-        let arrTime = UserDefaultsManager.shared.alarmArrayDateTime! as NSArray
-        arrSetFixAlarmTime = arrTime.mutableCopy() as! NSMutableArray
+//        let arrTime = UserDefaultsManager.shared.alarmArrayDateTime! as NSArray
+//        arrSetFixAlarmTime = arrTime.mutableCopy() as! NSMutableArray
         if UIDevice().userInterfaceIdiom == .phone {
             switch UIScreen.main.nativeBounds.height {
             case 1136:
@@ -810,7 +810,7 @@ final class HomeVC: UIViewController, AppStoreOpenable {
     
     func insertData(_ data: DataRecordModel) -> Void {
         
-        let result = DataManager.shared.write(value: [data])
+        DataManager.shared.write(value: [data])
         
         UIApplication.shared.applicationIconBadgeNumber = 0
         appDelegate.badgeCount = 0
@@ -940,7 +940,7 @@ extension HomeVC: iShowcaseDelegate {
         default:
             UserDefaultsManager.shared.isTutorialShown = true
             print("Default")
-            checkForAutoNotif()
+            //checkForAutoNotif()
             
         }
     }

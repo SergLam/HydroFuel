@@ -50,7 +50,7 @@ final class MyStatisticVC: UIViewController {
                 let date = (arrDates[i] as! String).components(separatedBy: "-")
                 arrShowDates.append("\(date[1])-\(date[2])")
                 if i == arrDates.count - 1 {
-                    self.setChartData(months: arrShowDates)
+                    // self.setChartData(months: arrShowDates)
                 }
             }
         }else{
@@ -61,7 +61,7 @@ final class MyStatisticVC: UIViewController {
                 arrShowDates.append("\(date[1])-\(date[2])")
                 
                 if i == arrDates.count - 1 {
-                    self.setChartData(months: arrShowDates)
+                    // self.setChartData(months: arrShowDates)
                 }
             }
         }
