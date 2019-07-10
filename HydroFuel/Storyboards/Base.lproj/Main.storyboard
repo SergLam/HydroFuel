@@ -461,7 +461,7 @@
                                                                             </userDefinedRuntimeAttribute>
                                                                         </userDefinedRuntimeAttributes>
                                                                         <connections>
-                                                                            <action selector="btnClickedToChangeDailyTarget:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Sl3-dG-9eR"/>
+                                                                            <action selector="didTapSuggestedWaterButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="tuT-ob-boV"/>
                                                                         </connections>
                                                                     </button>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1200" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vgK-Sh-J7m">
@@ -493,7 +493,7 @@
                                                                             </userDefinedRuntimeAttribute>
                                                                         </userDefinedRuntimeAttributes>
                                                                         <connections>
-                                                                            <action selector="btnClickedToChangeDailyTarget:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3CU-fd-u7y"/>
+                                                                            <action selector="didTapSuggestedWaterButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="TbN-ba-by9"/>
                                                                         </connections>
                                                                     </button>
                                                                 </subviews>

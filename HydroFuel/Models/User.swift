@@ -15,16 +15,28 @@ class User: Object {
     @objc dynamic var gender: String = ""
     @objc dynamic var activityLevel: String = ""
     @objc dynamic var weight: Int = 0
+    @objc dynamic var suggestedWaterLevel: Int = 0
     
     override class func primaryKey() -> String? {
         return "id"
     }
     
-    convenience required init(gender: String, activityLevel: String, weight: Int) {
+    convenience required init(gender: String, activityLevel: String, weight: Int, suggestedWater: Int) {
         self.init()
         self.gender = gender
         self.activityLevel = activityLevel
         self.weight = weight
+        self.suggestedWaterLevel = suggestedWater
+    }
+    
+    static func defaultUserModel() -> User {
+        
+        let user = self.init()
+        user.gender = Gender.male.rawValue
+        user.activityLevel = Activity.medium.rawValue
+        user.weight = 50
+        user.suggestedWaterLevel = 2500
+        return user
     }
 }
 
