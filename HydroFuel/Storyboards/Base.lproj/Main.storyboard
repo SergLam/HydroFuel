@@ -1492,7 +1492,7 @@
         <!--MenuVC-->
         <scene sceneID="QrS-2b-u9c">
             <objects>
-                <viewController storyboardIdentifier="menuVC" id="xRf-gU-F31" customClass="menuVC" customModule="HydroFuel" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MenuVC" id="xRf-gU-F31" customClass="MenuVC" customModule="HydroFuel" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="akG-Gj-esQ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

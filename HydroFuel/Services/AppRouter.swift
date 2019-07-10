@@ -14,7 +14,7 @@ class AppRouter {
     static func setupAppRootVC(mainVC: UIViewController) {
         
         let storyboard1: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        let leftViewController = storyboard1.instantiateViewController(withIdentifier: "menuVC") as! menuVC
+        let leftViewController = storyboard1.instantiateViewController(withIdentifier: "MenuVC") as! MenuVC
         let nvc: UINavigationController = UINavigationController(rootViewController: mainVC)
         
         leftViewController.mainViewController = nvc

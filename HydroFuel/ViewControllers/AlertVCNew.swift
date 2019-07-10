@@ -20,7 +20,7 @@ final class AlertVCNew: UIViewController {
     @IBOutlet private weak var btnMenu: UIButton!
     @IBOutlet private weak var tblAlert: UITableView!
     @IBOutlet private weak var imgback: UIImageView!
-   
+    
     let datePickerView = UIDatePicker()
     let datetime = Date()
     var timeTag = -1
@@ -43,43 +43,21 @@ final class AlertVCNew: UIViewController {
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
         
         showcase.delegate = self
-        if UserDefaultsManager.shared.previousDate == nil {
-            if appDelegate.isAfterReset == true{
-                
-                imgback.isHidden = false
-                btnMenu.isHidden = false
-            }else{
-                imgback.isHidden = true
-                btnMenu.isHidden = true
-            }
-        } else {
+        if appDelegate.isAfterReset == true{
+            
             imgback.isHidden = false
             btnMenu.isHidden = false
+        }else{
+            imgback.isHidden = true
+            btnMenu.isHidden = true
         }
         
-        if UserDefaultsManager.shared.alarmArrayAlarmTime != nil {
-            let arrTime = UserDefaultsManager.shared.alarmArrayAlarmTime! as NSArray
-            arraydate = arrTime.mutableCopy() as! NSMutableArray
-        }else{
-            arraydate = ["08:30 AM","09:30 AM","11:30 AM","01:00 PM","03:30 PM","05:30 PM","07:30 PM","08:30 PM","09:30 PM","11:00 PM"]
-            UserDefaultsManager.shared.alarmArrayAlarmTime = (arraydate as! [String])
-        }
-        if UserDefaultsManager.shared.alarmArrayDateTime != nil {
-            let arrTime = UserDefaultsManager.shared.alarmArrayDateTime! as NSArray
-            arrSetFixAlarmTime = arrTime.mutableCopy() as! NSMutableArray
-        }else{
-            arrSetFixAlarmTime = ["2018-09-13 08:30:00 +0000","2018-09-13 09:30:00 +0000","2018-09-13 10:30:00 +0000","2018-09-13 11:30:00 +0000","2018-09-13 12:30:00 +0000","2018-09-13 13:30:00 +0000","2018-09-13 14:30:00 +0000","2018-09-13 15:30:00 +0000","2018-09-13 16:30:00 +0000","2018-09-13 17:30:00 +0000"]
-            UserDefaultsManager.shared.alarmArrayDateTime = (arrSetFixAlarmTime as! [String])
-            
-        }
+        arraydate = ["08:30 AM","09:30 AM","11:30 AM","01:00 PM","03:30 PM","05:30 PM","07:30 PM","08:30 PM","09:30 PM","11:00 PM"]
         
-        if UserDefaults.standard.value(forKey: "lblml") != nil
-        {
-            str = Int(truncating: UserDefaults.standard.value(forKey: "lblml") as! NSNumber)
-            print(str)
-        }
+        arrSetFixAlarmTime = ["2018-09-13 08:30:00 +0000","2018-09-13 09:30:00 +0000","2018-09-13 10:30:00 +0000","2018-09-13 11:30:00 +0000","2018-09-13 12:30:00 +0000","2018-09-13 13:30:00 +0000","2018-09-13 14:30:00 +0000","2018-09-13 15:30:00 +0000","2018-09-13 16:30:00 +0000","2018-09-13 17:30:00 +0000"]
         
         for i in 0..<arrSetFixAlarmTime.count {
+            
             let formattor = DateFormatter()
             formattor.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
             formattor.timeZone = TimeZone(identifier: "UTC")
@@ -87,9 +65,11 @@ final class AlertVCNew: UIViewController {
             print(fixDate!)
             arrFixDates.append(fixDate!)
         }
+        
         self.navigationController?.navigationBar.isHidden = true
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     }
+    
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
@@ -112,79 +92,79 @@ final class AlertVCNew: UIViewController {
         arraydate[timeTag] = dateFormatter.string(from: sender.date)
         
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
-
+        
         arrSetFixAlarmTime[timeTag] = dateFormatter.string(from: sender.date)
     }
     
     func calculateWaterPerAlert(alertNumber: Int) -> String {
-        
-        if str * alertNumber < 1000{
-            if UserDefaultsManager.shared.isFirstNotification == true {
-                let text = "Drink down to the " + "\(1000 - (str * alertNumber))" + "ml mark, Open the App and Tap “Hydrate”"
-                return text
-            } else{
-                if alertNumber == 10
-                {
-                    let text = "Finish the bottle. Congratulations you’re done for the day!"
-                    return text
-                    
-                }else{
-                    let data = (str * alertNumber) % 1000
-                    let totalWater = str * 10
-                    if (str * alertNumber) > totalWater - ((totalWater % 1000)){
-                        let bottleToRefil = ((10 - alertNumber) * str) + data
-                        let text = "Drink down to the " + "\(bottleToRefil - data)" + "ml mark right now!"
-                        return text
-                    }else{
-                        let text = "Drink down to the " + "\(1000 - (str * alertNumber))" + "ml mark right now!"
-                        return text
-                    }
-                }
-                
-            }
-        }else {
-            let data = (str * alertNumber) % 1000
-            if 1000 - data > str && (1000 - data) + str > 1000{
-                
-                if alertNumber == 10
-                {
-                    let text = "Finish the bottle. Congratulations you’re done for the day!"
-                    return text
-                    
-                }else{
-                    let totalWater = str * 10
-                    if (str * alertNumber) > totalWater - ((totalWater % 1000)){
-                        let bottleToRefil = ((10 - alertNumber) * str) + data
-                        let text = "Finish the bottle, refill to the " + "\(bottleToRefil) ml mark! " + "and drink to the " + "\(bottleToRefil - data)" + "ml mark!"
-                        return text
-                    }
-                    let text = "Finish the bottle, refill and drink to the " + "\(1000 - data)" + "ml mark!"
-                    return text
-                }
-                
-            }
-                
-            else{
-                if alertNumber == 10
-                {
-                    let text = "Finish the bottle. Congratulations you’re done for the day!"
-                    return text
-                    
-                }else{
-                    let data = (str * alertNumber) % 1000
-                    let totalWater = str * 10
-                    if (str * alertNumber) > totalWater - ((totalWater % 1000)){
-                        let bottleToRefil = ((10 - alertNumber) * str) + data
-                        let text = "Drink down to the " + "\(bottleToRefil - data)" + "ml mark right now!"
-                        return text
-                    }else{
-                        let text = "Drink down to the " + "\(1000 - data)" + "ml mark right now!"
-                        return text
-                    }
-                }
-                
-            }
-        }
+        return ""
+//        if str * alertNumber < 1000{
+//            if UserDefaultsManager.shared.isFirstNotification == true {
+//                let text = "Drink down to the " + "\(1000 - (str * alertNumber))" + "ml mark, Open the App and Tap “Hydrate”"
+//                return text
+//            } else{
+//                if alertNumber == 10
+//                {
+//                    let text = "Finish the bottle. Congratulations you’re done for the day!"
+//                    return text
+//
+//                }else{
+//                    let data = (str * alertNumber) % 1000
+//                    let totalWater = str * 10
+//                    if (str * alertNumber) > totalWater - ((totalWater % 1000)){
+//                        let bottleToRefil = ((10 - alertNumber) * str) + data
+//                        let text = "Drink down to the " + "\(bottleToRefil - data)" + "ml mark right now!"
+//                        return text
+//                    }else{
+//                        let text = "Drink down to the " + "\(1000 - (str * alertNumber))" + "ml mark right now!"
+//                        return text
+//                    }
+//                }
+//
+//            }
+//        }else {
+//            let data = (str * alertNumber) % 1000
+//            if 1000 - data > str && (1000 - data) + str > 1000{
+//
+//                if alertNumber == 10
+//                {
+//                    let text = "Finish the bottle. Congratulations you’re done for the day!"
+//                    return text
+//
+//                }else{
+//                    let totalWater = str * 10
+//                    if (str * alertNumber) > totalWater - ((totalWater % 1000)){
+//                        let bottleToRefil = ((10 - alertNumber) * str) + data
+//                        let text = "Finish the bottle, refill to the " + "\(bottleToRefil) ml mark! " + "and drink to the " + "\(bottleToRefil - data)" + "ml mark!"
+//                        return text
+//                    }
+//                    let text = "Finish the bottle, refill and drink to the " + "\(1000 - data)" + "ml mark!"
+//                    return text
+//                }
+//
+//            }
+//
+//            else{
+//                if alertNumber == 10
+//                {
+//                    let text = "Finish the bottle. Congratulations you’re done for the day!"
+//                    return text
+//
+//                }else{
+//                    let data = (str * alertNumber) % 1000
+//                    let totalWater = str * 10
+//                    if (str * alertNumber) > totalWater - ((totalWater % 1000)){
+//                        let bottleToRefil = ((10 - alertNumber) * str) + data
+//                        let text = "Drink down to the " + "\(bottleToRefil - data)" + "ml mark right now!"
+//                        return text
+//                    }else{
+//                        let text = "Drink down to the " + "\(1000 - data)" + "ml mark right now!"
+//                        return text
+//                    }
+//                }
+//
+//            }
+//        }
     }
     
     @IBAction func btnMenu(_ sender: UIButton) {
@@ -207,29 +187,12 @@ final class AlertVCNew: UIViewController {
         arrFixDates = ((arrSortedDates as NSArray).mutableCopy() as! NSMutableArray) as! [Date]
         
         for (index, fixDate) in arrFixDates.enumerated() {
-       
+            
             timeTag = index
             setAlarm(fixDate, tag: index)
             let dt = formattor.string(from: fixDate)
             arrSetFixAlarmTime.replaceObject(at: index, with: dt)
         }
-        
-        if UserDefaultsManager.shared.previousDate == nil {
-            let today = Date().toLocalTime()
-            let dateFormattor = DateFormatter()
-            dateFormattor.dateFormat = "yyyy-MM-dd"
-            dateFormattor.timeZone = TimeZone(identifier: "UTC")
-            let strDate = dateFormattor.string(from: today)
-            
-            UIApplication.shared.applicationIconBadgeNumber = 0
-            appDelegate.badgeCount = 0
-            
-            UserDefaultsManager.shared.bottleCount = 1
-            UserDefaultsManager.shared.previousDate = strDate
-            UserDefaultsManager.shared.lastCountOfAttempt = 0
-            UserDefaultsManager.shared.lastDisplayedWaterLevel = 1000
-        }
-        UserDefaultsManager.shared.alarmArrayDateTime = (arrSetFixAlarmTime as! [String])
         
         if appDelegate.backvar == "static"
         {
@@ -247,24 +210,8 @@ final class AlertVCNew: UIViewController {
     
     @IBAction func btnHomeclick(_ sender: UIButton) {
         
-        UserDefaults.standard.set(2, forKey: "fill")
         appDelegate.isAfterReset = false
         
-        if UserDefaultsManager.shared.previousDate == nil {
-            
-            let today = Date().toLocalTime()
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            dateFormatter.timeZone = TimeZone(identifier: "UTC")
-            let strDate = dateFormatter.string(from: today)
-            
-            UIApplication.shared.applicationIconBadgeNumber = 0
-            appDelegate.badgeCount = 0
-            
-            UserDefaultsManager.shared.bottleCount = 1
-            UserDefaultsManager.shared.previousDate = strDate
-            UserDefaultsManager.shared.lastCountOfAttempt = 0
-            UserDefaultsManager.shared.lastDisplayedWaterLevel = 1000
-        }
         
         var arrForSort: [Date] = []
         
@@ -290,7 +237,6 @@ final class AlertVCNew: UIViewController {
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            UserDefaultsManager.shared.alarmArrayDateTime = (self.arrSetFixAlarmTime as! [String])
             let vc = self.storyboard?.instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
             self.appDelegate.resettime = "change"
             self.navigationController?.pushViewController(vc, animated: true)
@@ -372,7 +318,7 @@ extension AlertVCNew: UITextFieldDelegate {
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         
-         configureDateFormatter(for: textField)
+        configureDateFormatter(for: textField)
         
         arrSetFixAlarmTime.replaceObject(at: timeTag, with: "\(datePickerView.date.localiz)")
         arrFixDates.removeAll()

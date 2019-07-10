@@ -613,7 +613,7 @@ struct _R: Rswift.Validatable {
       let historyDetail = StoryboardViewControllerResource<HistoryDetail>(identifier: "HistoryDetail")
       let historyVC = StoryboardViewControllerResource<HistoryVC>(identifier: "HistoryVC")
       let homeVC = StoryboardViewControllerResource<HomeVC>(identifier: "HomeVC")
-      let menuVC = StoryboardViewControllerResource<menuVC>(identifier: "menuVC")
+      let menuVC = StoryboardViewControllerResource<MenuVC>(identifier: "MenuVC")
       let myStatisticVC = StoryboardViewControllerResource<MyStatisticVC>(identifier: "MyStatisticVC")
       let name = "Main"
       let personalInfoVC = StoryboardViewControllerResource<PersonalInfoVC>(identifier: "PersonalInfoVC")
@@ -634,7 +634,7 @@ struct _R: Rswift.Validatable {
         return UIKit.UIStoryboard(resource: self).instantiateViewController(withResource: homeVC)
       }
       
-      func menuVC(_: Void = ()) -> menuVC? {
+      func menuVC(_: Void = ()) -> MenuVC? {
         return UIKit.UIStoryboard(resource: self).instantiateViewController(withResource: menuVC)
       }
       
@@ -676,9 +676,9 @@ struct _R: Rswift.Validatable {
         if _R.storyboard.main().historyDetail() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'historyDetail' could not be loaded from storyboard 'Main' as 'HistoryDetail'.") }
         if _R.storyboard.main().historyVC() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'historyVC' could not be loaded from storyboard 'Main' as 'HistoryVC'.") }
         if _R.storyboard.main().homeVC() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'homeVC' could not be loaded from storyboard 'Main' as 'HomeVC'.") }
+        if _R.storyboard.main().menuVC() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'menuVC' could not be loaded from storyboard 'Main' as 'MenuVC'.") }
         if _R.storyboard.main().myStatisticVC() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'myStatisticVC' could not be loaded from storyboard 'Main' as 'MyStatisticVC'.") }
         if _R.storyboard.main().personalInfoVC() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'personalInfoVC' could not be loaded from storyboard 'Main' as 'PersonalInfoVC'.") }
-        if _R.storyboard.main().menuVC() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'menuVC' could not be loaded from storyboard 'Main' as 'menuVC'.") }
       }
       
       fileprivate init() {}

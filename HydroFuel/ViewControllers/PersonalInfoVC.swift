@@ -119,20 +119,11 @@ final class PersonalInfoVC: UIViewController {
     }
     
     func resetValues() {
-        let today = Date().toLocalTime()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        dateFormatter.timeZone = TimeZone(identifier: "UTC")
-        let strDate = dateFormatter.string(from: today)
         
         DataManager.shared.resetProgress(self.num)
         
         UIApplication.shared.applicationIconBadgeNumber = 0
         appDelegate.badgeCount = 0
-        UserDefaultsManager.shared.lastWaterConstraint = 200
-        UserDefaultsManager.shared.bottleCount = 1
-        UserDefaultsManager.shared.previousDate = strDate
-        UserDefaultsManager.shared.lastCountOfAttempt = 0
-        UserDefaultsManager.shared.lastDisplayedWaterLevel = 1000
         appDelegate.resettime = "reset"
         
     }
@@ -204,11 +195,11 @@ final class PersonalInfoVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
-        if UserDefaults.standard.value(forKey: "fill") != nil{
-            searchDataForUpdate()
-        } else {
-            DataManager.shared.write(value: [DataRecordModel.defaultModel()])
-        }
+        
+        searchDataForUpdate()
+        
+        DataManager.shared.write(value: [DataRecordModel.defaultModel()])
+        
         
         
         if user.weight != 0 {
@@ -227,13 +218,13 @@ final class PersonalInfoVC: UIViewController {
         } else {
             appDelegate.isMenuIconHidden = false
         }
-        if let WATERQTY = UserDefaults.standard.value(forKey:"MainWaterQuantityKey") as? Int {
-            caluculatedWaterLevelValue = (WATERQTY)
-            num = WATERQTY
-            print(caluculatedWaterLevelValue)
-            print(caluculatedWaterLevelValue)
-            suggestedWatelVolumeLabel.text = "\(caluculatedWaterLevelValue)"
-        }
+        
+        caluculatedWaterLevelValue = (0)
+        num = 0
+        print(caluculatedWaterLevelValue)
+        print(caluculatedWaterLevelValue)
+        suggestedWatelVolumeLabel.text = "\(caluculatedWaterLevelValue)"
+        
     }
     
     private func validation() -> Bool {
@@ -282,10 +273,6 @@ final class PersonalInfoVC: UIViewController {
         let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default) { [unowned self] (result) -> Void in
             
             let lblanss: Int = self.num / 10
-            
-            UserDefaults.standard.set(lblanss, forKey: "lblml")
-            UserDefaults.standard.set(1, forKey: "fill")
-            UserDefaults.standard.set(self.num, forKey: "MainWaterQuantityKey")
             
             let today = Date().toLocalTime()
             

@@ -41,24 +41,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         requestPermissionForAlerts()
         let storyboard1: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         
-        if UserDefaults.standard.value(forKey: "fill") != nil {
-            
-            if UserDefaults.standard.value(forKey: "fill") as! Int == 2 {
-                
-                let mainViewController = storyboard1.instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
-                AppRouter.setupAppRootVC(mainVC: mainViewController)
-            } else {
-                
-                let mainViewController = storyboard1.instantiateViewController(withIdentifier: "AlertVCNew") as! AlertVCNew
-                AppRouter.setupAppRootVC(mainVC: mainViewController)
-            }
-            
-        } else {
-            
-            isMenuIconHidden = true
-            let mainViewController = storyboard1.instantiateViewController(withIdentifier: "PersonalInfoVC") as! PersonalInfoVC
-            AppRouter.setupAppRootVC(mainVC: mainViewController)
+        
+        guard let homeVC = storyboard1.instantiateViewController(withIdentifier: "HomeVC") as? HomeVC else {
+            preconditionFailure("Unable to instantiateViewController")
         }
+        AppRouter.setupAppRootVC(mainVC: homeVC)
+        
+        guard let alertVC = storyboard1.instantiateViewController(withIdentifier: "AlertVCNew") as? AlertVCNew else {
+            preconditionFailure("Unable to instantiateViewController")
+        }
+        AppRouter.setupAppRootVC(mainVC: alertVC)
+        
+        isMenuIconHidden = true
+        guard let personalInfoVC = storyboard1.instantiateViewController(withIdentifier: "PersonalInfoVC") as? PersonalInfoVC else {
+            preconditionFailure("Unable to instantiateViewController")
+        }
+        AppRouter.setupAppRootVC(mainVC: personalInfoVC)
         
         return true
     }
@@ -88,7 +86,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     // Called when user cancel, open or select notification action
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        
+        // TODO: update database values here
         completionHandler()
     }
     
@@ -100,10 +98,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             return
         }
         UIApplication.shared.applicationIconBadgeNumber = badgeCount
+        // TODO: update database values here
         completionHandler([.alert, .badge, .sound])
         self.badgeCount = badgeCount
-        UserDefaultsManager.shared.isFirstNotification = false
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "NotifArrives"), object: nil)
     }
     
     

@@ -40,7 +40,7 @@
 		A796B06A21391CDF00FD85A1 /* Avenir-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A796B06721391CDF00FD85A1 /* Avenir-Light.ttf */; };
 		A796B06B21391CDF00FD85A1 /* Avenir-Roman.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A796B06821391CDF00FD85A1 /* Avenir-Roman.ttf */; };
 		A796B06D2139668800FD85A1 /* alertCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A796B06C2139668800FD85A1 /* alertCell.swift */; };
-		A796B07121397D1E00FD85A1 /* menuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A796B07021397D1E00FD85A1 /* menuVC.swift */; };
+		A796B07121397D1E00FD85A1 /* MenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A796B07021397D1E00FD85A1 /* MenuVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,7 +80,7 @@
 		A796B06721391CDF00FD85A1 /* Avenir-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Avenir-Light.ttf"; sourceTree = "<group>"; };
 		A796B06821391CDF00FD85A1 /* Avenir-Roman.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Avenir-Roman.ttf"; sourceTree = "<group>"; };
 		A796B06C2139668800FD85A1 /* alertCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = alertCell.swift; sourceTree = "<group>"; };
-		A796B07021397D1E00FD85A1 /* menuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = menuVC.swift; sourceTree = "<group>"; };
+		A796B07021397D1E00FD85A1 /* MenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuVC.swift; sourceTree = "<group>"; };
 		AD07F55ECDE656312122A720 /* Pods_HydroFuel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HydroFuel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C5D007F13B901C05CBB5F351 /* Pods-HydroFuel.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HydroFuel.release.xcconfig"; path = "Pods/Target Support Files/Pods-HydroFuel/Pods-HydroFuel.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -102,7 +102,7 @@
 			children = (
 				A72C71A1213A7781008FB95F /* HistoryDetail.swift */,
 				A796B0632139199B00FD85A1 /* PersonalInfoVC.swift */,
-				A796B07021397D1E00FD85A1 /* menuVC.swift */,
+				A796B07021397D1E00FD85A1 /* MenuVC.swift */,
 				A72C719B213A5FF2008FB95F /* HomeVC.swift */,
 				A72C719F213A776A008FB95F /* HistoryVC.swift */,
 				A72C71A3213A7795008FB95F /* MyStatisticVC.swift */,
@@ -166,21 +166,13 @@
 		7C59A05522D08B27005B474E /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				7C59A05B22D0B540005B474E /* UserDefaults */,
+				7C59A05C22D0B582005B474E /* UserDefaultsManager.swift */,
 				7C59A05622D08B57005B474E /* AlertPresenter.swift */,
 				7C59A05822D0A3D8005B474E /* LocalNotificationsService.swift */,
 				7CA8984C22D28202007D3DD0 /* AppRouter.swift */,
 				7C6007AF22D45AA300FBDD11 /* DataManager.swift */,
 			);
 			path = Services;
-			sourceTree = "<group>";
-		};
-		7C59A05B22D0B540005B474E /* UserDefaults */ = {
-			isa = PBXGroup;
-			children = (
-				7C59A05C22D0B582005B474E /* UserDefaultsManager.swift */,
-			);
-			path = UserDefaults;
 			sourceTree = "<group>";
 		};
 		7C59A06122D23A77005B474E /* Models */ = {
@@ -421,7 +413,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A796B07121397D1E00FD85A1 /* menuVC.swift in Sources */,
+				A796B07121397D1E00FD85A1 /* MenuVC.swift in Sources */,
 				7C59A06322D23A92005B474E /* DataRecordModel.swift in Sources */,
 				7C59A05D22D0B582005B474E /* UserDefaultsManager.swift in Sources */,
 				6D152541215BD51500E5B3AE /* AlertVCNew.swift in Sources */,

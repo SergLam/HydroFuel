@@ -11,7 +11,7 @@ import SlideMenuControllerSwift
 import StoreKit
 import SVProgressHUD
 
-final class menuVC: UIViewController, AppStoreOpenable {
+final class MenuVC: UIViewController, AppStoreOpenable {
     
     @IBOutlet private weak var tblview: UITableView!
     
@@ -42,7 +42,7 @@ final class menuVC: UIViewController, AppStoreOpenable {
 }
 
 // MARK: - UITableViewDataSource
-extension menuVC: UITableViewDataSource {
+extension MenuVC: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return arrayname.count
@@ -72,7 +72,7 @@ extension menuVC: UITableViewDataSource {
 }
 
 // MARK: - UITableViewDelegate
-extension menuVC: UITableViewDelegate {
+extension MenuVC: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -149,7 +149,7 @@ extension menuVC: UITableViewDelegate {
 }
 
 // MARK: - SKStoreProductViewControllerDelegate
-extension menuVC: SKStoreProductViewControllerDelegate {
+extension MenuVC: SKStoreProductViewControllerDelegate {
     
     func productViewControllerDidFinish(_ viewController: SKStoreProductViewController) {
         viewController.dismiss(animated: true, completion: nil)
