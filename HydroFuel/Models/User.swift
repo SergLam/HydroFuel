@@ -42,6 +42,7 @@ class User: Object {
 
 enum Gender: String {
     
+    case undefined = "undefined"
     case male = "male"
     case female = "female"
 }
