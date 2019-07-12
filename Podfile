@@ -15,6 +15,8 @@ target 'HydroFuel' do
     pod 'iShowcase', '~> 2.3.0'
     pod 'CTShowcase', '~> 2.4.0'
     pod 'SVProgressHUD', '~> 2.2.5'
+    pod 'R.swift', '~> 5.0.3'
+    pod 'RealmSwift', '~> 3.16.2'
     
 end
 

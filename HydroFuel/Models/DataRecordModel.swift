@@ -7,22 +7,45 @@
 //
 
 import Foundation
+import RealmSwift
 
-struct DataRecordModel: Equatable {
+class DataRecordModel: Object {
     
-    var activityLevel: String // low, medium, high
-    var date: String // "2019-07-07"
-    var gender: String // male - female
-    var id: Int
-    var remainingWaterQuantity: Int
-    var totalDrink: Int
+    @objc dynamic var id: String = NSUUID().uuidString.lowercased()
     
-    var totalAttempt: Int
-    var waterQuantity: Int
-    var waterQuantityPerAttempt: Int
-    var weight: Int
+    @objc dynamic var activityLevel: String = "" // low, medium, high
+    @objc dynamic var date: String = "" // "2019-07-07"
+    @objc dynamic var gender: String = ""// male - female
+    
+    @objc dynamic var remainingWaterQuantity: Int = 0
+    @objc dynamic var totalDrink: Int = 0
+    
+    @objc dynamic var totalAttempt: Int = 0
+    @objc dynamic var waterQuantity: Int = 0
+    @objc dynamic var waterPerAttempt: Int = 0
+    @objc dynamic var weight: Int = 0
+    
+    override class func primaryKey() -> String? {
+        return "id"
+    }
+    
+    convenience required init(activity: String, date: String, gender: String,
+                              remainingWater: Int, totalDrink: Int, totalAttempt: Int,
+                              waterQuantity: Int, waterPerAttempt: Int, weight: Int) {
+        self.init()
+        self.activityLevel = activity
+        self.date = date
+        self.gender = gender
+        self.remainingWaterQuantity = remainingWater
+        self.totalDrink = totalDrink
+        self.totalAttempt = totalAttempt
+        self.waterQuantity = waterQuantity
+        self.waterPerAttempt = waterPerAttempt
+        self.weight = weight
+    }
+    
     
     static func defaultModel() -> DataRecordModel {
-        return DataRecordModel(activityLevel: "", date: "", gender: "", id: 0, remainingWaterQuantity: 0, totalDrink: 0, totalAttempt: 0, waterQuantity: 0, waterQuantityPerAttempt: 0, weight: 0)
+        return DataRecordModel()
     }
 }

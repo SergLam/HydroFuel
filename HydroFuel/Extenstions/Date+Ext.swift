@@ -28,4 +28,13 @@ extension Date {
         return toLocalTime()
     }
     
+    static func currentDateToString() -> String {
+        
+        let dateFormatter = DateFormatter()
+        let today = Date().toLocalTime()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        return dateFormatter.string(from: today)
+    }
+    
 }

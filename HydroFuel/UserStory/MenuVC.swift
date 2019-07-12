@@ -11,9 +11,9 @@ import SlideMenuControllerSwift
 import StoreKit
 import SVProgressHUD
 
-final class menuVC: UIViewController {
+final class MenuVC: UIViewController, AppStoreOpenable {
     
-    @IBOutlet var tblview: UITableView!
+    @IBOutlet private weak var tblview: UITableView!
     
     @objc var mainViewController: UIViewController!
     @objc var HomeVC: UIViewController!
@@ -25,10 +25,13 @@ final class menuVC: UIViewController {
     
     var arrayname = ["Home", "History", "Modify Alerts", "My Statistics", "Buy",
                      "Personal Info", "Help & About Us", "Rate & Review"]
-    var arrayimg = ["homeimg", "history", "alarm", "graph", "shoppingcartblack",
-                    "personal", "help", "rateandreview"]
-    var arrayimgblue = ["homeblue", "historyblue", "alarm_selected", "graphblue",
-                        "shoppingcartblue", "settingblue", "help", "rateandreview"]
+    var arrayimg = [R.image.homeimg(), R.image.history(), R.image.alarm(),
+                    R.image.graph(), R.image.shoppingcartblack(), R.image.personal(),
+                    R.image.help(), R.image.rateandreview()]
+    
+    var arrayimgblue = [R.image.homeblue(), R.image.historyblue(), R.image.alarm_selected(),
+                        R.image.graphblue(), R.image.shoppingcartblue(), R.image.settingblue(),
+                        R.image.help(), R.image.rateandreview()]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,7 +42,7 @@ final class menuVC: UIViewController {
 }
 
 // MARK: - UITableViewDataSource
-extension menuVC: UITableViewDataSource {
+extension MenuVC: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return arrayname.count
@@ -52,16 +55,16 @@ extension menuVC: UITableViewDataSource {
         }
         
         cell.lblname.text = arrayname[indexPath.row]
-        cell.imgview.image = UIImage(named:arrayimg[indexPath.row])
+        cell.imgview.image = arrayimg[indexPath.row]
         
         cell.lineview.isHidden = indexPath.row != 3
         
         if appDelegate.menuName == arrayname[indexPath.row] {
             cell.lblname.textColor = UIColor.bgcolor
-            cell.imgview.image = UIImage(named: arrayimgblue[indexPath.row])
+            cell.imgview.image = arrayimgblue[indexPath.row]
         } else {
             cell.lblname.textColor = UIColor.black
-            cell.imgview.image = UIImage(named: arrayimg[indexPath.row])
+            cell.imgview.image = arrayimg[indexPath.row]
         }
         return cell
     }
@@ -69,7 +72,7 @@ extension menuVC: UITableViewDataSource {
 }
 
 // MARK: - UITableViewDelegate
-extension menuVC: UITableViewDelegate {
+extension MenuVC: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -82,31 +85,23 @@ extension menuVC: UITableViewDelegate {
         
         switch indexPath.row {
         case 0:
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let HomeVC = storyboard.instantiateViewController(withIdentifier: "HomeVC") as!  HomeVC
-            self.HomeVC = UINavigationController(rootViewController: HomeVC)
+            self.HomeVC = UINavigationController(rootViewController: AppRouter.createHomeVC())
             self.slideMenuController()?.changeMainViewController(self.HomeVC, close: true)
             
         case 1:
             cell.lblname.textColor = UIColor.blue
             appDelegate.backvar = "static"
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let HomeVC = storyboard.instantiateViewController(withIdentifier: "HistoryVC") as!  HistoryVC
-            self.Hostory = UINavigationController(rootViewController: HomeVC)
+            self.Hostory = UINavigationController(rootViewController: AppRouter.createHistoryVC())
             self.slideMenuController()?.changeMainViewController(self.Hostory, close: true)
         
         case 2:
             appDelegate.backvar = "static"
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let HomeVC = storyboard.instantiateViewController(withIdentifier: "AlertVCNew") as!  AlertVCNew
-            self.AlertVCNew = UINavigationController(rootViewController: HomeVC)
+            self.AlertVCNew = UINavigationController(rootViewController: AppRouter.createAlertVC())
             self.slideMenuController()?.changeMainViewController(self.AlertVCNew, close: true)
             
         case 3:
             appDelegate.backvar = "graph"
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let HomeVC = storyboard.instantiateViewController(withIdentifier: "MyStatisticVC") as!  MyStatisticVC
-            self.MyStatisticVC = UINavigationController(rootViewController: HomeVC)
+            self.MyStatisticVC = UINavigationController(rootViewController: AppRouter.createMyStatisticVC())
             self.slideMenuController()?.changeMainViewController(self.MyStatisticVC, close: true)
             
         case 4:
@@ -117,11 +112,8 @@ extension menuVC: UITableViewDelegate {
             
         case 5:
             appDelegate.backvar = "static"
-            appDelegate.menuvar = "show"
-            
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let HomeVC = storyboard.instantiateViewController(withIdentifier: "PersonalInfoVC") as!  PersonalInfoVC
-            self.PersonalInfoVC = UINavigationController(rootViewController: HomeVC)
+            appDelegate.isMenuIconHidden = false
+            self.PersonalInfoVC = UINavigationController(rootViewController: AppRouter.createPersonalInfoVC())
             self.slideMenuController()?.changeMainViewController(self.PersonalInfoVC, close: true)
             
         case 6:
@@ -130,11 +122,9 @@ extension menuVC: UITableViewDelegate {
             }
             UIApplication.shared.open(url, options: [:]) { (_) in }
         case 7:
-//            guard let url = URL(string: "https://itunes.apple.com/us/app/buddyball/id1432543329?ls=1&mt=8") else {
-//                return
-//            }
-//            UIApplication.shared.open(url, options: [:]) { (_) in }
-            viewProductInAppStore()
+            let storeVC = SKStoreProductViewController()
+            storeVC.delegate = self
+            viewProductAtAppStore(storeVC: storeVC)
             
         default:
             assertionFailure("Unknown row value, plese update this method")
@@ -147,32 +137,10 @@ extension menuVC: UITableViewDelegate {
     
 }
 
-
 // MARK: - SKStoreProductViewControllerDelegate
-extension menuVC: SKStoreProductViewControllerDelegate {
-    
-    private func viewProductInAppStore() {
-        
-        let storeViewController = SKStoreProductViewController()
-        storeViewController.delegate = self
-        let parameters = [SKStoreProductParameterITunesItemIdentifier : 1432543329]
-        SVProgressHUD.show(withStatus: "Opening AppStore...")
-        
-        storeViewController.loadProduct(withParameters: parameters) { [weak self] (loaded, error) -> Void in
-            SVProgressHUD.dismiss()
-            guard let _self = self else {
-                return
-            }
-            if loaded {
-                _self.present(storeViewController, animated: true, completion: nil)
-            } else if let error = error {
-                AlertPresenter.showErrorAlert(at: _self, message: error.localizedDescription)
-            }
-        }
-    }
+extension MenuVC: SKStoreProductViewControllerDelegate {
     
     func productViewControllerDidFinish(_ viewController: SKStoreProductViewController) {
         viewController.dismiss(animated: true, completion: nil)
     }
-    
 }

@@ -13,8 +13,7 @@ class AppRouter {
     
     static func setupAppRootVC(mainVC: UIViewController) {
         
-        let storyboard1: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        let leftViewController = storyboard1.instantiateViewController(withIdentifier: "menuVC") as! menuVC
+        let leftViewController = Storyboard(.main).instantiateViewController(MenuVC.self)
         let nvc: UINavigationController = UINavigationController(rootViewController: mainVC)
         
         leftViewController.mainViewController = nvc
@@ -26,5 +25,36 @@ class AppRouter {
         AppDelegate.shared.window?.rootViewController = slideMenuController
         AppDelegate.shared.window?.makeKeyAndVisible()
     }
+    
+    static func createAlertVC() -> AlertVCNew {
+        
+        return Storyboard(.main).instantiateViewController(AlertVCNew.self)
+    }
+    
+    static func createHomeVC() -> HomeVC {
+        
+        return Storyboard(.main).instantiateViewController(HomeVC.self)
+    }
+    
+    static func createHistoryVC() -> HistoryVC {
+        
+        return Storyboard(.main).instantiateViewController(HistoryVC.self)
+    }
+    
+    static func createHistoryDetail() -> HistoryDetail {
+        
+        return Storyboard(.main).instantiateViewController(HistoryDetail.self)
+    }
+    
+    static func createMyStatisticVC() -> MyStatisticVC {
+        
+        return Storyboard(.main).instantiateViewController(MyStatisticVC.self)
+    }
+    
+    static func createPersonalInfoVC() -> PersonalInfoVC {
+        
+        return Storyboard(.main).instantiateViewController(PersonalInfoVC.self)
+    }
+    
     
 }

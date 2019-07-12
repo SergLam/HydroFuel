@@ -11,15 +11,15 @@ import Charts
 
 final class MyStatisticVC: UIViewController {
     
-    @IBOutlet var lblnineteendays: UILabel!
-    @IBOutlet var lblthirteendays: UILabel!
-    @IBOutlet var lblsevendays: UILabel!
+    @IBOutlet private weak var lblnineteendays: UILabel!
+    @IBOutlet private weak var lblthirteendays: UILabel!
+    @IBOutlet private weak var lblsevendays: UILabel!
     var DateArr = [String]()
     
     var unitsSold = [Double]()
-    weak var axisFormatDelegate: IAxisValueFormatter?
-    @IBOutlet var imgback: UIImageView!
-    @IBOutlet var linechart: LineChartView!
+    private weak var axisFormatDelegate: IAxisValueFormatter?
+    @IBOutlet private weak var imgback: UIImageView!
+    @IBOutlet private weak var linechart: LineChartView!
     var arrDates = NSMutableArray()
     var arrDataForDates = NSMutableArray()
     var arrtotal = NSMutableArray()
@@ -50,7 +50,7 @@ final class MyStatisticVC: UIViewController {
                 let date = (arrDates[i] as! String).components(separatedBy: "-")
                 arrShowDates.append("\(date[1])-\(date[2])")
                 if i == arrDates.count - 1 {
-                    self.setChartData(months: arrShowDates)
+                    // self.setChartData(months: arrShowDates)
                 }
             }
         }else{
@@ -61,7 +61,7 @@ final class MyStatisticVC: UIViewController {
                 arrShowDates.append("\(date[1])-\(date[2])")
                 
                 if i == arrDates.count - 1 {
-                    self.setChartData(months: arrShowDates)
+                    // self.setChartData(months: arrShowDates)
                 }
             }
         }
@@ -72,7 +72,7 @@ final class MyStatisticVC: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
+        super.viewWillAppear(animated)
         switch appDelegate.backvar {
             
         case "static":
@@ -141,7 +141,7 @@ final class MyStatisticVC: UIViewController {
         let set1: LineChartDataSet = LineChartDataSet(entries: yVals1, label: "-- Water Intake")
         set1.axisDependency = .left // Line will correlate with left axis values
         
-        set1.setColor(UIColor.blue)//.withAlphaComponent(0.1))
+        set1.setColor(UIColor.blue)
         set1.setCircleColor(UIColor.blue)
         set1.circleRadius = 3.0
         set1.fillAlpha = 65 / 255.0
@@ -175,19 +175,14 @@ final class MyStatisticVC: UIViewController {
     
     func searchDataForProgress(strDate: String) {
         
-        let result = DBManager.shared.selectAllByDate(strDate)
+        let result = DataManager.shared.selectAllByDate(strDate)
         
-        guard result.status == 1 else {
-            self.arrDataForDates.add(0)
-            //assertionFailure("\(result.failure)")
+        guard let dictPrevious = result.first else {
             return
         }
         
-        let arrLocalData = result.arrData
-        let dictPrevious = arrLocalData[0]
-        
         let TOTALATTEMPT = dictPrevious.totalAttempt
-        let WATERQTYPERATTEMPT = dictPrevious.waterQuantityPerAttempt
+        let WATERQTYPERATTEMPT = dictPrevious.waterPerAttempt
         
         let totalWater = TOTALATTEMPT * WATERQTYPERATTEMPT
         
@@ -195,89 +190,6 @@ final class MyStatisticVC: UIViewController {
     }
     
     func showData() {
-        
-        let data = DBManager.shared.selectAll()
-        if data.status == 1 {
-            
-            let arrLocalData = data.arrData
-            for element in arrLocalData {
-                
-                let dictPrevious = element
-                print("total atempt--",dictPrevious)
-                let TOTALATTEMPT = dictPrevious.totalAttempt
-                let WATERQTYPERATTEMPT = dictPrevious.waterQuantityPerAttempt
-                let totalWater = TOTALATTEMPT * WATERQTYPERATTEMPT
-                self.arrtotal.add(totalWater)
-                print("total",arrtotal)
-            }
-            
-            print(arrLocalData.count)
-            
-            if arrLocalData.count < 7
-            {
-                for j in 0..<arrtotal.count
-                {
-                    let ans =  ((arrtotal[j]) as AnyObject) as! Int
-                    let ans1 = (ans / Int(arrLocalData.count))
-                    lblsevendays.text = "\(ans1)" + " " +  "ml"
-                    print("ans1 is",ans1)
-                    print("ans is",ans)
-                }
-            }
-            else  if arrLocalData.count > 7
-            {
-                for j in 0..<7
-                {
-                    let ans =  ((arrtotal[j]) as AnyObject) as! Int
-                    let ans1 = (ans / 7)
-                    lblsevendays.text = "\(ans1)" + " " +  "ml"
-                    print("ans1 is",ans1)
-                }
-            }
-            if arrLocalData.count < 30
-            {
-                for j in 0..<arrtotal.count
-                {
-                    let ans =  ((arrtotal[j]) as AnyObject) as! Int
-                    let ans1 = (ans / Int(arrLocalData.count))
-                    lblthirteendays.text = "\(ans1)" + " " +  "ml"
-                    print("ans1 is",ans1)
-                    print("ans is",ans)
-                }
-            }
-            else  if arrLocalData.count > 30
-            {
-                for j in 0..<30
-                {
-                    let ans =  ((arrtotal[j]) as AnyObject) as! Int
-                    let ans1 = (ans / 30)
-                    lblthirteendays.text = "\(ans1)" + " " +  "ml"
-                    print("ans1 is",ans1)
-                }
-            }
-            if arrLocalData.count < 90
-            {
-                for j in 0..<arrtotal.count
-                {
-                    let ans =  ((arrtotal[j]) as AnyObject) as! Int
-                    let ans1 = (ans / Int(arrLocalData.count))
-                    lblnineteendays.text = "\(ans1)" + " " +  "ml"
-                    print("ans1 is",ans1)
-                    print("ans is",ans)
-                }
-            }
-            else if arrLocalData.count > 90
-            {
-                for j in 0..<90
-                {
-                    let ans =  ((arrtotal[j]) as AnyObject) as! Int
-                    let ans1 = (ans / 90)
-                    lblnineteendays.text = "\(ans1)" + " " +  "ml"
-                    print("ans1 is",ans1)
-                }
-            }
-            
-        }
         
     }
     

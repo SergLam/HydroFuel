@@ -14,7 +14,7 @@ final class HistoryDetail: UIViewController {
     
     @IBOutlet private weak var lblWaterLevalPersentage: UILabel!
     @IBOutlet private weak var lblWaterLeval: UILabel!
-    @IBOutlet weak var progressRingView: UICircularProgressRing!
+    @IBOutlet private weak var progressRingView: UICircularProgressRing!
     @IBOutlet private var imgback: UIImageView!
     @IBOutlet private var calendar: FSCalendar!
     
@@ -58,10 +58,10 @@ final class HistoryDetail: UIViewController {
         
         if appDelegate.backvar == "static" {
             appDelegate.backvar = "static"
-            imgback.image = UIImage(named: "menu")
+            imgback.image = R.image.menu()
         } else {
             appDelegate.backvar = "abc"
-            imgback.image = UIImage(named: "backk")
+            imgback.image = R.image.backk()
             
         }
         self.navigationController?.popViewController(animated: true)
@@ -84,18 +84,15 @@ final class HistoryDetail: UIViewController {
     
     private func searchDataForProgress(strDate: String) {
         
-        let data = DBManager.shared.selectAllByDate(strDate)
+        displayProgressData(totalWater: 0, waterQty: 0)
         
-        guard data.status == 1 else {
-            displayProgressData(totalWater: 0, waterQty: 0)
+        let records = DataManager.shared.selectAllByDate(strDate)
+        guard let dictPrevious = records.first else {
             return
         }
-        let arrLocalData = data.arrData
-        let dictPrevious = arrLocalData[0]
-        
         let warerQty = dictPrevious.waterQuantity
         let totalAttempt = dictPrevious.totalAttempt
-        let waterQtyPerAttempt = dictPrevious.waterQuantityPerAttempt
+        let waterQtyPerAttempt = dictPrevious.waterPerAttempt
         
         let totalWater = totalAttempt * waterQtyPerAttempt
         
