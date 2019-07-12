@@ -85,31 +85,23 @@ extension MenuVC: UITableViewDelegate {
         
         switch indexPath.row {
         case 0:
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let HomeVC = storyboard.instantiateViewController(withIdentifier: "HomeVC") as!  HomeVC
-            self.HomeVC = UINavigationController(rootViewController: HomeVC)
+            self.HomeVC = UINavigationController(rootViewController: AppRouter.createHomeVC())
             self.slideMenuController()?.changeMainViewController(self.HomeVC, close: true)
             
         case 1:
             cell.lblname.textColor = UIColor.blue
             appDelegate.backvar = "static"
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let HomeVC = storyboard.instantiateViewController(withIdentifier: "HistoryVC") as!  HistoryVC
-            self.Hostory = UINavigationController(rootViewController: HomeVC)
+            self.Hostory = UINavigationController(rootViewController: AppRouter.createHistoryVC())
             self.slideMenuController()?.changeMainViewController(self.Hostory, close: true)
         
         case 2:
             appDelegate.backvar = "static"
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let HomeVC = storyboard.instantiateViewController(withIdentifier: "AlertVCNew") as!  AlertVCNew
-            self.AlertVCNew = UINavigationController(rootViewController: HomeVC)
+            self.AlertVCNew = UINavigationController(rootViewController: AppRouter.createAlertVC())
             self.slideMenuController()?.changeMainViewController(self.AlertVCNew, close: true)
             
         case 3:
             appDelegate.backvar = "graph"
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let HomeVC = storyboard.instantiateViewController(withIdentifier: "MyStatisticVC") as!  MyStatisticVC
-            self.MyStatisticVC = UINavigationController(rootViewController: HomeVC)
+            self.MyStatisticVC = UINavigationController(rootViewController: AppRouter.createMyStatisticVC())
             self.slideMenuController()?.changeMainViewController(self.MyStatisticVC, close: true)
             
         case 4:
@@ -121,10 +113,7 @@ extension MenuVC: UITableViewDelegate {
         case 5:
             appDelegate.backvar = "static"
             appDelegate.isMenuIconHidden = false
-            
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let HomeVC = storyboard.instantiateViewController(withIdentifier: "PersonalInfoVC") as!  PersonalInfoVC
-            self.PersonalInfoVC = UINavigationController(rootViewController: HomeVC)
+            self.PersonalInfoVC = UINavigationController(rootViewController: AppRouter.createPersonalInfoVC())
             self.slideMenuController()?.changeMainViewController(self.PersonalInfoVC, close: true)
             
         case 6:

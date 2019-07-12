@@ -43,9 +43,7 @@ final class HomeVC: UIViewController, AppStoreOpenable {
     @IBOutlet private weak var conBottomTab: NSLayoutConstraint!
     
     @IBOutlet private weak var conTopBottleCount: NSLayoutConstraint!
-    
     @IBOutlet private weak var imgBottle: UIImageView!
-    
     @IBOutlet private weak var conTopvideoMarker: NSLayoutConstraint!
     
     var currentModel = DataRecordModel.defaultModel()
@@ -68,6 +66,8 @@ final class HomeVC: UIViewController, AppStoreOpenable {
     
     private let dateFormatter = DateFormatter()
     
+    
+    // MARK: Life-cycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -93,6 +93,8 @@ final class HomeVC: UIViewController, AppStoreOpenable {
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
             self?.showFirstTutorialView()
+            self?.searchDataForUpdate()
+            self?.showData()
         }
     }
     
@@ -123,21 +125,15 @@ final class HomeVC: UIViewController, AppStoreOpenable {
     
     @IBAction func btnstatisticclick(_ sender: UIButton) {
         appDelegate.backvar = "abc"
-        let vc = storyboard?.instantiateViewController(withIdentifier: "MyStatisticVC") as! MyStatisticVC
-        self.navigationController?.pushViewController(vc, animated: true)
+        self.navigationController?.pushViewController(AppRouter.createMyStatisticVC(), animated: true)
     }
     
     @IBAction func btnHistoryclick(_ sender: UIButton) {
         appDelegate.backvar = "abc"
-        let vc = storyboard?.instantiateViewController(withIdentifier: "HistoryVC") as! HistoryVC
-        self.navigationController?.pushViewController(vc, animated: true)
+        self.navigationController?.pushViewController(AppRouter.createHistoryVC(), animated: true)
     }
     
-    @IBAction func btnHomeclick(_ sender: UIButton) {
-        
-    }
-    
-    @IBAction func btnHelpclick(_ sender: UIButton) { //"www.hydro-fuel.co.uk/support
+    @IBAction func btnHelpclick(_ sender: UIButton) {
         
         guard let url = URL(string: "https://www.hydro-fuel.co.uk/support") else {
             return
@@ -170,14 +166,13 @@ final class HomeVC: UIViewController, AppStoreOpenable {
         UIApplication.shared.beginIgnoringInteractionEvents()
         btnHydrate.isUserInteractionEnabled = false
         let totalDrink = appDelegate.badgeCount - lastCountOfAttempt
-        print("totalDrink--",totalDrink)
+        
         let remainingWaterQty = currentModel.remainingWaterQuantity - (totalDrink*currentModel.waterPerAttempt)
-        print("remainingWaterQty--",remainingWaterQty)
+        
         self.lblWaterToDrink.text = "\(remainingWaterQty)ml"
         
         self.lblBottleCount.text = "Bottle \(self.bottleCount) of \(tottleBottle)"
         
-        print(String(describing: lblBottleCount.text))
         self.lblWaterLavel.text = "\(0)"
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.changeStatus()
@@ -186,16 +181,13 @@ final class HomeVC: UIViewController, AppStoreOpenable {
     }
     
     @objc func changeStatus() {
-        
+        // TODO: water level animation should be here
     }
     
     
     func searchDataForUpdate() {
         
-        let today = Date().toLocalTime()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        dateFormatter.timeZone = TimeZone(identifier: "UTC")
-        let strDate = dateFormatter.string(from: today)
+        let strDate = Date.currentDateToString()
         
         let data = DataManager.shared.selectAllByDate(strDate)
         previousModel = data.first
@@ -214,35 +206,15 @@ final class HomeVC: UIViewController, AppStoreOpenable {
         currentModel.waterPerAttempt = previousModel.waterPerAttempt
         let remainingWaterQty = currentModel.remainingWaterQuantity - (currentModel.totalDrink * currentModel.waterPerAttempt)
         self.lblWaterToDrink.text = "\(remainingWaterQty)ml"
-        
-        
-        
     }
     
     func updateData(remainingWaterQty: Int, totalAttempt: Int) {
         
-        let today = Date().toLocalTime()
-        let dateFormattor = DateFormatter()
-        dateFormattor.dateFormat = "yyyy-MM-dd"
-        dateFormattor.timeZone = TimeZone(identifier: "UTC")
-        let strDate = dateFormattor.string(from: today)
+        let strDate = Date.currentDateToString()
 
         DataManager.shared.updateAllByDate(strDate: strDate,
                                            remainingWaterQuantity: remainingWaterQty, totalAttepmt: totalAttempt)
         searchDataForUpdate()
-    }
-    
-    
-    func createDB() -> Void {
-        
-        let today = Date().toLocalTime()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        dateFormatter.timeZone = TimeZone(identifier: "UTC")
-        let strDate = dateFormatter.string(from: today)
-        
-//        searchDataForUpdate()
-
-//        showData()
     }
     
     func insertData(_ data: DataRecordModel) -> Void {
@@ -269,12 +241,7 @@ final class HomeVC: UIViewController, AppStoreOpenable {
     
     func showData() {
         
-        let today = Date().toLocalTime()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        dateFormatter.timeZone = TimeZone(identifier: "UTC")
-        let strDate = dateFormatter.string(from: today)
-        
-        
+        let strDate = Date.currentDateToString()
         let data = DataManager.shared.readAll(object: DataRecordModel.self)
         
         previousModel = data.last

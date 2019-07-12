@@ -33,7 +33,7 @@ class User: Object {
         
         let user = self.init()
         user.gender = Gender.male.rawValue
-        user.activityLevel = Activity.medium.rawValue
+        user.activityLevel = Activity.undefined.rawValue
         user.weight = 50
         user.suggestedWaterLevel = 2500
         return user
@@ -47,6 +47,8 @@ enum Gender: String {
 }
 
 enum Activity: String {
+    
+    case undefined = "undefined"
     case low = "low"
     case medium = "medium"
     case high = "high"

@@ -30,4 +30,15 @@ final class AlertPresenter {
         alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
         vc.present(alert, animated: true)
     }
+    
+    static func showMyAlert(at vc: UIViewController, message: String) -> Void {
+        
+        let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "Ok", style: .default) { (_) in
+        }
+        alertController.addAction(okAction)
+        
+        vc.present(alertController, animated: true, completion: nil)
+    }
 }

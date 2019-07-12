@@ -121,7 +121,7 @@
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="50" minValue="5" maxValue="200" translatesAutoresizingMaskIntoConstraints="NO" id="phH-dz-j5C">
+                                                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="50" minValue="30" maxValue="200" translatesAutoresizingMaskIntoConstraints="NO" id="phH-dz-j5C">
                                                                 <rect key="frame" x="13" y="70" width="284" height="36"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="35" id="gRC-yz-7aQ"/>
@@ -1199,9 +1199,6 @@
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NB0-vm-gKL">
                                                         <rect key="frame" x="0.0" y="0.0" width="70" height="70"/>
-                                                        <connections>
-                                                            <action selector="btnHomeclick:" destination="VSP-rO-gW4" eventType="touchUpInside" id="frk-00-nLf"/>
-                                                        </connections>
                                                     </button>
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

@@ -44,18 +44,16 @@ extension HistoryVC: FSCalendarDelegate {
 
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
         
-        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        
         switch appDelegate.backvar {
             
         case "static", "graph":
-            let vc = storyBoard.instantiateViewController(withIdentifier: "HistoryDetail") as! HistoryDetail
+            let vc = AppRouter.createHistoryDetail()
             vc.showDate = date.toLocalTime()
             self.navigationController?.pushViewController(vc, animated: true)
             
         default:
             appDelegate.backvar = "abc"
-            let vc = storyBoard.instantiateViewController(withIdentifier: "HistoryDetail") as! HistoryDetail
+            let vc = AppRouter.createHistoryDetail()
             vc.showDate = date.toLocalTime()
             self.navigationController?.pushViewController(vc, animated: true)
         }

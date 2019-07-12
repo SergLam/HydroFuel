@@ -41,7 +41,7 @@ final class PersonalInfoVC: UIViewController {
     private let selectedLowActImage = R.image.standingbuttonblue()
     private let unSelectedLowActImage = R.image.standingbuttonblack()
     private let selectedMediumActImage = R.image.walkingbuttonblue()
-    private let unSelectedMediumActImage = R.image.walkingbuttonblue()
+    private let unSelectedMediumActImage = R.image.walkingbuttonblack()
     private let selectedHighActImage = R.image.runningbuttonblue()
     private let unSelectedHighActImage = R.image.runningbuttonblack()
     
@@ -116,27 +116,30 @@ final class PersonalInfoVC: UIViewController {
             
         case .high:
             genderRation = gender == .male ? 0.7 : 0.6
+            
+        case .undefined:
+            genderRation = 0.33
+            
         }
         
-        guard let currentWaterLevel = Int(suggestedWatelVolumeLabel.text!) else {
-            assertionFailure("Unable to get current water level")
-            return
-        }
         let newWaterLevel = Int(Double(slider.value) * Double(genderRation) * 100)
-        guard abs(newWaterLevel - currentWaterLevel) > 500 else {
-            return
+        if newWaterLevel < 500 {
+            suggestedWatelVolumeLabel.text = "\(500)"
+        } else {
+            let roundValue = Int(newWaterLevel / 500) * 500
+            suggestedWatelVolumeLabel.text = "\(roundValue)"
         }
-        suggestedWatelVolumeLabel.text = "\(newWaterLevel)"
+        
     }
     
     @IBAction func didTapSuggestedWaterButton(_ sender: UIButton) {
         var currentAmount = Int(suggestedWatelVolumeLabel.text ?? "0") ?? 0
-        if sender.tag == 1{
+        if sender.tag == 1 {
             //Plus
             currentAmount += 500
-        }else{
+        } else {
             //Minus
-            currentAmount = max(500, currentAmount-500)
+            currentAmount = max(500, currentAmount - 500)
         }
         suggestedWatelVolumeLabel.text = "\(currentAmount)"
         resetValues()
@@ -154,9 +157,18 @@ final class PersonalInfoVC: UIViewController {
     @objc func panGesture(gesture: UIPanGestureRecognizer) {
         
         let currentPoint = gesture.location(in: slider)
-        let percentage = currentPoint.x/slider.bounds.size.width;
+        let percentage = currentPoint.x / slider.bounds.size.width
         let delta = Float(percentage) * (slider.maximumValue - slider.minimumValue)
-        let value = slider.minimumValue + delta
+        
+        var value = slider.minimumValue + delta
+        
+        if value < slider.minimumValue {
+            
+           value = slider.minimumValue
+            
+        } else if value > slider.maximumValue {
+            value = slider.maximumValue
+        }
         slider.setValue(value, animated: true)
         user.weight = Int(value)
         updateDisplayedUserData()
@@ -164,12 +176,13 @@ final class PersonalInfoVC: UIViewController {
     
     private func validation() -> Bool {
         
-        let inputData = [lblkg.text!, user.gender, user.activityLevel]
-        let errorMessages = ["Please Choose Weight", "Please Choose Gender", "Please Choose Activity Level"]
+        let inputData: [String: String] = [lblkg.text!: "Please Choose Weight",
+                                           user.gender: "Please Choose Gender",
+                                           user.activityLevel: "Please Choose Activity Level"]
         
-        for (index, data) in inputData.enumerated() {
-            if data.isEmpty {
-                showMyAlert(messageIs: errorMessages[index])
+        for data in inputData {
+            if data.key.isEmpty {
+                AlertPresenter.showMyAlert(at: self, message: data.value)
                 return false
             }
         }
@@ -201,6 +214,7 @@ final class PersonalInfoVC: UIViewController {
     }
     
     @IBAction func btndone(_ sender: UIButton) {
+        
         guard validation() else {
             return
         }
@@ -208,10 +222,7 @@ final class PersonalInfoVC: UIViewController {
         
         let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default) { [unowned self] (result) -> Void in
             
-            let today = Date().toLocalTime()
-            self.dateFormatter.dateFormat = "yyyy-MM-dd"
-            self.dateFormatter.timeZone = TimeZone(identifier: "UTC")
-            let strDate = self.dateFormatter.string(from: today)
+            let strDate = Date.currentDateToString()
             
             guard let waterLevel = Int(self.suggestedWatelVolumeLabel.text!) else {
                 assertionFailure("Unable to get water level")
@@ -221,15 +232,7 @@ final class PersonalInfoVC: UIViewController {
                                        gender: self.user.gender, remainingWater: waterLevel,
                                        totalDrink: 0, totalAttempt: 0, waterQuantity: waterLevel,
                                        waterPerAttempt: waterLevel / 10, weight: Int(self.slider.value))
-            
-                
-//                self.insertData(data)
-//
-//                data.totalDrink = lblanss * self.dictPrevious.totalDrink
-//                data.remainingWaterQuantity = self.num - (lblanss * self.dictPrevious.totalDrink)
-//                self.updateData(data)
-            
-            
+            self.updateData(data)
         }
         alertController.addAction(okAction)
         
@@ -256,33 +259,21 @@ final class PersonalInfoVC: UIViewController {
     private func insertData(_ data: DataRecordModel) -> Void {
         
         DataManager.shared.write(value: [data])
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let vc = storyboard.instantiateViewController(withIdentifier: "AlertVCNew") as? AlertVCNew else {
-            assertionFailure("Unable to instantiateViewController")
-            return
-        }
+        let vc = AppRouter.createAlertVC()
         appDelegate.resettime = "reset"
-        navigationController!.pushViewController(vc, animated: true)
-        
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     private func updateData(_ data: DataRecordModel) {
         
         DataManager.shared.update(value: [data])
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let vc = storyboard.instantiateViewController(withIdentifier: "HomeVC") as? HomeVC else {
-            assertionFailure("Unable to instantiateViewController")
-            return
-        }
-        navigationController!.pushViewController(vc, animated: true)
+        let vc = AppRouter.createHomeVC()
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     private func searchDataForUpdate() {
         
-        let today = Date()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        dateFormatter.timeZone = TimeZone(identifier: "UTC")
-        let strDate = dateFormatter.string(from: today)
+        let strDate = Date.currentDateToString()
         let records = DataManager.shared.selectAllByDate(strDate)
         guard let lastRecord = records.first else {
             return
