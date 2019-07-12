@@ -45,19 +45,15 @@ final class PersonalInfoVC: UIViewController {
     private let selectedHighActImage = R.image.runningbuttonblue()
     private let unSelectedHighActImage = R.image.runningbuttonblack()
     
-    private var user = DataManager.shared.currentUser ?? User.defaultUserModel()
-    private var tmpUserModel = User.defaultUserModel()
+    private let viewModel = PersonalInfoVM()
     
     private var currentShowcase = 0
     private var showcase = iShowcase()
     
-    private let dateFormatter = DateFormatter()
-    
-    // Default water level calculation formula (Int(Double(weightCurrentVAle) * Double(0.033) * 1000) )
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        viewModel.delegate = self
         showcase.delegate = self
         configureWeightSlider()
         
@@ -71,7 +67,7 @@ final class PersonalInfoVC: UIViewController {
         btnmenu.isHidden = appDelegate.isMenuIconHidden
         imgmenu.isHidden = appDelegate.isMenuIconHidden
         updateDisplayedUserData()
-        searchDataForUpdate()
+        viewModel.searchDataForUpdate()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -93,9 +89,9 @@ final class PersonalInfoVC: UIViewController {
     
     private func updateDisplayedUserData() {
         
-        lblkg.text = "\(user.weight) Kg"
-        guard let gender = Gender(rawValue: user.gender),
-            let activity = Activity(rawValue: user.activityLevel) else {
+        lblkg.text = "\(viewModel.user.weight) Kg"
+        guard let gender = Gender(rawValue: viewModel.user.gender),
+            let activity = Activity(rawValue: viewModel.user.activityLevel) else {
                 assertionFailure("Unable to get user gender or activity")
             return
         }
@@ -170,73 +166,46 @@ final class PersonalInfoVC: UIViewController {
             value = slider.maximumValue
         }
         slider.setValue(value, animated: true)
-        user.weight = Int(value)
+        viewModel.user.weight = Int(value)
         updateDisplayedUserData()
     }
     
-    private func validation() -> Bool {
-        
-        let inputData: [String: String] = [lblkg.text!: "Please Choose Weight",
-                                           user.gender: "Please Choose Gender",
-                                           user.activityLevel: "Please Choose Activity Level"]
-        
-        for data in inputData {
-            if data.key.isEmpty {
-                AlertPresenter.showMyAlert(at: self, message: data.value)
-                return false
-            }
-        }
-        return true
-    }
-    
     @IBAction func btnFemale(_ sender: UIButton) {
-        user.gender = Gender.female.rawValue
+        viewModel.user.gender = Gender.female.rawValue
         updateDisplayedUserData()
     }
     
     @IBAction func btnselectMale(_ sender: UIButton) {
-        user.gender = Gender.male.rawValue
+        viewModel.user.gender = Gender.male.rawValue
         updateDisplayedUserData()
     }
     @IBAction func btnHighClick(_ sender: UIButton) {
-        user.activityLevel = Activity.high.rawValue
+        viewModel.user.activityLevel = Activity.high.rawValue
         updateDisplayedUserData()
     }
     
     @IBAction func btnMediumClick(_ sender: UIButton) {
-        user.activityLevel = Activity.medium.rawValue
+        viewModel.user.activityLevel = Activity.medium.rawValue
         updateDisplayedUserData()
     }
     
     @IBAction func btnLowClick(_ sender: UIButton) {
-        user.activityLevel = Activity.low.rawValue
+        viewModel.user.activityLevel = Activity.low.rawValue
         updateDisplayedUserData()
     }
     
     @IBAction func btndone(_ sender: UIButton) {
         
-        guard validation() else {
+        do {
+            try viewModel.validateInputData()
+        } catch {
+            AlertPresenter.showMyAlert(at: self, message: error.localizedDescription)
+        }
+        guard let waterLevel = Int(self.suggestedWatelVolumeLabel.text!) else {
+            assertionFailure("Unable to get water level")
             return
         }
-        let alertController = UIAlertController(title: nil, message: "Details Successfully Updated", preferredStyle: .alert)
-        
-        let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default) { [unowned self] (result) -> Void in
-            
-            let strDate = Date.currentDateToString()
-            
-            guard let waterLevel = Int(self.suggestedWatelVolumeLabel.text!) else {
-                assertionFailure("Unable to get water level")
-                return
-            }
-            let data = DataRecordModel(activity: self.user.activityLevel, date: strDate,
-                                       gender: self.user.gender, remainingWater: waterLevel,
-                                       totalDrink: 0, totalAttempt: 0, waterQuantity: waterLevel,
-                                       waterPerAttempt: waterLevel / 10, weight: Int(self.slider.value))
-            self.updateData(data)
-        }
-        alertController.addAction(okAction)
-        
-        self.present(alertController, animated: true, completion: nil)
+        self.viewModel.updateData(waterLevel)
     }
     
     @IBAction func btnmenuclick(_ sender: UIButton) {
@@ -256,28 +225,13 @@ final class PersonalInfoVC: UIViewController {
         self.appDelegate.timeselect = "yes"
     }
     
-    private func insertData(_ data: DataRecordModel) -> Void {
-        
-        DataManager.shared.write(value: [data])
-        let vc = AppRouter.createAlertVC()
-        appDelegate.resettime = "reset"
-        navigationController?.pushViewController(vc, animated: true)
-    }
+}
+
+// MARK: - PersonalInfoVMDelegate
+extension PersonalInfoVC: PersonalInfoVMDelegate {
     
-    private func updateData(_ data: DataRecordModel) {
-        
-        DataManager.shared.update(value: [data])
-        let vc = AppRouter.createHomeVC()
+    func shouldPushController(vc: UIViewController) {
         navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    private func searchDataForUpdate() {
-        
-        let strDate = Date.currentDateToString()
-        let records = DataManager.shared.selectAllByDate(strDate)
-        guard let lastRecord = records.first else {
-            return
-        }
     }
     
 }

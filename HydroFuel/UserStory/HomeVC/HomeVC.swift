@@ -87,7 +87,6 @@ final class HomeVC: UIViewController, AppStoreOpenable {
             DispatchQueue.main.async {
                 self.notifMarkerView.isHidden = false
                 self.fartuMarkerView.isHidden = false
-                self.countWaterLevalAsNotif()
             }
             return
         }
@@ -108,14 +107,6 @@ final class HomeVC: UIViewController, AppStoreOpenable {
     
     @objc func NotifArrives() {
 
-    }
-    
-    func checkForAutoNotif() {
-        
-    }
-    
-    func countWaterLevalAsNotif() {
-        
     }
     
     @IBAction func btnmenuclick(_ sender: UIButton) {

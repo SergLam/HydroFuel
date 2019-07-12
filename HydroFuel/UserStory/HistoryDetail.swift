@@ -37,7 +37,7 @@ final class HistoryDetail: UIViewController {
         arrDatesForGraph.add(Yesterday)
         arrDatesForGraph.add(strDate)
         
-        self.navigationController?.navigationBar.isHidden = true
+        navigationController?.navigationBar.isHidden = true
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     }
     

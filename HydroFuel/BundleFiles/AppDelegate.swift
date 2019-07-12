@@ -39,24 +39,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UNUserNotificationCenter.current().delegate = self
         
         requestPermissionForAlerts()
-        let storyboard1: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         
+        AppRouter.setupAppRootVC(mainVC: AppRouter.createHomeVC())
         
-        guard let homeVC = storyboard1.instantiateViewController(withIdentifier: "HomeVC") as? HomeVC else {
-            preconditionFailure("Unable to instantiateViewController")
-        }
-        AppRouter.setupAppRootVC(mainVC: homeVC)
-        
-        guard let alertVC = storyboard1.instantiateViewController(withIdentifier: "AlertVCNew") as? AlertVCNew else {
-            preconditionFailure("Unable to instantiateViewController")
-        }
-        AppRouter.setupAppRootVC(mainVC: alertVC)
+        AppRouter.setupAppRootVC(mainVC: AppRouter.createAlertVC())
         
         isMenuIconHidden = true
-        guard let personalInfoVC = storyboard1.instantiateViewController(withIdentifier: "PersonalInfoVC") as? PersonalInfoVC else {
-            preconditionFailure("Unable to instantiateViewController")
-        }
-        AppRouter.setupAppRootVC(mainVC: personalInfoVC)
+        AppRouter.setupAppRootVC(mainVC: AppRouter.createPersonalInfoVC())
         
         return true
     }

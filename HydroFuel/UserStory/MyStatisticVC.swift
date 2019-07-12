@@ -14,12 +14,13 @@ final class MyStatisticVC: UIViewController {
     @IBOutlet private weak var lblnineteendays: UILabel!
     @IBOutlet private weak var lblthirteendays: UILabel!
     @IBOutlet private weak var lblsevendays: UILabel!
-    var DateArr = [String]()
-    
-    var unitsSold = [Double]()
-    private weak var axisFormatDelegate: IAxisValueFormatter?
     @IBOutlet private weak var imgback: UIImageView!
     @IBOutlet private weak var linechart: LineChartView!
+    
+    var DateArr = [String]()
+    var unitsSold = [Double]()
+    private weak var axisFormatDelegate: IAxisValueFormatter?
+    
     var arrDates = NSMutableArray()
     var arrDataForDates = NSMutableArray()
     var arrtotal = NSMutableArray()
