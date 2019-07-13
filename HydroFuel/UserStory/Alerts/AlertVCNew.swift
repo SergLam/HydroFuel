@@ -18,16 +18,14 @@ final class AlertVCNew: UIViewController {
     @IBOutlet private weak var tblAlert: UITableView!
     @IBOutlet private weak var imgback: UIImageView!
     
-    let datePickerView = UIDatePicker()
-    var timeTag = -1
-    
-    var arraydate = ["08:30 AM","09:30 AM","11:30 AM","01:00 PM","03:30 PM","05:30 PM","07:30 PM","08:30 PM","09:30 PM","11:00 PM"]
-    var arrSetFixAlarmTime = ["2018-09-13 08:30:00 +0000","2018-09-13 09:30:00 +0000","2018-09-13 10:30:00 +0000","2018-09-13 11:30:00 +0000","2018-09-13 12:30:00 +0000","2018-09-13 13:30:00 +0000","2018-09-13 14:30:00 +0000","2018-09-13 15:30:00 +0000","2018-09-13 16:30:00 +0000","2018-09-13 17:30:00 +0000"]
-    var arrFixDates: [Date] = []
-    
-    var showcase = iShowcase()
+    private let datePickerView = UIDatePicker()
     
     private let dateFormatter = DateFormatter()
+    private var timeTag = 0 // Determine selected cell
+    private var lastSelectedDate = Date()
+    
+    private var showcase = iShowcase()
+    private let viewModel = AlertVM()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,19 +33,9 @@ final class AlertVCNew: UIViewController {
         showcase.delegate = self
         imgback.isHidden = !appDelegate.isAfterReset
         btnMenu.isHidden = !appDelegate.isAfterReset
-        
-        for time in arrSetFixAlarmTime {
-            
-            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
-            dateFormatter.timeZone = TimeZone(identifier: "UTC")
-            let fixDate = dateFormatter.date(from: time)
-            arrFixDates.append(fixDate!)
-        }
-        
         navigationController?.navigationBar.isHidden = true
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     }
-    
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
@@ -60,18 +48,7 @@ final class AlertVCNew: UIViewController {
     }
     
     @objc func handleDatePicker(sender: UIDatePicker) {
-        
-        datePickerView.datePickerMode = .time
-        dateFormatter.amSymbol = "AM"
-        dateFormatter.pmSymbol = "PM"
-        dateFormatter.timeZone = TimeZone.current
-        
-        dateFormatter.dateFormat = "HH:mm a"
-        arraydate[timeTag] = dateFormatter.string(from: sender.date)
-        
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
-        
-        arrSetFixAlarmTime[timeTag] = dateFormatter.string(from: sender.date)
+        lastSelectedDate = sender.date
     }
     
     func calculateWaterPerAlert(alertNumber: Int) -> String {
@@ -148,30 +125,7 @@ final class AlertVCNew: UIViewController {
     @IBAction func btnMenu(_ sender: UIButton) {
         
         appDelegate.isAfterReset = false
-
-        var arrForSort:[Date] = []
-        for date in arrFixDates {
-            let format1 = DateFormatter()
-            format1.dateFormat = "HH:mm"
-            format1.timeZone = TimeZone(identifier: "UTC")
-            let strDate2 = format1.string(from: date)
-            arrForSort.append(format1.date(from: strDate2)!)
-        }
-        
-        let arrSortedDates = arrForSort.sorted(by: { $0.compare($1) == .orderedAscending })
-        arrFixDates = ((arrSortedDates as NSArray).mutableCopy() as! NSMutableArray) as! [Date]
-        
-        let formattor = DateFormatter()
-        formattor.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
-        formattor.timeZone = TimeZone(identifier: "UTC")
-        
-        for (index, fixDate) in arrFixDates.enumerated() {
-            
-            timeTag = index
-            setAlarm(fixDate, tag: index)
-            let dt = formattor.string(from: fixDate)
-            arrSetFixAlarmTime[index] = dt
-        }
+        viewModel.saveAlarmTimes()
         
         if appDelegate.backvar == "static" {
             self.toggleLeft()
@@ -188,28 +142,7 @@ final class AlertVCNew: UIViewController {
         
         appDelegate.isAfterReset = false
         
-        var arrForSort: [Date] = []
-        
-        dateFormatter.dateFormat = "HH:mm"
-        dateFormatter.timeZone = TimeZone(identifier: "UTC")
-        
-        for date in arrFixDates {
-            let strDate2 = dateFormatter.string(from: date)
-            arrForSort.append(dateFormatter.date(from: strDate2)!)
-        }
-        
-        let arrSortedDates = arrForSort.sorted(by: { $0.compare($1) == .orderedAscending })
-        arrFixDates = ((arrSortedDates as NSArray).mutableCopy() as! NSMutableArray) as! [Date]
-        
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
-        dateFormatter.timeZone = TimeZone(identifier: "UTC")
-        
-        for (index, date) in arrFixDates.enumerated() {
-            timeTag = index
-            setAlarm(date, tag: index)
-            let dt = dateFormatter.string(from: date)
-            arrSetFixAlarmTime[index] = dt
-        }
+        viewModel.saveAlarmTimes()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             let vc = self.storyboard?.instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
@@ -232,7 +165,7 @@ final class AlertVCNew: UIViewController {
 extension AlertVCNew: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return arrFixDates.count
+        return viewModel.tmpAlarmDates.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -243,7 +176,7 @@ extension AlertVCNew: UITableViewDataSource {
         
         dateFormatter.dateFormat = "hh:mm a"
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
-        let strDate = dateFormatter.string(from: arrFixDates[indexPath.row])
+        let strDate = dateFormatter.string(from: viewModel.tmpAlarmDates[indexPath.row])
         cell.lbltimeshow.text = strDate
         cell.lblwaterdescripation.text = calculateWaterPerAlert(alertNumber: indexPath.row + 1)
         
@@ -276,36 +209,15 @@ extension AlertVCNew: UITableViewDelegate {
 // MARK: - UITextFieldDelegate
 extension AlertVCNew: UITextFieldDelegate {
     
-    private func configureDateFormatter(for textField: UITextField) {
-        datePickerView.datePickerMode = .time
-        dateFormatter.amSymbol = "AM"
-        dateFormatter.pmSymbol = "PM"
-        dateFormatter.dateFormat = "hh:mm a"
-        dateFormatter.timeZone = TimeZone(identifier: "UTC")
-        timeTag = textField.tag
-    }
-    
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        
-        configureDateFormatter(for: textField)
-        
         textField.inputView = datePickerView
+        timeTag = textField.tag
         datePickerView.addTarget(self, action: #selector(handleDatePicker(sender:)), for: .valueChanged)
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         
-        arrFixDates.removeAll()
-        configureDateFormatter(for: textField)
-        arrSetFixAlarmTime[timeTag] = "\(datePickerView.date.dateToTimeZoneString())"
-        
-        for date in arrSetFixAlarmTime {
-            
-            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
-            let fixDate = dateFormatter.date(from: date)
-            arrFixDates.append(fixDate!)
-        }
-        
+        viewModel.tmpAlarmDates[timeTag] = datePickerView.date
         tblAlert.reloadData()
     }
     

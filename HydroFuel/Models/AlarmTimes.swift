@@ -42,7 +42,8 @@ class AlarmTimes: Object {
         var defaultDates: [Date] = []
         var defaultWaterLevels: [Int] = []
         
-        for i in 0...10 {
+        for i in 0...9 {
+            // TODO: change date timezone to UTC
             let date = Calendar.current.date(bySettingHour: hours[i], minute: minutes[i], second: 0, of: Date())!
             defaultWaterLevels.append(waterPerAttempt * (10 - i))
             defaultDates.append(date)
