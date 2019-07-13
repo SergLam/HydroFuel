@@ -20,7 +20,7 @@ final class HistoryDetail: UIViewController {
     
     var showDate = Date()
     var counter = 0
-    var arrDatesForGraph = NSMutableArray()
+    private var arrDatesForGraph = Array<String>()
     
     private let dateFormatter = DateFormatter()
     
@@ -34,8 +34,8 @@ final class HistoryDetail: UIViewController {
         
         let Day = Calendar.current.date(byAdding: .day, value: -1, to: showDate)
         let Yesterday = dateFormatter.string(from: Day!)
-        arrDatesForGraph.add(Yesterday)
-        arrDatesForGraph.add(strDate)
+        arrDatesForGraph.append(Yesterday)
+        arrDatesForGraph.append(strDate)
         
         navigationController?.navigationBar.isHidden = true
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
@@ -120,7 +120,7 @@ extension HistoryDetail: FSCalendarDelegate {
     
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
         
-        arrDatesForGraph.removeAllObjects()
+        arrDatesForGraph.removeAll()
         let today = date.toLocalTime()
         
         let strDate = dateFormatter.string(from: today)
@@ -128,8 +128,8 @@ extension HistoryDetail: FSCalendarDelegate {
         let Day = Calendar.current.date(byAdding: .day, value: -1, to: today)
         let Yesterday = dateFormatter.string(from: Day!)
         
-        arrDatesForGraph.add(Yesterday)
-        arrDatesForGraph.add(strDate)
+        arrDatesForGraph.append(Yesterday)
+        arrDatesForGraph.append(strDate)
         
         searchDataForProgress(strDate: strDate)
     }

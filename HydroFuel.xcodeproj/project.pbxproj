@@ -28,6 +28,8 @@
 		7CA167FE22D3067D00274D89 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA167FD22D3067D00274D89 /* User.swift */; };
 		7CA1680022D3109400274D89 /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA167FF22D3109400274D89 /* UIView+Ext.swift */; };
 		7CA8984D22D28202007D3DD0 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA8984C22D28202007D3DD0 /* AppRouter.swift */; };
+		7CAFBF7A22D9E7DB00FD47E5 /* AlarmTimes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAFBF7922D9E7DB00FD47E5 /* AlarmTimes.swift */; };
+		7CAFBF7E22D9FFD400FD47E5 /* AlertVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAFBF7D22D9FFD400FD47E5 /* AlertVM.swift */; };
 		9DFDF4361D18266FA3A14C03 /* Pods_HydroFuel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD07F55ECDE656312122A720 /* Pods_HydroFuel.framework */; };
 		A72C719C213A5FF2008FB95F /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72C719B213A5FF2008FB95F /* HomeVC.swift */; };
 		A72C719E213A64EC008FB95F /* menucell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72C719D213A64EC008FB95F /* menucell.swift */; };
@@ -70,6 +72,8 @@
 		7CA167FD22D3067D00274D89 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		7CA167FF22D3109400274D89 /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
 		7CA8984C22D28202007D3DD0 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		7CAFBF7922D9E7DB00FD47E5 /* AlarmTimes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmTimes.swift; sourceTree = "<group>"; };
+		7CAFBF7D22D9FFD400FD47E5 /* AlertVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertVM.swift; sourceTree = "<group>"; };
 		A72C719B213A5FF2008FB95F /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
 		A72C719D213A64EC008FB95F /* menucell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = menucell.swift; sourceTree = "<group>"; };
 		A72C719F213A776A008FB95F /* HistoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryVC.swift; sourceTree = "<group>"; };
@@ -115,13 +119,12 @@
 		7C59A03F22CFE66D005B474E /* UserStory */ = {
 			isa = PBXGroup;
 			children = (
+				7CAFBF7C22D9F3D500FD47E5 /* History */,
+				7CAFBF7B22D9F3C700FD47E5 /* Alerts */,
 				1305D71622D880F000447B89 /* PersonalInfo */,
 				7C7F414222D85D8100124069 /* HomeVC */,
-				A72C71A1213A7781008FB95F /* HistoryDetail.swift */,
 				A796B07021397D1E00FD85A1 /* MenuVC.swift */,
-				A72C719F213A776A008FB95F /* HistoryVC.swift */,
 				A72C71A3213A7795008FB95F /* MyStatisticVC.swift */,
-				6D152540215BD51500E5B3AE /* AlertVCNew.swift */,
 			);
 			path = UserStory;
 			sourceTree = "<group>";
@@ -196,6 +199,7 @@
 			children = (
 				7C59A06222D23A92005B474E /* DataRecordModel.swift */,
 				7CA167FD22D3067D00274D89 /* User.swift */,
+				7CAFBF7922D9E7DB00FD47E5 /* AlarmTimes.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -215,6 +219,24 @@
 				7C7F414322D85D9400124069 /* HomeVCViewModel.swift */,
 			);
 			path = HomeVC;
+			sourceTree = "<group>";
+		};
+		7CAFBF7B22D9F3C700FD47E5 /* Alerts */ = {
+			isa = PBXGroup;
+			children = (
+				6D152540215BD51500E5B3AE /* AlertVCNew.swift */,
+				7CAFBF7D22D9FFD400FD47E5 /* AlertVM.swift */,
+			);
+			path = Alerts;
+			sourceTree = "<group>";
+		};
+		7CAFBF7C22D9F3D500FD47E5 /* History */ = {
+			isa = PBXGroup;
+			children = (
+				A72C71A1213A7781008FB95F /* HistoryDetail.swift */,
+				A72C719F213A776A008FB95F /* HistoryVC.swift */,
+			);
+			path = History;
 			sourceTree = "<group>";
 		};
 		9834042595A6A2FDBF07E7CF /* Frameworks */ = {
@@ -445,6 +467,7 @@
 				6D152541215BD51500E5B3AE /* AlertVCNew.swift in Sources */,
 				7C59A05722D08B57005B474E /* AlertPresenter.swift in Sources */,
 				7C7F414122D7D68900124069 /* UIStoryboard+Ext.swift in Sources */,
+				7CAFBF7A22D9E7DB00FD47E5 /* AlarmTimes.swift in Sources */,
 				A796B06D2139668800FD85A1 /* alertCell.swift in Sources */,
 				7CA167FE22D3067D00274D89 /* User.swift in Sources */,
 				7C6007B022D45AA300FBDD11 /* DataManager.swift in Sources */,
@@ -457,6 +480,7 @@
 				A72C719E213A64EC008FB95F /* menucell.swift in Sources */,
 				7C59A05022D06B26005B474E /* UIFont+Ext.swift in Sources */,
 				A72C719C213A5FF2008FB95F /* HomeVC.swift in Sources */,
+				7CAFBF7E22D9FFD400FD47E5 /* AlertVM.swift in Sources */,
 				7C7F414422D85D9400124069 /* HomeVCViewModel.swift in Sources */,
 				A72C71A0213A776A008FB95F /* HistoryVC.swift in Sources */,
 				7C59A04A22CFFA92005B474E /* UIViewController+Ext.swift in Sources */,

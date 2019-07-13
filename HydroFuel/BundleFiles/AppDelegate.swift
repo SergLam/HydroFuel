@@ -35,18 +35,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         IQKeyboardManager.shared.enable = true
-        
         UNUserNotificationCenter.current().delegate = self
-        
         requestPermissionForAlerts()
         
-        AppRouter.setupAppRootVC(mainVC: AppRouter.createHomeVC())
-        
-        AppRouter.setupAppRootVC(mainVC: AppRouter.createAlertVC())
-        
-        isMenuIconHidden = true
-        AppRouter.setupAppRootVC(mainVC: AppRouter.createPersonalInfoVC())
-        
+        if DataManager.shared.currentUser == nil {
+            
+            isMenuIconHidden = true
+            AppRouter.setupAppRootVC(mainVC: AppRouter.createPersonalInfoVC())
+            
+        } else if DataManager.shared.alarmTimes == nil {
+            
+            AppRouter.setupAppRootVC(mainVC: AppRouter.createAlertVC())
+        } else {
+            AppRouter.setupAppRootVC(mainVC: AppRouter.createHomeVC())
+        }
         return true
     }
     

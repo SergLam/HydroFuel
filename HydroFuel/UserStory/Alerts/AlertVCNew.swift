@@ -8,9 +8,6 @@
 
 import UIKit
 import SlideMenuControllerSwift
-import UserNotifications
-import UserNotificationsUI
-import IQKeyboardManagerSwift
 import iShowcase
 import CTShowcase
 
@@ -22,51 +19,32 @@ final class AlertVCNew: UIViewController {
     @IBOutlet private weak var imgback: UIImageView!
     
     let datePickerView = UIDatePicker()
-    let datetime = Date()
     var timeTag = -1
-    var arraydate = NSMutableArray()
-    var arrSetFixAlarmTime = NSMutableArray()
+    
+    var arraydate = ["08:30 AM","09:30 AM","11:30 AM","01:00 PM","03:30 PM","05:30 PM","07:30 PM","08:30 PM","09:30 PM","11:00 PM"]
+    var arrSetFixAlarmTime = ["2018-09-13 08:30:00 +0000","2018-09-13 09:30:00 +0000","2018-09-13 10:30:00 +0000","2018-09-13 11:30:00 +0000","2018-09-13 12:30:00 +0000","2018-09-13 13:30:00 +0000","2018-09-13 14:30:00 +0000","2018-09-13 15:30:00 +0000","2018-09-13 16:30:00 +0000","2018-09-13 17:30:00 +0000"]
     var arrFixDates: [Date] = []
-    var str = 0
+    
     var showcase = iShowcase()
-    var strTimes = ""
     
     private let dateFormatter = DateFormatter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        dateFormatter.dateFormat = "HH:mm"
-        strTimes = dateFormatter.string(from: Date())
-        print(strTimes)
-        dateFormatter.timeZone = TimeZone(identifier: "UTC")
-        
         showcase.delegate = self
-        if appDelegate.isAfterReset == true{
+        imgback.isHidden = !appDelegate.isAfterReset
+        btnMenu.isHidden = !appDelegate.isAfterReset
+        
+        for time in arrSetFixAlarmTime {
             
-            imgback.isHidden = false
-            btnMenu.isHidden = false
-        }else{
-            imgback.isHidden = true
-            btnMenu.isHidden = true
-        }
-        
-        arraydate = ["08:30 AM","09:30 AM","11:30 AM","01:00 PM","03:30 PM","05:30 PM","07:30 PM","08:30 PM","09:30 PM","11:00 PM"]
-        
-        arrSetFixAlarmTime = ["2018-09-13 08:30:00 +0000","2018-09-13 09:30:00 +0000","2018-09-13 10:30:00 +0000","2018-09-13 11:30:00 +0000","2018-09-13 12:30:00 +0000","2018-09-13 13:30:00 +0000","2018-09-13 14:30:00 +0000","2018-09-13 15:30:00 +0000","2018-09-13 16:30:00 +0000","2018-09-13 17:30:00 +0000"]
-        
-        for i in 0..<arrSetFixAlarmTime.count {
-            
-            let formattor = DateFormatter()
-            formattor.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
-            formattor.timeZone = TimeZone(identifier: "UTC")
-            let fixDate = formattor.date(from: arrSetFixAlarmTime[i] as! String)
-            print(fixDate!)
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+            dateFormatter.timeZone = TimeZone(identifier: "UTC")
+            let fixDate = dateFormatter.date(from: time)
             arrFixDates.append(fixDate!)
         }
         
-        self.navigationController?.navigationBar.isHidden = true
+        navigationController?.navigationBar.isHidden = true
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     }
     
@@ -170,10 +148,7 @@ final class AlertVCNew: UIViewController {
     @IBAction func btnMenu(_ sender: UIButton) {
         
         appDelegate.isAfterReset = false
-        let formattor = DateFormatter()
-        formattor.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
-        formattor.timeZone = TimeZone(identifier: "UTC")
-        
+
         var arrForSort:[Date] = []
         for date in arrFixDates {
             let format1 = DateFormatter()
@@ -186,22 +161,23 @@ final class AlertVCNew: UIViewController {
         let arrSortedDates = arrForSort.sorted(by: { $0.compare($1) == .orderedAscending })
         arrFixDates = ((arrSortedDates as NSArray).mutableCopy() as! NSMutableArray) as! [Date]
         
+        let formattor = DateFormatter()
+        formattor.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+        formattor.timeZone = TimeZone(identifier: "UTC")
+        
         for (index, fixDate) in arrFixDates.enumerated() {
             
             timeTag = index
             setAlarm(fixDate, tag: index)
             let dt = formattor.string(from: fixDate)
-            arrSetFixAlarmTime.replaceObject(at: index, with: dt)
+            arrSetFixAlarmTime[index] = dt
         }
         
-        if appDelegate.backvar == "static"
-        {
+        if appDelegate.backvar == "static" {
             self.toggleLeft()
             appDelegate.resettime = "change"
             //setdata()
-        }
-        else
-        {
+        } else {
             imgback.image = UIImage(named: "back2")
             self.navigationController?.popViewController(animated: true)
         }
@@ -211,7 +187,6 @@ final class AlertVCNew: UIViewController {
     @IBAction func btnHomeclick(_ sender: UIButton) {
         
         appDelegate.isAfterReset = false
-        
         
         var arrForSort: [Date] = []
         
@@ -233,7 +208,7 @@ final class AlertVCNew: UIViewController {
             timeTag = index
             setAlarm(date, tag: index)
             let dt = dateFormatter.string(from: date)
-            arrSetFixAlarmTime.replaceObject(at: index, with: dt)
+            arrSetFixAlarmTime[index] = dt
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -271,12 +246,14 @@ extension AlertVCNew: UITableViewDataSource {
         let strDate = dateFormatter.string(from: arrFixDates[indexPath.row])
         cell.lbltimeshow.text = strDate
         cell.lblwaterdescripation.text = calculateWaterPerAlert(alertNumber: indexPath.row + 1)
+        
         cell.txttimer.tag = indexPath.row
+        
         cell.txttimer.delegate = self
         
         cell.txttimer.isEnabled = true
         cell.btnEdit.isEnabled = true
-        cell.imgEdit.image = UIImage(named: "edit")
+        cell.imgEdit.image = R.image.edit()
         
         return cell
     }
@@ -318,15 +295,14 @@ extension AlertVCNew: UITextFieldDelegate {
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         
-        configureDateFormatter(for: textField)
-        
-        arrSetFixAlarmTime.replaceObject(at: timeTag, with: "\(datePickerView.date.localiz)")
         arrFixDates.removeAll()
+        configureDateFormatter(for: textField)
+        arrSetFixAlarmTime[timeTag] = "\(datePickerView.date.dateToTimeZoneString())"
         
         for date in arrSetFixAlarmTime {
             
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
-            let fixDate = dateFormatter.date(from: date as! String)
+            let fixDate = dateFormatter.date(from: date)
             arrFixDates.append(fixDate!)
         }
         
@@ -340,7 +316,7 @@ extension AlertVCNew: iShowcaseDelegate {
     
     private func showFirstTutorialView() {
         
-        showcase.setupShowcaseForTableView(self.tblAlert, withIndexPath: [0,0])
+        showcase.setupShowcaseForTableView(tblAlert, withIndexPath: [0,0])
         showcase.titleLabel.text = "Notifications tell you exactly how much to drink so pay attention! You can edit the notification times here."
         showcase.titleLabel.font = UIFont.avenirMedium17
         showcase.detailsLabel.text = "\n\n\n"

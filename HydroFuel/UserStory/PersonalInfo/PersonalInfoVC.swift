@@ -67,7 +67,6 @@ final class PersonalInfoVC: UIViewController {
         btnmenu.isHidden = appDelegate.isMenuIconHidden
         imgmenu.isHidden = appDelegate.isMenuIconHidden
         updateDisplayedUserData()
-        viewModel.searchDataForUpdate()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -89,9 +88,9 @@ final class PersonalInfoVC: UIViewController {
     
     private func updateDisplayedUserData() {
         
-        lblkg.text = "\(viewModel.user.weight) Kg"
-        guard let gender = Gender(rawValue: viewModel.user.gender),
-            let activity = Activity(rawValue: viewModel.user.activityLevel) else {
+        lblkg.text = "\(viewModel.tmpUserModel.weight) Kg"
+        guard let gender = Gender(rawValue: viewModel.tmpUserModel.gender),
+            let activity = Activity(rawValue: viewModel.tmpUserModel.activityLevel) else {
                 assertionFailure("Unable to get user gender or activity")
             return
         }
@@ -137,6 +136,7 @@ final class PersonalInfoVC: UIViewController {
             //Minus
             currentAmount = max(500, currentAmount - 500)
         }
+        viewModel.tmpUserModel.suggestedWaterLevel = currentAmount
         suggestedWatelVolumeLabel.text = "\(currentAmount)"
         resetValues()
     }
@@ -166,31 +166,31 @@ final class PersonalInfoVC: UIViewController {
             value = slider.maximumValue
         }
         slider.setValue(value, animated: true)
-        viewModel.user.weight = Int(value)
+        viewModel.tmpUserModel.weight = Int(value)
         updateDisplayedUserData()
     }
     
     @IBAction func btnFemale(_ sender: UIButton) {
-        viewModel.user.gender = Gender.female.rawValue
+        viewModel.tmpUserModel.gender = Gender.female.rawValue
         updateDisplayedUserData()
     }
     
     @IBAction func btnselectMale(_ sender: UIButton) {
-        viewModel.user.gender = Gender.male.rawValue
+        viewModel.tmpUserModel.gender = Gender.male.rawValue
         updateDisplayedUserData()
     }
     @IBAction func btnHighClick(_ sender: UIButton) {
-        viewModel.user.activityLevel = Activity.high.rawValue
+        viewModel.tmpUserModel.activityLevel = Activity.high.rawValue
         updateDisplayedUserData()
     }
     
     @IBAction func btnMediumClick(_ sender: UIButton) {
-        viewModel.user.activityLevel = Activity.medium.rawValue
+        viewModel.tmpUserModel.activityLevel = Activity.medium.rawValue
         updateDisplayedUserData()
     }
     
     @IBAction func btnLowClick(_ sender: UIButton) {
-        viewModel.user.activityLevel = Activity.low.rawValue
+        viewModel.tmpUserModel.activityLevel = Activity.low.rawValue
         updateDisplayedUserData()
     }
     
@@ -200,12 +200,9 @@ final class PersonalInfoVC: UIViewController {
             try viewModel.validateInputData()
         } catch {
             AlertPresenter.showMyAlert(at: self, message: error.localizedDescription)
-        }
-        guard let waterLevel = Int(self.suggestedWatelVolumeLabel.text!) else {
-            assertionFailure("Unable to get water level")
             return
         }
-        self.viewModel.updateData(waterLevel)
+        viewModel.updateData()
     }
     
     @IBAction func btnmenuclick(_ sender: UIButton) {
