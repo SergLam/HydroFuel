@@ -15,31 +15,24 @@ import StoreKit
 
 final class HomeVC: UIViewController, AppStoreOpenable {
     
-    @IBOutlet private weak var conBottomWater: NSLayoutConstraint!
     @IBOutlet private weak var demowaterlevel: UILabel!
     @IBOutlet private weak var lblBottleCount: UILabel!
-    @IBOutlet private weak var viewOuter: UIView!
-    @IBOutlet private weak var conTopBlueBG: NSLayoutConstraint!
     
     @IBOutlet private weak var conImgTrailing: NSLayoutConstraint!
-    @IBOutlet private weak var conHeightWaterLeval: NSLayoutConstraint!
     
     @IBOutlet private weak var conImgLeading: NSLayoutConstraint!
     
     @IBOutlet private weak var lblWaterToDrink: UILabel!
-    @IBOutlet private weak var fartuMarkerView: UIView!
     @IBOutlet private weak var lblWaterLavel: UILabel!
     
     @IBOutlet private weak var notifMarkerView: UIView!
     @IBOutlet private weak var lblNotifWaterLavel: UILabel!
-    @IBOutlet private weak var conTopNotifMarker: NSLayoutConstraint!
     
     @IBOutlet private weak var notificationvideDomo: UIView!
     @IBOutlet private weak var btnReset: UIButton!
     @IBOutlet private weak var btnHydrate: UIButton!
     @IBOutlet private weak var conBottomTab: NSLayoutConstraint!
     
-    @IBOutlet private weak var conTopBottleCount: NSLayoutConstraint!
     @IBOutlet private weak var imgBottle: UIImageView!
     @IBOutlet private weak var conTopvideoMarker: NSLayoutConstraint!
     
@@ -64,7 +57,6 @@ final class HomeVC: UIViewController, AppStoreOpenable {
         guard !UserDefaultsManager.shared.isTutorialShown else {
             notificationvideDomo.isHidden = true
             notifMarkerView.isHidden = false
-            fartuMarkerView.isHidden = false
             return
         }
         showFirstTutorialView()
@@ -183,15 +175,12 @@ final class HomeVC: UIViewController, AppStoreOpenable {
         appDelegate.badgeCount = 0
         viewModel.lastCountOfAttempt = 0
         viewModel.bottleCount = 1
-        viewModel.prevWaterLeval = viewOuter.frame.size.height
-        conHeightWaterLeval.constant = viewOuter.frame.size.height
         
         lblBottleCount.text = "Bottle \(viewModel.bottleCount) of \(viewModel.tottleBottle)"
         notifMarkerView.isHidden = true
         lblWaterLavel.text = "\(1000)"
         
         lblNotifWaterLavel.text = ""
-        conTopNotifMarker.constant = -15
         appDelegate.resettime = "reset"
         
         searchDataForUpdate()
@@ -226,16 +215,12 @@ final class HomeVC: UIViewController, AppStoreOpenable {
         appDelegate.badgeCount = 0
         viewModel.lastCountOfAttempt = 0
         viewModel.bottleCount = 1
-        viewModel.prevWaterLeval = viewOuter.frame.size.height
-        
-        conHeightWaterLeval.constant = viewOuter.frame.size.height
         
         lblBottleCount.text = "Bottle \(viewModel.bottleCount) of \(viewModel.tottleBottle)"
         notifMarkerView.isHidden = true
         lblWaterLavel.text = "\(1000)"
         
         lblNotifWaterLavel.text = ""
-        conTopNotifMarker.constant = -15
         appDelegate.resettime = "reset"
         searchDataForUpdate()
     }
@@ -285,7 +270,6 @@ extension HomeVC: iShowcaseDelegate {
             
         default:
             UserDefaultsManager.shared.isTutorialShown = true
-            print("Default")
             //checkForAutoNotif()
             
         }

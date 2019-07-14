@@ -17,6 +17,21 @@ struct R: Rswift.Validatable {
     try intern.validate()
   }
   
+  /// This `R.color` struct is generated, and contains static references to 1 colors.
+  struct color {
+    /// Color `Color`.
+    static let color = Rswift.ColorResource(bundle: R.hostingBundle, name: "Color")
+    
+    /// `UIColor(named: "Color", bundle: ..., traitCollection: ...)`
+    @available(tvOS 11.0, *)
+    @available(iOS 11.0, *)
+    static func color(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIColor? {
+      return UIKit.UIColor(resource: R.color.color, compatibleWith: traitCollection)
+    }
+    
+    fileprivate init() {}
+  }
+  
   /// This `R.font` struct is generated, and contains static references to 3 fonts.
   struct font: Rswift.Validatable {
     /// Font `Avenir-Book`.
@@ -50,7 +65,7 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
   
-  /// This `R.image` struct is generated, and contains static references to 58 images.
+  /// This `R.image` struct is generated, and contains static references to 60 images.
   struct image {
     /// Image `Background`.
     static let background = Rswift.ImageResource(bundle: R.hostingBundle, name: "Background")
@@ -82,6 +97,10 @@ struct R: Rswift.Validatable {
     static let back2 = Rswift.ImageResource(bundle: R.hostingBundle, name: "back2")
     /// Image `backk`.
     static let backk = Rswift.ImageResource(bundle: R.hostingBundle, name: "backk")
+    /// Image `bottle_body`.
+    static let bottle_body = Rswift.ImageResource(bundle: R.hostingBundle, name: "bottle_body")
+    /// Image `bottle_head`.
+    static let bottle_head = Rswift.ImageResource(bundle: R.hostingBundle, name: "bottle_head")
     /// Image `bouder2`.
     static let bouder2 = Rswift.ImageResource(bundle: R.hostingBundle, name: "bouder2")
     /// Image `dottedline`.
@@ -242,6 +261,16 @@ struct R: Rswift.Validatable {
     /// `UIImage(named: "backk", bundle: ..., traitCollection: ...)`
     static func backk(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.backk, compatibleWith: traitCollection)
+    }
+    
+    /// `UIImage(named: "bottle_body", bundle: ..., traitCollection: ...)`
+    static func bottle_body(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.bottle_body, compatibleWith: traitCollection)
+    }
+    
+    /// `UIImage(named: "bottle_head", bundle: ..., traitCollection: ...)`
+    static func bottle_head(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.bottle_head, compatibleWith: traitCollection)
     }
     
     /// `UIImage(named: "bouder2", bundle: ..., traitCollection: ...)`
@@ -652,14 +681,14 @@ struct _R: Rswift.Validatable {
         if UIKit.UIImage(named: "Dotted Line", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'Dotted Line' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "Slab Button", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'Slab Button' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "backk", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'backk' is used in storyboard 'Main', but couldn't be loaded.") }
-        if UIKit.UIImage(named: "bouder2", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'bouder2' is used in storyboard 'Main', but couldn't be loaded.") }
+        if UIKit.UIImage(named: "bottle_body", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'bottle_body' is used in storyboard 'Main', but couldn't be loaded.") }
+        if UIKit.UIImage(named: "bottle_head", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'bottle_head' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "femalebuttonblack", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'femalebuttonblack' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "footer_help", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'footer_help' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "footer_history", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'footer_history' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "footer_star", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'footer_star' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "footernew", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'footernew' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "home1", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'home1' is used in storyboard 'Main', but couldn't be loaded.") }
-        if UIKit.UIImage(named: "ios21", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'ios21' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "malebuttonblack", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'malebuttonblack' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "menu", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'menu' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "menuiconnew", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'menuiconnew' is used in storyboard 'Main', but couldn't be loaded.") }
@@ -667,7 +696,6 @@ struct _R: Rswift.Validatable {
         if UIKit.UIImage(named: "runningbuttonblack", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'runningbuttonblack' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "standingbuttonblack", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'standingbuttonblack' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "statistics.PNG (1)", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'statistics.PNG (1)' is used in storyboard 'Main', but couldn't be loaded.") }
-        if UIKit.UIImage(named: "toboudernew", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'toboudernew' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "walkingbuttonblack", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'walkingbuttonblack' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "waterDrop", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'waterDrop' is used in storyboard 'Main', but couldn't be loaded.") }
         if #available(iOS 11.0, *) {

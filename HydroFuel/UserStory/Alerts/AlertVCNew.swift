@@ -188,10 +188,6 @@ extension AlertVCNew: UITableViewDataSource {
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
         let strDate = dateFormatter.string(from: viewModel.tmpAlarmDates[indexPath.row])
         cell.lbltimeshow.text = strDate
-        // "Finish the bottle, refill and drink to the 950 ml mark!"
-//        "Finish the bottle. Congratulations you’re done for the day!"
-//        if appDelegate.isFirstNotif == true - "Drink down to the " + "\(1000 - (str * alertNumber))" + "ml mark, Open the App and Tap “Hydrate”"
-//        "Drink down to the " + "\(bottleToRefil - data)" + "ml mark right now!"
         cell.lblwaterdescripation.text = calculateWaterPerAlert(rowIndex: indexPath.row)
         
         cell.txttimer.tag = indexPath.row
