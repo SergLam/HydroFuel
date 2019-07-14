@@ -120,8 +120,10 @@ final class PersonalInfoVC: UIViewController {
         let newWaterLevel = Int(Double(slider.value) * Double(genderRation) * 100)
         if newWaterLevel < 500 {
             suggestedWatelVolumeLabel.text = "\(500)"
+            viewModel.tmpUserModel.suggestedWaterLevel = 500
         } else {
             let roundValue = Int(newWaterLevel / 500) * 500
+            viewModel.tmpUserModel.suggestedWaterLevel = roundValue
             suggestedWatelVolumeLabel.text = "\(roundValue)"
         }
         

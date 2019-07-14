@@ -36,6 +36,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         IQKeyboardManager.shared.enable = true
         UNUserNotificationCenter.current().delegate = self
+        if UserDefaultsManager.shared.isFirstNotification == nil {
+            UserDefaultsManager.shared.isFirstNotification = true
+        }
+        
         requestPermissionForAlerts()
         
         if DataManager.shared.currentUser == nil {
@@ -78,6 +82,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     // Called when user cancel, open or select notification action
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         // TODO: update database values here
+        
         completionHandler()
     }
     
@@ -89,7 +94,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             return
         }
         UIApplication.shared.applicationIconBadgeNumber = badgeCount
-        // TODO: update database values here
+        UserDefaultsManager.shared.isFirstNotification = false
         completionHandler([.alert, .badge, .sound])
         self.badgeCount = badgeCount
     }

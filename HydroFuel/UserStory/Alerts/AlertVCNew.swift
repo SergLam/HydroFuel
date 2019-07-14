@@ -51,75 +51,85 @@ final class AlertVCNew: UIViewController {
         lastSelectedDate = sender.date
     }
     
-    func calculateWaterPerAlert(alertNumber: Int) -> String {
-        return ""
-//        if str * alertNumber < 1000{
-//            if UserDefaultsManager.shared.isFirstNotification == true {
-//                let text = "Drink down to the " + "\(1000 - (str * alertNumber))" + "ml mark, Open the App and Tap “Hydrate”"
-//                return text
-//            } else{
-//                if alertNumber == 10
-//                {
-//                    let text = "Finish the bottle. Congratulations you’re done for the day!"
-//                    return text
-//
-//                }else{
-//                    let data = (str * alertNumber) % 1000
-//                    let totalWater = str * 10
-//                    if (str * alertNumber) > totalWater - ((totalWater % 1000)){
-//                        let bottleToRefil = ((10 - alertNumber) * str) + data
-//                        let text = "Drink down to the " + "\(bottleToRefil - data)" + "ml mark right now!"
-//                        return text
-//                    }else{
-//                        let text = "Drink down to the " + "\(1000 - (str * alertNumber))" + "ml mark right now!"
-//                        return text
-//                    }
-//                }
-//
-//            }
-//        }else {
-//            let data = (str * alertNumber) % 1000
-//            if 1000 - data > str && (1000 - data) + str > 1000{
-//
-//                if alertNumber == 10
-//                {
-//                    let text = "Finish the bottle. Congratulations you’re done for the day!"
-//                    return text
-//
-//                }else{
-//                    let totalWater = str * 10
-//                    if (str * alertNumber) > totalWater - ((totalWater % 1000)){
-//                        let bottleToRefil = ((10 - alertNumber) * str) + data
-//                        let text = "Finish the bottle, refill to the " + "\(bottleToRefil) ml mark! " + "and drink to the " + "\(bottleToRefil - data)" + "ml mark!"
-//                        return text
-//                    }
-//                    let text = "Finish the bottle, refill and drink to the " + "\(1000 - data)" + "ml mark!"
-//                    return text
-//                }
-//
-//            }
-//
-//            else{
-//                if alertNumber == 10
-//                {
-//                    let text = "Finish the bottle. Congratulations you’re done for the day!"
-//                    return text
-//
-//                }else{
-//                    let data = (str * alertNumber) % 1000
-//                    let totalWater = str * 10
-//                    if (str * alertNumber) > totalWater - ((totalWater % 1000)){
-//                        let bottleToRefil = ((10 - alertNumber) * str) + data
-//                        let text = "Drink down to the " + "\(bottleToRefil - data)" + "ml mark right now!"
-//                        return text
-//                    }else{
-//                        let text = "Drink down to the " + "\(1000 - data)" + "ml mark right now!"
-//                        return text
-//                    }
-//                }
-//
-//            }
-//        }
+    func calculateWaterPerAlert(rowIndex: Int) -> String {
+        
+        let alertTimeForIndex = viewModel.tmpAlarmDates[rowIndex]
+        
+        let sortedTimes = viewModel.tmpAlarmDates.sorted { return $0 < $1 }
+        let sortedWaterLevels = viewModel.tmpAlarmDates.sorted { return $0 < $1 }
+        var sortedInstructions = Array<String>()
+        
+        guard let totalDrink = viewModel.user?.suggestedWaterLevel else {
+            preconditionFailure("User object should not be nil")
+        }
+        let waterPerAttempt = Int(totalDrink / 10)
+        
+        var drinkedBottles: Int = 0
+        var currentBottleWaterLevel: Int = 1000
+        var bottleVolume: Int = 1000
+        
+        // Sub-function to reduce code duplicates
+        func createInstructionForNonFirstNotification(index: Int) -> String {
+            let value = currentBottleWaterLevel - waterPerAttempt
+            
+            if value > 0 {
+                currentBottleWaterLevel = value
+                
+                if drinkedBottles * bottleVolume >= totalDrink || index == 9 {
+                    return "Drink down to the " + "\(value)" + "ml mark right now.\nCongratulations you’re done for the day!"
+                } else {
+                    return "Drink down to the " + "\(value)" + "ml mark right now!"
+                }
+            } else {
+                currentBottleWaterLevel = bottleVolume - abs(value)
+                drinkedBottles += 1
+                
+                if drinkedBottles * bottleVolume >= totalDrink || index == 9 {
+                    return "Finish the bottle. Congratulations you’re done for the day!"
+                } else {
+                    return "Finish the bottle, refill and drink to the \(currentBottleWaterLevel) ml mark!"
+                }
+            }
+        }
+        
+        for index in 0...9 {
+            if UserDefaultsManager.shared.isFirstNotification == true {
+                
+                if drinkedBottles == 0 {
+                    let value = currentBottleWaterLevel - waterPerAttempt
+                    
+                    if value > 0 {
+                        sortedInstructions.append("Drink down to the " + "\(value)" + "ml mark, Open the App and Tap “Hydrate”")
+                        currentBottleWaterLevel = value
+                        continue
+                    } else {
+                        currentBottleWaterLevel = bottleVolume - abs(value)
+                        drinkedBottles += 1
+                        sortedInstructions.append("Finish the bottle, refill and drink to the \(currentBottleWaterLevel) ml mark!")
+                        continue
+                    }
+                    
+                } else {
+                    
+                    sortedInstructions.append(createInstructionForNonFirstNotification(index: index))
+                    continue
+                }
+              
+            } else {
+                sortedInstructions.append(createInstructionForNonFirstNotification(index: index))
+                continue
+            }
+        }
+        // Search in sorted dates array and return some value
+        for (index, date) in sortedTimes.enumerated() {
+            if date == alertTimeForIndex {
+                return sortedInstructions[index]
+            }
+        }
+        preconditionFailure("Cannot find record for requested index")
+        
+       
+        
     }
     
     @IBAction func btnMenu(_ sender: UIButton) {
@@ -130,7 +140,7 @@ final class AlertVCNew: UIViewController {
         if appDelegate.backvar == "static" {
             self.toggleLeft()
             appDelegate.resettime = "change"
-            //setdata()
+            viewModel.saveAlarmTimes()
         } else {
             imgback.image = UIImage(named: "back2")
             self.navigationController?.popViewController(animated: true)
@@ -145,7 +155,7 @@ final class AlertVCNew: UIViewController {
         viewModel.saveAlarmTimes()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            let vc = self.storyboard?.instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
+            let vc = AppRouter.createHomeVC()
             self.appDelegate.resettime = "change"
             self.navigationController?.pushViewController(vc, animated: true)
         }
@@ -154,7 +164,7 @@ final class AlertVCNew: UIViewController {
     func setAlarm(_ setDate: Date, tag: Int) {
         
         let info: [String : Any] = ["Name" : "Parth", "Badge": timeTag + 1]
-        let body = calculateWaterPerAlert(alertNumber: tag + 1)
+        let body = calculateWaterPerAlert(rowIndex: tag)
         LocalNotificationsService.enqueueLocalNotification(body: body, badge: tag + 1,
                                                            info: info, toDate: setDate)
     }
@@ -178,7 +188,11 @@ extension AlertVCNew: UITableViewDataSource {
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
         let strDate = dateFormatter.string(from: viewModel.tmpAlarmDates[indexPath.row])
         cell.lbltimeshow.text = strDate
-        cell.lblwaterdescripation.text = calculateWaterPerAlert(alertNumber: indexPath.row + 1)
+        // "Finish the bottle, refill and drink to the 950 ml mark!"
+//        "Finish the bottle. Congratulations you’re done for the day!"
+//        if appDelegate.isFirstNotif == true - "Drink down to the " + "\(1000 - (str * alertNumber))" + "ml mark, Open the App and Tap “Hydrate”"
+//        "Drink down to the " + "\(bottleToRefil - data)" + "ml mark right now!"
+        cell.lblwaterdescripation.text = calculateWaterPerAlert(rowIndex: indexPath.row)
         
         cell.txttimer.tag = indexPath.row
         

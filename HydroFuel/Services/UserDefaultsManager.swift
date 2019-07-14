@@ -22,6 +22,15 @@ final class UserDefaultsManager {
             defaults.set(newValue, forKey: #function)
         }
     }
+    
+    var isFirstNotification: Bool? {
+        get {
+            return defaults.value(forKey: #function) as? Bool
+        }
+        set {
+            defaults.set(newValue, forKey: #function)
+        }
+    }
         
 }
 
