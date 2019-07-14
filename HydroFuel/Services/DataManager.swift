@@ -26,6 +26,10 @@ final class DataManager {
         return realm.objects(User.self).first
     }
     
+    var alarmTimes: AlarmTimes? {
+        return realm.objects(AlarmTimes.self).first
+    }
+    
     func write<T: Object>(value: [T]) {
         do {
             try realm.write { realm.add(value) }

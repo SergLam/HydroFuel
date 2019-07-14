@@ -35,29 +35,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         IQKeyboardManager.shared.enable = true
-        
         UNUserNotificationCenter.current().delegate = self
+        if UserDefaultsManager.shared.isFirstNotification == nil {
+            UserDefaultsManager.shared.isFirstNotification = true
+        }
         
         requestPermissionForAlerts()
-        let storyboard1: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         
-        
-        guard let homeVC = storyboard1.instantiateViewController(withIdentifier: "HomeVC") as? HomeVC else {
-            preconditionFailure("Unable to instantiateViewController")
+        if DataManager.shared.currentUser == nil {
+            
+            isMenuIconHidden = true
+            AppRouter.setupAppRootVC(mainVC: AppRouter.createPersonalInfoVC())
+            
+        } else if DataManager.shared.alarmTimes == nil {
+            
+            AppRouter.setupAppRootVC(mainVC: AppRouter.createAlertVC())
+        } else {
+            AppRouter.setupAppRootVC(mainVC: AppRouter.createHomeVC())
         }
-        AppRouter.setupAppRootVC(mainVC: homeVC)
-        
-        guard let alertVC = storyboard1.instantiateViewController(withIdentifier: "AlertVCNew") as? AlertVCNew else {
-            preconditionFailure("Unable to instantiateViewController")
-        }
-        AppRouter.setupAppRootVC(mainVC: alertVC)
-        
-        isMenuIconHidden = true
-        guard let personalInfoVC = storyboard1.instantiateViewController(withIdentifier: "PersonalInfoVC") as? PersonalInfoVC else {
-            preconditionFailure("Unable to instantiateViewController")
-        }
-        AppRouter.setupAppRootVC(mainVC: personalInfoVC)
-        
         return true
     }
     
@@ -87,6 +82,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     // Called when user cancel, open or select notification action
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         // TODO: update database values here
+        
         completionHandler()
     }
     
@@ -98,7 +94,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             return
         }
         UIApplication.shared.applicationIconBadgeNumber = badgeCount
-        // TODO: update database values here
+        UserDefaultsManager.shared.isFirstNotification = false
         completionHandler([.alert, .badge, .sound])
         self.badgeCount = badgeCount
     }

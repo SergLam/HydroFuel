@@ -14,15 +14,16 @@ final class MyStatisticVC: UIViewController {
     @IBOutlet private weak var lblnineteendays: UILabel!
     @IBOutlet private weak var lblthirteendays: UILabel!
     @IBOutlet private weak var lblsevendays: UILabel!
-    var DateArr = [String]()
-    
-    var unitsSold = [Double]()
-    private weak var axisFormatDelegate: IAxisValueFormatter?
     @IBOutlet private weak var imgback: UIImageView!
     @IBOutlet private weak var linechart: LineChartView!
-    var arrDates = NSMutableArray()
-    var arrDataForDates = NSMutableArray()
-    var arrtotal = NSMutableArray()
+    
+    var DateArr = [String]()
+    var unitsSold = [Double]()
+    private weak var axisFormatDelegate: IAxisValueFormatter?
+    
+    var arrDates = Array<String>()
+    var arrDataForDates = Array<String>()
+    var arrtotal = Array<String>()
     let months = ["15-Aug-2017","20-Aug-2017"]
     let dataofy = [1900,190]
     var arrShowDates: [String] = []
@@ -38,16 +39,17 @@ final class MyStatisticVC: UIViewController {
             dateFormatter.dateFormat = "yyyy-MM-dd"
             dateFormatter.timeZone = TimeZone(identifier: "UTC")
             let strDate = dateFormatter.string(from: today)
-            print(strDate)
+            
             let Day = Calendar.current.date(byAdding: .day, value: -1, to: today)
             let Yesterday = dateFormatter.string(from: Day!)
-            let arrDatesForGraph = NSMutableArray()
-            arrDatesForGraph.add(Yesterday)
-            arrDatesForGraph.add(strDate)
+            var arrDatesForGraph = Array<String>()
+            arrDatesForGraph.append(Yesterday)
+            arrDatesForGraph.append(strDate)
+            
             arrDates = arrDatesForGraph
             for i in 0..<arrDates.count {
-                searchDataForProgress(strDate: arrDates[i] as! String)
-                let date = (arrDates[i] as! String).components(separatedBy: "-")
+                searchDataForProgress(strDate: arrDates[i])
+                let date = (arrDates[i]).components(separatedBy: "-")
                 arrShowDates.append("\(date[1])-\(date[2])")
                 if i == arrDates.count - 1 {
                     // self.setChartData(months: arrShowDates)
@@ -56,8 +58,8 @@ final class MyStatisticVC: UIViewController {
         }else{
             
             for i in 0..<arrDates.count {
-                searchDataForProgress(strDate: arrDates[i] as! String)
-                let date = (arrDates[i] as! String).components(separatedBy: "-")
+                searchDataForProgress(strDate: arrDates[i])
+                let date = (arrDates[i]).components(separatedBy: "-")
                 arrShowDates.append("\(date[1])-\(date[2])")
                 
                 if i == arrDates.count - 1 {
@@ -186,7 +188,7 @@ final class MyStatisticVC: UIViewController {
         
         let totalWater = TOTALATTEMPT * WATERQTYPERATTEMPT
         
-        arrDataForDates.add(totalWater)
+        arrDataForDates.append(String(totalWater))
     }
     
     func showData() {

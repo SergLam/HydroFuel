@@ -38,10 +38,24 @@ class User: Object {
         user.suggestedWaterLevel = 2500
         return user
     }
+    
+    func update(user: User) {
+        
+        if user.gender != Gender.undefined.rawValue {
+            gender = user.gender
+        }
+        if user.activityLevel != Activity.undefined.rawValue {
+            activityLevel = user.activityLevel
+        }
+        weight = user.weight
+        suggestedWaterLevel = user.suggestedWaterLevel
+    }
+    
 }
 
 enum Gender: String {
     
+    case undefined = "undefined"
     case male = "male"
     case female = "female"
 }

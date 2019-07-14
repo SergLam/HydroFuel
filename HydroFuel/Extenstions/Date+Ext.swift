@@ -37,4 +37,12 @@ extension Date {
         return dateFormatter.string(from: today)
     }
     
+    func dateToTimeZoneString() -> String {
+        let dateFormatter = DateFormatter()
+        let today = self.toLocalTime()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        return dateFormatter.string(from: today)
+    }
+    
 }

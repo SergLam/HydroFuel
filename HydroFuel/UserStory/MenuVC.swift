@@ -54,18 +54,13 @@ extension MenuVC: UITableViewDataSource {
             preconditionFailure("Unable to dequeueReusableCell")
         }
         
+        let cellIsActive = appDelegate.menuName == arrayname[indexPath.row]
+        
         cell.lblname.text = arrayname[indexPath.row]
-        cell.imgview.image = arrayimg[indexPath.row]
+        cell.lblname.textColor = cellIsActive ? UIColor.bgcolor : UIColor.black
+        cell.imgview.image = cellIsActive ? arrayimgblue[indexPath.row] : arrayimg[indexPath.row]
         
         cell.lineview.isHidden = indexPath.row != 3
-        
-        if appDelegate.menuName == arrayname[indexPath.row] {
-            cell.lblname.textColor = UIColor.bgcolor
-            cell.imgview.image = arrayimgblue[indexPath.row]
-        } else {
-            cell.lblname.textColor = UIColor.black
-            cell.imgview.image = arrayimg[indexPath.row]
-        }
         return cell
     }
     
