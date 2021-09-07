@@ -36,7 +36,7 @@ enum UserDataError: Error, LocalizedError {
     
 }
 
-protocol PersonalInfoVMDelegate: class {
+protocol PersonalInfoVMDelegate: AnyObject {
     
     func shouldPushController(vc: UIViewController)
 }

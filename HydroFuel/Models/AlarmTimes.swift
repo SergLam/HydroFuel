@@ -28,14 +28,8 @@ class AlarmTimes: Object {
     
     static func defaultModel() -> AlarmTimes {
         
-        let object = self.init()
-        object.alarms.removeAll()
-        object.waterLevels.removeAll()
-        
         let hours: [Int] = [8, 9, 11, 13, 15, 17, 19, 20, 21, 23]
         let minutes: [Int] = [30, 30, 30, 0, 30, 30, 30, 30, 30, 0]
-        
-        
         let user = DataManager.shared.currentUser ?? User.defaultUserModel()
         let waterPerAttempt = user.suggestedWaterLevel / 10
         
@@ -51,9 +45,8 @@ class AlarmTimes: Object {
             defaultWaterLevels.append(waterPerAttempt * (10 - i))
             defaultDates.append(date)
         }
-        object.alarms.append(objectsIn: defaultDates)
-        object.waterLevels.append(objectsIn: defaultWaterLevels)
-        return object
+        
+        return AlarmTimes(alarmTimes: defaultDates, waterLevels: defaultWaterLevels)
     }
 
 }

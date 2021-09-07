@@ -66,7 +66,7 @@ final class AlertVCNew: UIViewController {
         
         var drinkedBottles: Int = 0
         var currentBottleWaterLevel: Int = 1000
-        var bottleVolume: Int = 1000
+        let bottleVolume: Int = 1000
         
         // Sub-function to reduce code duplicates
         func createInstructionForNonFirstNotification(index: Int) -> String {

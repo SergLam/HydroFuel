@@ -9,29 +9,167 @@ import UIKit
 
 /// This `R` struct is generated and contains references to static resources.
 struct R: Rswift.Validatable {
-  fileprivate static let applicationLocale = hostingBundle.preferredLocalizations.first.flatMap(Locale.init) ?? Locale.current
+  fileprivate static let applicationLocale = hostingBundle.preferredLocalizations.first.flatMap { Locale(identifier: $0) } ?? Locale.current
   fileprivate static let hostingBundle = Bundle(for: R.Class.self)
-  
+
+  /// Find first language and bundle for which the table exists
+  fileprivate static func localeBundle(tableName: String, preferredLanguages: [String]) -> (Foundation.Locale, Foundation.Bundle)? {
+    // Filter preferredLanguages to localizations, use first locale
+    var languages = preferredLanguages
+      .map { Locale(identifier: $0) }
+      .prefix(1)
+      .flatMap { locale -> [String] in
+        if hostingBundle.localizations.contains(locale.identifier) {
+          if let language = locale.languageCode, hostingBundle.localizations.contains(language) {
+            return [locale.identifier, language]
+          } else {
+            return [locale.identifier]
+          }
+        } else if let language = locale.languageCode, hostingBundle.localizations.contains(language) {
+          return [language]
+        } else {
+          return []
+        }
+      }
+
+    // If there's no languages, use development language as backstop
+    if languages.isEmpty {
+      if let developmentLocalization = hostingBundle.developmentLocalization {
+        languages = [developmentLocalization]
+      }
+    } else {
+      // Insert Base as second item (between locale identifier and languageCode)
+      languages.insert("Base", at: 1)
+
+      // Add development language as backstop
+      if let developmentLocalization = hostingBundle.developmentLocalization {
+        languages.append(developmentLocalization)
+      }
+    }
+
+    // Find first language for which table exists
+    // Note: key might not exist in chosen language (in that case, key will be shown)
+    for language in languages {
+      if let lproj = hostingBundle.url(forResource: language, withExtension: "lproj"),
+         let lbundle = Bundle(url: lproj)
+      {
+        let strings = lbundle.url(forResource: tableName, withExtension: "strings")
+        let stringsdict = lbundle.url(forResource: tableName, withExtension: "stringsdict")
+
+        if strings != nil || stringsdict != nil {
+          return (Locale(identifier: language), lbundle)
+        }
+      }
+    }
+
+    // If table is available in main bundle, don't look for localized resources
+    let strings = hostingBundle.url(forResource: tableName, withExtension: "strings", subdirectory: nil, localization: nil)
+    let stringsdict = hostingBundle.url(forResource: tableName, withExtension: "stringsdict", subdirectory: nil, localization: nil)
+
+    if strings != nil || stringsdict != nil {
+      return (applicationLocale, hostingBundle)
+    }
+
+    // If table is not found for requested languages, key will be shown
+    return nil
+  }
+
+  /// Load string from Info.plist file
+  fileprivate static func infoPlistString(path: [String], key: String) -> String? {
+    var dict = hostingBundle.infoDictionary
+    for step in path {
+      guard let obj = dict?[step] as? [String: Any] else { return nil }
+      dict = obj
+    }
+    return dict?[key] as? String
+  }
+
   static func validate() throws {
     try font.validate()
     try intern.validate()
   }
-  
+
+  #if os(iOS) || os(tvOS)
+  /// This `R.storyboard` struct is generated, and contains static references to 2 storyboards.
+  struct storyboard {
+    /// Storyboard `LaunchScreen`.
+    static let launchScreen = _R.storyboard.launchScreen()
+    /// Storyboard `Main`.
+    static let main = _R.storyboard.main()
+
+    #if os(iOS) || os(tvOS)
+    /// `UIStoryboard(name: "LaunchScreen", bundle: ...)`
+    static func launchScreen(_: Void = ()) -> UIKit.UIStoryboard {
+      return UIKit.UIStoryboard(resource: R.storyboard.launchScreen)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIStoryboard(name: "Main", bundle: ...)`
+    static func main(_: Void = ()) -> UIKit.UIStoryboard {
+      return UIKit.UIStoryboard(resource: R.storyboard.main)
+    }
+    #endif
+
+    fileprivate init() {}
+  }
+  #endif
+
   /// This `R.color` struct is generated, and contains static references to 1 colors.
   struct color {
     /// Color `Color`.
     static let color = Rswift.ColorResource(bundle: R.hostingBundle, name: "Color")
-    
+
+    #if os(iOS) || os(tvOS)
     /// `UIColor(named: "Color", bundle: ..., traitCollection: ...)`
     @available(tvOS 11.0, *)
     @available(iOS 11.0, *)
     static func color(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIColor? {
       return UIKit.UIColor(resource: R.color.color, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(watchOS)
+    /// `UIColor(named: "Color", bundle: ..., traitCollection: ...)`
+    @available(watchOSApplicationExtension 4.0, *)
+    static func color(_: Void = ()) -> UIKit.UIColor? {
+      return UIKit.UIColor(named: R.color.color.name)
+    }
+    #endif
+
     fileprivate init() {}
   }
-  
+
+  /// This `R.file` struct is generated, and contains static references to 3 files.
+  struct file {
+    /// Resource file `Avenir-Book.ttf`.
+    static let avenirBookTtf = Rswift.FileResource(bundle: R.hostingBundle, name: "Avenir-Book", pathExtension: "ttf")
+    /// Resource file `Avenir-Light.ttf`.
+    static let avenirLightTtf = Rswift.FileResource(bundle: R.hostingBundle, name: "Avenir-Light", pathExtension: "ttf")
+    /// Resource file `Avenir-Roman.ttf`.
+    static let avenirRomanTtf = Rswift.FileResource(bundle: R.hostingBundle, name: "Avenir-Roman", pathExtension: "ttf")
+
+    /// `bundle.url(forResource: "Avenir-Book", withExtension: "ttf")`
+    static func avenirBookTtf(_: Void = ()) -> Foundation.URL? {
+      let fileResource = R.file.avenirBookTtf
+      return fileResource.bundle.url(forResource: fileResource)
+    }
+
+    /// `bundle.url(forResource: "Avenir-Light", withExtension: "ttf")`
+    static func avenirLightTtf(_: Void = ()) -> Foundation.URL? {
+      let fileResource = R.file.avenirLightTtf
+      return fileResource.bundle.url(forResource: fileResource)
+    }
+
+    /// `bundle.url(forResource: "Avenir-Roman", withExtension: "ttf")`
+    static func avenirRomanTtf(_: Void = ()) -> Foundation.URL? {
+      let fileResource = R.file.avenirRomanTtf
+      return fileResource.bundle.url(forResource: fileResource)
+    }
+
+    fileprivate init() {}
+  }
+
   /// This `R.font` struct is generated, and contains static references to 3 fonts.
   struct font: Rswift.Validatable {
     /// Font `Avenir-Book`.
@@ -40,31 +178,31 @@ struct R: Rswift.Validatable {
     static let avenirLight = Rswift.FontResource(fontName: "Avenir-Light")
     /// Font `Avenir-Roman`.
     static let avenirRoman = Rswift.FontResource(fontName: "Avenir-Roman")
-    
+
     /// `UIFont(name: "Avenir-Book", size: ...)`
     static func avenirBook(size: CGFloat) -> UIKit.UIFont? {
       return UIKit.UIFont(resource: avenirBook, size: size)
     }
-    
+
     /// `UIFont(name: "Avenir-Light", size: ...)`
     static func avenirLight(size: CGFloat) -> UIKit.UIFont? {
       return UIKit.UIFont(resource: avenirLight, size: size)
     }
-    
+
     /// `UIFont(name: "Avenir-Roman", size: ...)`
     static func avenirRoman(size: CGFloat) -> UIKit.UIFont? {
       return UIKit.UIFont(resource: avenirRoman, size: size)
     }
-    
+
     static func validate() throws {
       if R.font.avenirBook(size: 42) == nil { throw Rswift.ValidationError(description:"[R.swift] Font 'Avenir-Book' could not be loaded, is 'Avenir-Book.ttf' added to the UIAppFonts array in this targets Info.plist?") }
       if R.font.avenirLight(size: 42) == nil { throw Rswift.ValidationError(description:"[R.swift] Font 'Avenir-Light' could not be loaded, is 'Avenir-Light.ttf' added to the UIAppFonts array in this targets Info.plist?") }
       if R.font.avenirRoman(size: 42) == nil { throw Rswift.ValidationError(description:"[R.swift] Font 'Avenir-Roman' could not be loaded, is 'Avenir-Roman.ttf' added to the UIAppFonts array in this targets Info.plist?") }
     }
-    
+
     fileprivate init() {}
   }
-  
+
   /// This `R.image` struct is generated, and contains static references to 60 images.
   struct image {
     /// Image `Background`.
@@ -187,340 +325,440 @@ struct R: Rswift.Validatable {
     static let walkingbuttonblue = Rswift.ImageResource(bundle: R.hostingBundle, name: "walkingbuttonblue")
     /// Image `waterDrop`.
     static let waterDrop = Rswift.ImageResource(bundle: R.hostingBundle, name: "waterDrop")
-    
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "Background", bundle: ..., traitCollection: ...)`
     static func background(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.background, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "Brand Name", bundle: ..., traitCollection: ...)`
     static func brandName(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.brandName, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "Done Button", bundle: ..., traitCollection: ...)`
     static func doneButton(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.doneButton, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "Dotted Line", bundle: ..., traitCollection: ...)`
     static func dottedLine(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.dottedLine, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "Go To Hom Button", bundle: ..., traitCollection: ...)`
     static func goToHomButton(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.goToHomButton, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "Grey Button", bundle: ..., traitCollection: ...)`
     static func greyButton(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.greyButton, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "HeaderBanner", bundle: ..., traitCollection: ...)`
     static func headerBanner(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.headerBanner, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "King Button", bundle: ..., traitCollection: ...)`
     static func kingButton(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.kingButton, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "Running Button", bundle: ..., traitCollection: ...)`
     static func runningButton(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.runningButton, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "Settings Button", bundle: ..., traitCollection: ...)`
     static func settingsButton(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.settingsButton, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "Slab Button", bundle: ..., traitCollection: ...)`
     static func slabButton(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.slabButton, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "alarm", bundle: ..., traitCollection: ...)`
     static func alarm(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.alarm, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "alarm_selected", bundle: ..., traitCollection: ...)`
     static func alarm_selected(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.alarm_selected, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "back2", bundle: ..., traitCollection: ...)`
     static func back2(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.back2, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "backk", bundle: ..., traitCollection: ...)`
     static func backk(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.backk, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "bottle_body", bundle: ..., traitCollection: ...)`
     static func bottle_body(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.bottle_body, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "bottle_head", bundle: ..., traitCollection: ...)`
     static func bottle_head(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.bottle_head, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "bouder2", bundle: ..., traitCollection: ...)`
     static func bouder2(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.bouder2, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "dottedline", bundle: ..., traitCollection: ...)`
     static func dottedline(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.dottedline, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "edit", bundle: ..., traitCollection: ...)`
     static func edit(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.edit, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "editdisable", bundle: ..., traitCollection: ...)`
     static func editdisable(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.editdisable, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "femalebuttonblack", bundle: ..., traitCollection: ...)`
     static func femalebuttonblack(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.femalebuttonblack, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "femalebuttonblue", bundle: ..., traitCollection: ...)`
     static func femalebuttonblue(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.femalebuttonblue, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "footer", bundle: ..., traitCollection: ...)`
     static func footer(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.footer, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "footer_help", bundle: ..., traitCollection: ...)`
     static func footer_help(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.footer_help, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "footer_history", bundle: ..., traitCollection: ...)`
     static func footer_history(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.footer_history, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "footer_star", bundle: ..., traitCollection: ...)`
     static func footer_star(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.footer_star, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "footernew", bundle: ..., traitCollection: ...)`
     static func footernew(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.footernew, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "graph", bundle: ..., traitCollection: ...)`
     static func graph(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.graph, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "graphblue", bundle: ..., traitCollection: ...)`
     static func graphblue(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.graphblue, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "help", bundle: ..., traitCollection: ...)`
     static func help(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.help, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "history", bundle: ..., traitCollection: ...)`
     static func history(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.history, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "historyblue", bundle: ..., traitCollection: ...)`
     static func historyblue(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.historyblue, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "home1", bundle: ..., traitCollection: ...)`
     static func home1(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.home1, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "homeblue", bundle: ..., traitCollection: ...)`
     static func homeblue(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.homeblue, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "homeimg", bundle: ..., traitCollection: ...)`
     static func homeimg(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.homeimg, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "ios21", bundle: ..., traitCollection: ...)`
     static func ios21(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.ios21, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "lbs Button", bundle: ..., traitCollection: ...)`
     static func lbsButton(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.lbsButton, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "line", bundle: ..., traitCollection: ...)`
     static func line(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.line, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "malebuttonblack", bundle: ..., traitCollection: ...)`
     static func malebuttonblack(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.malebuttonblack, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "malebuttonblue", bundle: ..., traitCollection: ...)`
     static func malebuttonblue(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.malebuttonblue, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "menu", bundle: ..., traitCollection: ...)`
     static func menu(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.menu, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "menuiconnew", bundle: ..., traitCollection: ...)`
     static func menuiconnew(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.menuiconnew, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "personal", bundle: ..., traitCollection: ...)`
     static func personal(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.personal, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "rateandreview", bundle: ..., traitCollection: ...)`
     static func rateandreview(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.rateandreview, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "refresh", bundle: ..., traitCollection: ...)`
     static func refresh(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.refresh, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "round1", bundle: ..., traitCollection: ...)`
     static func round1(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.round1, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "runningbuttonblack", bundle: ..., traitCollection: ...)`
     static func runningbuttonblack(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.runningbuttonblack, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "runningbuttonblue", bundle: ..., traitCollection: ...)`
     static func runningbuttonblue(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.runningbuttonblue, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "settingblue", bundle: ..., traitCollection: ...)`
     static func settingblue(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.settingblue, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "shoppingcartblack", bundle: ..., traitCollection: ...)`
     static func shoppingcartblack(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.shoppingcartblack, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "shoppingcartblue", bundle: ..., traitCollection: ...)`
     static func shoppingcartblue(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.shoppingcartblue, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "splashscreen", bundle: ..., traitCollection: ...)`
     static func splashscreen(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.splashscreen, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "standingbuttonblack", bundle: ..., traitCollection: ...)`
     static func standingbuttonblack(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.standingbuttonblack, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "standingbuttonblue", bundle: ..., traitCollection: ...)`
     static func standingbuttonblue(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.standingbuttonblue, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "statistics.PNG (1)", bundle: ..., traitCollection: ...)`
     static func statisticsPNG1(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.statisticsPNG1, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "toboudernew", bundle: ..., traitCollection: ...)`
     static func toboudernew(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.toboudernew, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "walkingbuttonblack", bundle: ..., traitCollection: ...)`
     static func walkingbuttonblack(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.walkingbuttonblack, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "walkingbuttonblue", bundle: ..., traitCollection: ...)`
     static func walkingbuttonblue(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.walkingbuttonblue, compatibleWith: traitCollection)
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "waterDrop", bundle: ..., traitCollection: ...)`
     static func waterDrop(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.waterDrop, compatibleWith: traitCollection)
     }
-    
+    #endif
+
     fileprivate init() {}
   }
-  
+
   /// This `R.reuseIdentifier` struct is generated, and contains static references to 2 reuse identifiers.
   struct reuseIdentifier {
     /// Reuse identifier `alertCell`.
     static let alertCell: Rswift.ReuseIdentifier<alertCell> = Rswift.ReuseIdentifier(identifier: "alertCell")
     /// Reuse identifier `cell1`.
     static let cell1: Rswift.ReuseIdentifier<menucell> = Rswift.ReuseIdentifier(identifier: "cell1")
-    
+
     fileprivate init() {}
   }
-  
-  /// This `R.storyboard` struct is generated, and contains static references to 2 storyboards.
-  struct storyboard {
-    /// Storyboard `LaunchScreen`.
-    static let launchScreen = _R.storyboard.launchScreen()
-    /// Storyboard `Main`.
-    static let main = _R.storyboard.main()
-    
-    /// `UIStoryboard(name: "LaunchScreen", bundle: ...)`
-    static func launchScreen(_: Void = ()) -> UIKit.UIStoryboard {
-      return UIKit.UIStoryboard(resource: R.storyboard.launchScreen)
-    }
-    
-    /// `UIStoryboard(name: "Main", bundle: ...)`
-    static func main(_: Void = ()) -> UIKit.UIStoryboard {
-      return UIKit.UIStoryboard(resource: R.storyboard.main)
-    }
-    
-    fileprivate init() {}
-  }
-  
+
   /// This `R.string` struct is generated, and contains static references to 1 localization tables.
   struct string {
     /// This `R.string.localizable` struct is generated, and contains static references to 9 localization keys.
@@ -543,100 +781,182 @@ struct R: Rswift.Validatable {
       static let homeTutorialSecondStep = Rswift.StringResource(key: "home.tutorial.second-step", tableName: "Localizable", bundle: R.hostingBundle, locales: [], comment: nil)
       /// Value: You’re Done! Fill up your bottle and lets get started!
       static let homeTutorialFifthStep = Rswift.StringResource(key: "home.tutorial.fifth-step", tableName: "Localizable", bundle: R.hostingBundle, locales: [], comment: nil)
-      
+
       /// Value: Click here to reset today’s intake.
-      static func homeTutorialFourthStep(_: Void = ()) -> String {
-        return NSLocalizedString("home.tutorial.fourth-step", bundle: R.hostingBundle, comment: "")
+      static func homeTutorialFourthStep(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("home.tutorial.fourth-step", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "home.tutorial.fourth-step"
+        }
+
+        return NSLocalizedString("home.tutorial.fourth-step", bundle: bundle, comment: "")
       }
-      
+
       /// Value: Once you’ve drank… Tap ‘Hydrate’ and the water level will update automatically.
-      static func homeTutorialThirdStep(_: Void = ()) -> String {
-        return NSLocalizedString("home.tutorial.third-step", bundle: R.hostingBundle, comment: "")
+      static func homeTutorialThirdStep(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("home.tutorial.third-step", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "home.tutorial.third-step"
+        }
+
+        return NSLocalizedString("home.tutorial.third-step", bundle: bundle, comment: "")
       }
-      
+
       /// Value: Select your Activity level
-      static func personalInfoTutorialThirdStep(_: Void = ()) -> String {
-        return NSLocalizedString("personal-info.tutorial.third-step", bundle: R.hostingBundle, comment: "")
+      static func personalInfoTutorialThirdStep(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("personal-info.tutorial.third-step", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "personal-info.tutorial.third-step"
+        }
+
+        return NSLocalizedString("personal-info.tutorial.third-step", bundle: bundle, comment: "")
       }
-      
+
       /// Value: Select your Gender
-      static func personalInfoTutorialSecondStep(_: Void = ()) -> String {
-        return NSLocalizedString("personal-info.tutorial.second-step", bundle: R.hostingBundle, comment: "")
+      static func personalInfoTutorialSecondStep(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("personal-info.tutorial.second-step", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "personal-info.tutorial.second-step"
+        }
+
+        return NSLocalizedString("personal-info.tutorial.second-step", bundle: bundle, comment: "")
       }
-      
+
       /// Value: This is your suggested daily water intake
-      static func personalInfoTutorialFourthStep(_: Void = ()) -> String {
-        return NSLocalizedString("personal-info.tutorial.fourth-step", bundle: R.hostingBundle, comment: "")
+      static func personalInfoTutorialFourthStep(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("personal-info.tutorial.fourth-step", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "personal-info.tutorial.fourth-step"
+        }
+
+        return NSLocalizedString("personal-info.tutorial.fourth-step", bundle: bundle, comment: "")
       }
-      
+
       /// Value: To work out your daily water intake goal please Select Your Weight
-      static func personalInfoTutorialFirstStep(_: Void = ()) -> String {
-        return NSLocalizedString("personal-info.tutorial.first-step", bundle: R.hostingBundle, comment: "")
+      static func personalInfoTutorialFirstStep(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("personal-info.tutorial.first-step", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "personal-info.tutorial.first-step"
+        }
+
+        return NSLocalizedString("personal-info.tutorial.first-step", bundle: bundle, comment: "")
       }
-      
+
       /// Value: Water level 1: This shows you how full the bottle is.
-      static func homeTutorialFirstStep(_: Void = ()) -> String {
-        return NSLocalizedString("home.tutorial.first-step", bundle: R.hostingBundle, comment: "")
+      static func homeTutorialFirstStep(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("home.tutorial.first-step", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "home.tutorial.first-step"
+        }
+
+        return NSLocalizedString("home.tutorial.first-step", bundle: bundle, comment: "")
       }
-      
+
       /// Value: Water level 2: This shows you where you need to drink to.
-      static func homeTutorialSecondStep(_: Void = ()) -> String {
-        return NSLocalizedString("home.tutorial.second-step", bundle: R.hostingBundle, comment: "")
+      static func homeTutorialSecondStep(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("home.tutorial.second-step", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "home.tutorial.second-step"
+        }
+
+        return NSLocalizedString("home.tutorial.second-step", bundle: bundle, comment: "")
       }
-      
+
       /// Value: You’re Done! Fill up your bottle and lets get started!
-      static func homeTutorialFifthStep(_: Void = ()) -> String {
-        return NSLocalizedString("home.tutorial.fifth-step", bundle: R.hostingBundle, comment: "")
+      static func homeTutorialFifthStep(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("home.tutorial.fifth-step", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "home.tutorial.fifth-step"
+        }
+
+        return NSLocalizedString("home.tutorial.fifth-step", bundle: bundle, comment: "")
       }
-      
+
       fileprivate init() {}
     }
-    
+
     fileprivate init() {}
   }
-  
+
   fileprivate struct intern: Rswift.Validatable {
     fileprivate static func validate() throws {
       try _R.validate()
     }
-    
+
     fileprivate init() {}
   }
-  
+
   fileprivate class Class {}
-  
+
   fileprivate init() {}
 }
 
 struct _R: Rswift.Validatable {
   static func validate() throws {
+    #if os(iOS) || os(tvOS)
     try storyboard.validate()
+    #endif
   }
-  
+
+  #if os(iOS) || os(tvOS)
   struct storyboard: Rswift.Validatable {
     static func validate() throws {
+      #if os(iOS) || os(tvOS)
       try launchScreen.validate()
+      #endif
+      #if os(iOS) || os(tvOS)
       try main.validate()
+      #endif
     }
-    
+
+    #if os(iOS) || os(tvOS)
     struct launchScreen: Rswift.StoryboardResourceWithInitialControllerType, Rswift.Validatable {
       typealias InitialController = UIKit.UIViewController
-      
+
       let bundle = R.hostingBundle
       let name = "LaunchScreen"
-      
+
       static func validate() throws {
         if UIKit.UIImage(named: "splashscreen", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'splashscreen' is used in storyboard 'LaunchScreen', but couldn't be loaded.") }
-        if #available(iOS 11.0, *) {
+        if #available(iOS 11.0, tvOS 11.0, *) {
         }
       }
-      
+
       fileprivate init() {}
     }
-    
+    #endif
+
+    #if os(iOS) || os(tvOS)
     struct main: Rswift.StoryboardResourceWithInitialControllerType, Rswift.Validatable {
       typealias InitialController = UIKit.UINavigationController
-      
+
       let alertVCNew = StoryboardViewControllerResource<AlertVCNew>(identifier: "AlertVCNew")
       let bundle = R.hostingBundle
       let historyDetail = StoryboardViewControllerResource<HistoryDetail>(identifier: "HistoryDetail")
@@ -646,35 +966,35 @@ struct _R: Rswift.Validatable {
       let myStatisticVC = StoryboardViewControllerResource<MyStatisticVC>(identifier: "MyStatisticVC")
       let name = "Main"
       let personalInfoVC = StoryboardViewControllerResource<PersonalInfoVC>(identifier: "PersonalInfoVC")
-      
+
       func alertVCNew(_: Void = ()) -> AlertVCNew? {
         return UIKit.UIStoryboard(resource: self).instantiateViewController(withResource: alertVCNew)
       }
-      
+
       func historyDetail(_: Void = ()) -> HistoryDetail? {
         return UIKit.UIStoryboard(resource: self).instantiateViewController(withResource: historyDetail)
       }
-      
+
       func historyVC(_: Void = ()) -> HistoryVC? {
         return UIKit.UIStoryboard(resource: self).instantiateViewController(withResource: historyVC)
       }
-      
+
       func homeVC(_: Void = ()) -> HomeVC? {
         return UIKit.UIStoryboard(resource: self).instantiateViewController(withResource: homeVC)
       }
-      
+
       func menuVC(_: Void = ()) -> MenuVC? {
         return UIKit.UIStoryboard(resource: self).instantiateViewController(withResource: menuVC)
       }
-      
+
       func myStatisticVC(_: Void = ()) -> MyStatisticVC? {
         return UIKit.UIStoryboard(resource: self).instantiateViewController(withResource: myStatisticVC)
       }
-      
+
       func personalInfoVC(_: Void = ()) -> PersonalInfoVC? {
         return UIKit.UIStoryboard(resource: self).instantiateViewController(withResource: personalInfoVC)
       }
-      
+
       static func validate() throws {
         if UIKit.UIImage(named: "Background", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'Background' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "Brand Name", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'Brand Name' is used in storyboard 'Main', but couldn't be loaded.") }
@@ -698,7 +1018,7 @@ struct _R: Rswift.Validatable {
         if UIKit.UIImage(named: "statistics.PNG (1)", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'statistics.PNG (1)' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "walkingbuttonblack", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'walkingbuttonblack' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "waterDrop", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'waterDrop' is used in storyboard 'Main', but couldn't be loaded.") }
-        if #available(iOS 11.0, *) {
+        if #available(iOS 11.0, tvOS 11.0, *) {
         }
         if _R.storyboard.main().alertVCNew() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'alertVCNew' could not be loaded from storyboard 'Main' as 'AlertVCNew'.") }
         if _R.storyboard.main().historyDetail() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'historyDetail' could not be loaded from storyboard 'Main' as 'HistoryDetail'.") }
@@ -708,12 +1028,14 @@ struct _R: Rswift.Validatable {
         if _R.storyboard.main().myStatisticVC() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'myStatisticVC' could not be loaded from storyboard 'Main' as 'MyStatisticVC'.") }
         if _R.storyboard.main().personalInfoVC() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'personalInfoVC' could not be loaded from storyboard 'Main' as 'PersonalInfoVC'.") }
       }
-      
+
       fileprivate init() {}
     }
-    
+    #endif
+
     fileprivate init() {}
   }
-  
+  #endif
+
   fileprivate init() {}
 }

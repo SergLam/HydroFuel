@@ -1,64 +1,79 @@
 PODS:
-  - Charts (3.3.0):
-    - Charts/Core (= 3.3.0)
-  - Charts/Core (3.3.0)
+  - Charts (3.6.0):
+    - Charts/Core (= 3.6.0)
+  - Charts/Core (3.6.0)
   - CTShowcase (2.4.0)
-  - FSCalendar (2.8.0)
-  - IQKeyboardManagerSwift (6.4.0)
+  - FSCalendar (2.8.2)
+  - IQKeyboardManagerSwift (6.5.6)
   - iShowcase (2.3.0)
-  - R.swift (5.0.3):
-    - R.swift.Library (~> 5.0.0)
-  - R.swift.Library (5.0.1)
-  - Realm (3.16.2):
-    - Realm/Headers (= 3.16.2)
-  - Realm/Headers (3.16.2)
-  - RealmSwift (3.16.2):
-    - Realm (= 3.16.2)
+  - R.swift (5.4.1-alpha.5):
+    - R.swift.Library (~> 5.3.0)
+  - R.swift.Library (5.3.0)
+  - Realm (10.14.0):
+    - Realm/Headers (= 10.14.0)
+  - Realm/Headers (10.14.0)
+  - RealmSwift (10.14.0):
+    - Realm (= 10.14.0)
   - SlideMenuControllerSwift (4.0.0)
   - SVProgressHUD (2.2.5)
-  - UICircularProgressRing (6.2.0)
+  - UICircularProgressRing (7.0.0)
 
 DEPENDENCIES:
-  - Charts (~> 3.3.0)
+  - Charts (~> 3.6.0)
   - CTShowcase (~> 2.4.0)
-  - FSCalendar (~> 2.8.0)
-  - IQKeyboardManagerSwift (~> 6.4.0)
-  - iShowcase (~> 2.3.0)
-  - R.swift (~> 5.0.3)
-  - RealmSwift (~> 3.16.2)
-  - SlideMenuControllerSwift (~> 4.0.0)
+  - FSCalendar (~> 2.8.2)
+  - IQKeyboardManagerSwift (~> 6.5.6)
+  - iShowcase (from `https://github.com/yramocan/iShowcase`, branch `master`)
+  - R.swift (~> 5.4.1-alpha.5)
+  - RealmSwift (~> 10.14.0)
+  - SlideMenuControllerSwift (from `https://github.com/mirabo-tech/SlideMenuControllerSwift`, branch `master`)
   - SVProgressHUD (~> 2.2.5)
-  - UICircularProgressRing (~> 6.2.0)
+  - UICircularProgressRing (~> 7.0)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
-    - Charts
+  https://github.com/CocoaPods/Specs.git:
     - CTShowcase
+    - SVProgressHUD
+  trunk:
+    - Charts
     - FSCalendar
     - IQKeyboardManagerSwift
-    - iShowcase
     - R.swift
     - R.swift.Library
     - Realm
     - RealmSwift
-    - SlideMenuControllerSwift
-    - SVProgressHUD
     - UICircularProgressRing
 
+EXTERNAL SOURCES:
+  iShowcase:
+    :branch: master
+    :git: https://github.com/yramocan/iShowcase
+  SlideMenuControllerSwift:
+    :branch: master
+    :git: https://github.com/mirabo-tech/SlideMenuControllerSwift
+
+CHECKOUT OPTIONS:
+  iShowcase:
+    :commit: a52063e6b5d46c45f87285d2e29538e06a91063c
+    :git: https://github.com/yramocan/iShowcase
+  SlideMenuControllerSwift:
+    :commit: 7da98c6d35f4da8d8f227440d76c53acb28e82ef
+    :git: https://github.com/mirabo-tech/SlideMenuControllerSwift
+
 SPEC CHECKSUMS:
-  Charts: e0dd4cd8f257bccf98407b58183ddca8e8d5b578
+  Charts: b1e3a1f5a1c9ba5394438ca3b91bd8c9076310af
   CTShowcase: d6a7933f0724dadc12399b4d6d4815b419f1eb65
-  FSCalendar: 3a5ed3636e2ba1b83ebebfcf0c2603105a6f5efe
-  IQKeyboardManagerSwift: ed9b04ee0e3067ffba543283462d619f944b05e5
-  iShowcase: 8c88edc62366d87b44822bac91df09d6872874ab
-  R.swift: f5a87643b91ea569d23d6afb3eee9c743edde239
-  R.swift.Library: cfe85d569d9bae6cb262922db130e7c3a7a5fad1
-  Realm: 0e73b4edeb5b6a90da3d83206883b2e34e00eb38
-  RealmSwift: a81e650171ef0a5f999df1ed8d39ba8d6fce88a4
-  SlideMenuControllerSwift: 021d6318201c53d4d4d3710517d43d6c556c7dd0
+  FSCalendar: e6a2eb9c571bf0719ed797ef807e08426753c241
+  IQKeyboardManagerSwift: c7df9d2deb356c04522f5c4b7b6e4ce4d8ed94fe
+  iShowcase: a182652133c75762a10eaef4acdca0dbc4a779ad
+  R.swift: a73479da974c4f7b1591551e95c584f562af57fd
+  R.swift.Library: 0fc583cb55a99e28901299cc451614cad1161962
+  Realm: 95a120db10fa66d0f1d10bee4ce828177ae00090
+  RealmSwift: 4937e1b6f9b87bc25dc23883198807bf69e8cb76
+  SlideMenuControllerSwift: f9ec1ad1a95d211324d25b15dcdbc94881596716
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
-  UICircularProgressRing: 0ff679b05a17f15ad6301a7886686837b8c301a9
+  UICircularProgressRing: 738b48db0ec1fbbd8482d727979392bb8c272e8d
 
-PODFILE CHECKSUM: e6ea36c2d5e2970cd0f9a922bcfe7582e128d50a
+PODFILE CHECKSUM: 5e590cb190d6af569a7e1c09377a80f503d2a5a1
 
-COCOAPODS: 1.7.2
+COCOAPODS: 1.10.2

@@ -30,13 +30,7 @@ class User: Object {
     }
     
     static func defaultUserModel() -> User {
-        
-        let user = self.init()
-        user.gender = Gender.male.rawValue
-        user.activityLevel = Activity.undefined.rawValue
-        user.weight = 50
-        user.suggestedWaterLevel = 2500
-        return user
+        return User(gender: Gender.male.rawValue, activityLevel: Activity.undefined.rawValue, weight: 50, suggestedWater: 2500)
     }
     
     func update(user: User) {
